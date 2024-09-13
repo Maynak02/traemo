@@ -10,7 +10,7 @@ const Home = () => {
       <div className="grid grid-cols-1 grid-div">
         <div className="right-div mb-[100px] ml-[100px]">
           <div className="container">
-            <p className="started-div">Let's Get Started</p>
+            <p className="started-div">{"Let's Get Started"}</p>
             <Image
               src="/images/get-started-bar.svg"
               className="get-started-bar"
