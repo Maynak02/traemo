@@ -11,13 +11,13 @@ const Home = () => {
         <div className="right-div mb-[100px] ml-[100px]">
           <div className="container">
             <p className="started-div">{"Let's Get Started"}</p>
-            <Image
+            {/* <Image
               src="/images/get-started-bar.svg"
               className="get-started-bar"
               alt="get-started-bar"
               width={200}
               height={5}
-            />
+            /> */}
             <div className="profile-question-text-div mt-[60px]">
               <span className="text-question">
                 Do you want a fully customised programme (around 10 minutes) or

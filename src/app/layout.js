@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="%PUBLIC_URL%/images/logo.png" />
+        <link rel="icon" href="/images/logo.png" />
         <title>Traemo</title>
       </head>
       <body className={`${inter.className}`}>
