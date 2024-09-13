@@ -14,7 +14,7 @@ import ToastWrapper from "@/components/ToastContainer";
 import StyledJsxRegistry from "./registry";
 import { persistor, store } from "@/redux/store";
 import { Provider } from "react-redux";
-import ProtectedPageService from "@/services/protectedPage";
+// import ProtectedPageService from "@/services/protectedPage";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,17 +28,17 @@ const rubik = Rubik({
 });
 export default function RootLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
+  // const router = useRouter();
+  // const pathname = usePathname();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  const isLoginPage =
-    pathname === "/login" ||
-    pathname === "/register" ||
-    pathname == "/resetPassword" ||
-    pathname == "/forgotPassword";
+  // const isLoginPage =
+  //   pathname === "/login" ||
+  //   pathname === "/register" ||
+  //   pathname == "/resetPassword" ||
+  //   pathname == "/forgotPassword";
 
   return (
     <html lang="en">
@@ -49,8 +49,8 @@ export default function RootLayout({ children }) {
       <body className={`${inter.className}`}>
         <Provider store={store}>
           {/* <GoogleOAuthProvider clientId="598913711908-ps1ud5pqp6diuci99laprr35pkbqffoa.apps.googleusercontent.com"> */}
-          <ProtectedPageService />
-          <ToastWrapper />
+          {/* <ProtectedPageService /> */}
+          {/* <ToastWrapper /> */}
           <div>
             <div>
               <MainDiv>

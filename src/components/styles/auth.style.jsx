@@ -26,7 +26,8 @@ const LoginMain = styled.div`
             width: 50%;
             padding: 0px 4px;
           }
-        } .form-group {
+        }
+        .form-group {
           margin-bottom: 12px;
           input {
             width: 100%;
@@ -34,7 +35,7 @@ const LoginMain = styled.div`
             border: 1px solid #cbd5e1;
             border-radius: 12px;
             padding: 12px;
-            font-family: 'Public Sans', sans-serif;
+            font-family: "Public Sans", sans-serif;
             font-size: 13px;
             outline: none;
             box-shadow: none;

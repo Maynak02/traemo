@@ -353,6 +353,7 @@ const DashboardHeader = ({ className = "" }) => {
                 </span>
               </li>
             </Link>
+
             <Link href="/customer/history">
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_history.svg" />

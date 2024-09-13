@@ -43,9 +43,13 @@ const Home = () => {
             </div>
             <div className="flex justify-between mr-[10px]">
               <div className="button-div mt-[147px] mr-[20px]">
-                <Link href="/forgotpassword">
-                  <button className="button !w-[400px]">Forgot Password</button>
-                </Link>
+                {/* <Link href="/forgotpassword">
+                  <a>
+                    <button className="button !w-[400px]">
+                      Forgot Password
+                    </button>
+                  </a>
+                </Link> */}
               </div>
               <div className="button-div mt-[147px] mr-[20px]">
                 <Link href="/resetpassword">
