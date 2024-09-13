@@ -5,11 +5,7 @@ max-w-[1760px]
   m-auto
   w-full
     `;
-const ProfileQuestionMain{
+// const ProfileQuestionMain{
 
-
-}
+// }
 export default Container;
-
-
-
