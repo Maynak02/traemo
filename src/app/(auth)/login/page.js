@@ -53,26 +53,27 @@ const LoginPage = () => {
     setValue,
   } = methods;
   const onSubmitForm = async (formData) => {
-    const { email } = formData;
-    setIsLoading(true);
-    const objParam = {
-      email: email,
-    };
-    try {
-      const { payload: res } = await dispatch(loginAction(objParam));
-      const { data, status, message } = res;
-      if (status) {
-        setIsLoading(false);
-        router.push("/register");
-      } else {
-        setIsLoading(false);
-        toast.error(message);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
+    router.push("/customer/home");
+    // const { email } = formData;
+    // setIsLoading(true);
+    // const objParam = {
+    //   email: email,
+    // };
+    // try {
+    //   const { payload: res } = await dispatch(loginAction(objParam));
+    //   const { data, status, message } = res;
+    //   if (status) {
+    //     setIsLoading(false);
+    //     router.push("/register");
+    //   } else {
+    //     setIsLoading(false);
+    //     toast.error(message);
+    //   }
+    // } catch (error) {
+    //   setIsLoading(false);
+    //   toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+    //   console.log("Error", error);
+    // }
   };
 
   return (

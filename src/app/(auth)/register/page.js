@@ -71,30 +71,30 @@ const RegisterPage = () => {
   } = methods;
 
   const onSubmitForm = async (formData) => {
-    const { email, firstname, lastname } = formData;
-
-    setIsLoading(true);
-    const objParam = {
-      email: email,
-      firstname: firstname,
-      lastname: lastname,
-    };
-    console.log("payload==>", objParam);
-
-    try {
-      const { payload: res } = await dispatch(authTokenAction(objParam));
-      const { data, status, message } = res;
-      if (status) {
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        toast.error(message);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
+    console.log("formData", formData);
+    router.push("/customer/home");
+    // const { email, firstname, lastname } = formData;
+    // setIsLoading(true);
+    // const objParam = {
+    //   email: email,
+    //   firstname: firstname,
+    //   lastname: lastname,
+    // };
+    // console.log("payload==>", objParam);
+    // try {
+    //   const { payload: res } = await dispatch(authTokenAction(objParam));
+    //   const { data, status, message } = res;
+    //   if (status) {
+    //     setIsLoading(false);
+    //   } else {
+    //     setIsLoading(false);
+    //     toast.error(message);
+    //   }
+    // } catch (error) {
+    //   setIsLoading(false);
+    //   toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+    //   console.log("Error", error);
+    // }
   };
 
   return (
