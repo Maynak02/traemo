@@ -31,6 +31,8 @@ const Header = styled.div`
           font-size: 14px;
           color: #fff;
           padding: 0px 5px 0px 8px;
+          overflow: hidden !important;
+          text-overflow: ellipsis;
         }
         .arrow-icon {
           width: 26px;
@@ -38,6 +40,7 @@ const Header = styled.div`
       }
     }
     .toggle-header {
+      margin-right: 20px;
       .toggle-header-inner {
         display: flex;
         align-items: center;
@@ -90,6 +93,7 @@ const Header = styled.div`
         border-radius: 12px;
         top: 74px;
         right: 0px;
+        display: none;
         .cart-dropdown-inner {
           padding: 32px 24px;
           .cart-footer {
@@ -228,6 +232,135 @@ const Header = styled.div`
       }
       .arrow-icon {
         width: 26px;
+      }
+    }
+  }
+  .cart-dropdown {
+    position: absolute;
+    width: 435px;
+    border: 1px solid rgba(208, 213, 221, 0.6);
+    box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.15);
+    z-index: 9;
+    background-color: #fff;
+    border-radius: 12px;
+    top: 85px;
+    right: 215px;
+    .cart-dropdown-inner {
+      padding: 24px 24px;
+      .cart-footer {
+        padding: 24px 12px 0px 12px;
+        .btn-footer {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          border: none;
+          background-color: #f9c93c;
+          border-radius: 30px;
+          padding: 16px;
+          justify-content: center;
+          outline: none;
+          box-shadow: none;
+          p {
+            font-size: 14px;
+            color: #fff;
+            font-weight: 600;
+            padding: 0px 8px;
+          }
+          h4 {
+            font-size: 18px;
+            color: #fff;
+            font-weight: 600;
+          }
+        }
+      }
+      .cart-dropdown-inner-top {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(208, 213, 221, 0.6);
+        padding-bottom: 16px;
+        h5 {
+          font-size: 16px;
+          padding-left: 8px;
+          color: #000;
+        }
+      }
+      .cart-dropdown-block {
+        .cart-dropdown-block-inner {
+          max-height: 500px;
+          overflow-y: auto;
+          .cart-dropdown-block-inner-block {
+            padding: 20px 0px;
+            border-bottom: 1px solid rgba(208, 213, 221, 0.6);
+            display: flex;
+            .img-block {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 96px;
+              height: 96px;
+              border: 1px solid rgba(208, 213, 221, 0.6);
+              padding: 10px;
+              border-radius: 12px;
+              > img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+            }
+            .cart-block {
+              display: flex;
+              padding: 12px;
+              width: 75%;
+              justify-content: space-between;
+              .cart-block-left {
+                width: 70%;
+                h5 {
+                  color: #000;
+                  font-weight: 500;
+                  font-size: 18px;
+                  margin-bottom: 8px;
+                }
+                p {
+                  color: #667085;
+                  font-size: 12px;
+                  font-weight: 400;
+                  line-height: 14px;
+                  padding: 0px;
+                }
+              }
+              .cart-price {
+                width: 30%;
+                display: flex;
+                align-items: flex-end;
+                flex-direction: column;
+                h3 {
+                  color: #f9c93c;
+                  font-weight: 600;
+                  font-size: 18px;
+                }
+                input {
+                  width: 53px;
+                  height: 34px;
+                  border-radius: 8px;
+                  border: 1px solid rgba(208, 213, 221, 0.6);
+                  font-size: 14px;
+                  line-height: 14px;
+                  text-align: center;
+                  outline: none;
+                  color: #000;
+                  font-weight: 500;
+                  &::placeholder {
+                    color: #000;
+                  }
+
+                  &::-ms-input-placeholder {
+                    color: #000;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

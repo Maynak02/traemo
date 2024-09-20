@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;900&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -510,13 +510,12 @@ input[type="radio"]:checked + label {
   @apply text-center !important;
 }
 
-
 .ReactModal__Overlay {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.45) !important;
-    z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.45) !important;
+  z-index: 99;
 }
 .common-modal-block {
   width: 897px;
@@ -536,7 +535,7 @@ input[type="radio"]:checked + label {
   flex-direction: column;
   justify-content: space-between;
   background-color: #fdf3d6;
-  padding: 64px 32px 0px 32px; 
+  padding: 64px 32px 0px 32px;
 }
 .top-block-top h2 {
   font-size: 40px;
@@ -584,7 +583,7 @@ input[type="radio"]:checked + label {
   border: 1px solid #cbd5e1;
   border-radius: 12px;
   padding: 12px 12px 12px 52px;
-  font-family: 'Public Sans', sans-serif;
+  font-family: "Public Sans", sans-serif;
   font-size: 13px;
   outline: none;
   box-shadow: none;

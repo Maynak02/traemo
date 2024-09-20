@@ -16,9 +16,10 @@ export const axiosPost = async (
     response.status = result?.status;
   } catch (e) {
     response.status = false;
-    response.message = e?.response?.data?.errors[0] || "something went wrong";
+    response.message = e?.response?.data?.detail;
     response.data = e?.response?.data || e;
-    console.log("🚀 ~ response:", e);
+
+    console.log("🚀 ~ response:", response);
   }
   return response;
 };

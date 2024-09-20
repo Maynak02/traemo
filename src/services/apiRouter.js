@@ -1,8 +1,10 @@
 export const API_ROUTER = {
-  REGISTER_USER: "auth/register",
-  LOGIN_USER: "auth/login",
-  FORGET_PASSWORD_USER: "auth/login",
-  RESET_PASSWORD_USER: "auth/login",
+  // LOGIN
+  LOGIN_USER: "/auth/login",
+  AUTH_TOKEN: "/auth/token",
+  AUTH_LINK: "/auth/link",
+  AUTH_LOGOUT: "/auth/logout",
+  AUTH_LOGOUT_ALL: "/auth/logoutall",
 
   // PAYMENTS
   GET_FUNDS: "/payments/funds",

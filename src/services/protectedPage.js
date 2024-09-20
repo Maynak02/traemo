@@ -1,49 +1,53 @@
-// "use client";
-// import { useRouter, usePathname } from "next/navigation";
-// import { useEffect } from "react";
-// import { getData } from "@/utils/storage";
-// import { useSelector } from "react-redux";
+"use client";
+import { useRouter, usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { getData } from "@/utils/storage";
+import { useSelector } from "react-redux";
 
-// const ProtectedPageService = () => {
-//   const router = useRouter();
-//   const path = usePathname();
-//   const user = getData("user");
-//   const userAuth = user?.token;
-//   const selector = useSelector(state => state.registerApi);
+const ProtectedPageService = () => {
+  const router = useRouter();
+  const path = usePathname();
+  const user = getData("user");
+  const userAuth = user?.token;
+  const selector = useSelector((state) => state.registerApi);
 
-//   const afterLoginProtectedPages = [
-//    ];
-//   const afterLoginNotAccessiblePages = [
-//     "/",
-//     "/home",
-//     "/register",
-//     "/login",
-//     "/resetPassword",
-//     "/forgotPassword",
-//      ];
+  const afterLoginProtectedPages = [
+    // "/customer/wallet",
+    // "/customer/profile",
+    // "/customer/cart",
+    // "/customer/history",
+    // "/customer/productdetail/[productid]",
+    // "/customer/standingorders",
+  ];
 
-//   useEffect(() => {
-//     if (afterLoginNotAccessiblePages.includes(path) && userAuth) {
-//       let dashboard_url = `/que1`;
-//       router.push(dashboard_url);
-//     }
+  const afterLoginNotAccessiblePages = [
+    // "/",
+    // "/register",
+    // "/login",
+  ];
 
-//     let isProtectedDynamicPath = false;
-//     afterLoginProtectedPages.forEach((pattern) => {
-//       if (
-//         (pattern instanceof RegExp && pattern.test(path)) ||
-//         path === pattern
-//       ) {
-//         isProtectedDynamicPath = true;
-//       }
-//     });
+  useEffect(() => {
+    if (afterLoginNotAccessiblePages.includes(path) && userAuth) {
+      let dashboard_url = `/customer/home`;
+      router.push(dashboard_url);
+    }
 
-//     if (isProtectedDynamicPath && !userAuth) {
-//       router.push("/login");
-//     }
-//   }, [userAuth, path]);
+    let isProtectedDynamicPath = false;
+    afterLoginProtectedPages.forEach((pattern) => {
+      if (
+        (pattern instanceof RegExp && pattern.test(path)) ||
+        path === pattern
+      ) {
+        isProtectedDynamicPath = true;
+      }
+    });
 
-//   return null;
-// };
+    if (isProtectedDynamicPath && !userAuth) {
+      router.push("/login");
+    }
+  }, [userAuth, path]);
 
-// export default ProtectedPageService;
+  return null;
+};
+
+export default ProtectedPageService;
