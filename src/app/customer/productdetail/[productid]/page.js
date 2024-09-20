@@ -91,6 +91,7 @@ const Productdetail = () => {
                 {...settingsThumbnail}
                 asNavFor={nav1}
                 ref={(slider2) => setNav2(slider2)}
+                className="setting-thumbnail"
               >
                 {productList.map((item, index) => {
                   return (

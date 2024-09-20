@@ -73,7 +73,6 @@ const CustomerDashboard = () => {
   return (
     <div>
       <div className="">
-        {/* Header Start */}
         <DashboardHeader />
         <CommonPagesBlock>
           <div className="dasborad-main">
@@ -394,40 +393,6 @@ const CustomerDashboard = () => {
             </div>
           </div>
         </CommonPagesBlock>
-        {/* Header End */}
-        {/* <div className='self-stretch flex flex-col items-start justify-start gap-4 max-w-full px-8'>
-          <div className='flex flex-row items-start justify-start gap-2 mq1000:flex-wrap text-xs text-gray-400'>
-            <CategoryTabs />
-          </div>
-          <div className='self-stretch overflow-hidden flex flex-col items-center justify-center pt-1 px-8 w-[100%] relative'>
-            <span className='absolute z-10 bottom-0 left-1/2 transform -translate-x-1/2 w-[100%] border-b-[0.5px] border-gray-300'></span>
-          </div>
-
-          <div className='flex flex-row items-start justify-start gap-2 mq1000:flex-wrap text-xs text-gray-400'>
-            <SubCategoryTabs />
-          </div>
-        </div> */}
-        {/* <div className='self-stretch bg-gray-25 border-gray-300 border-b-[0.5px] border-solid overflow-hidden flex flex-col items-start justify-center pt-2 px-8' />
-        
-        <main className='self-start flex flex-row items-start justify-end py-0 pl-10 pr-10 box-border max-w-full'>
-          <section className='items-center justify-start max-w-full'>
-            <div className='flex-1 flex-row items-center justify-start gap-8 max-w-full grid grid-cols-6'>
-              {productList.map((item) => {
-                return (
-                  <CardList
-                    imageUrl={item.imageUrl}
-                    finalPrice={item.finalPrice}
-                    productName={item.productName}
-                    quantity={item.quantity}
-                    productid={item.productid}
-                  />
-                );
-              })}
-            </div>
-          </section>
-        </main>
-        
-      </div> */}
       </div>
     </div>
   );

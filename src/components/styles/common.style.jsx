@@ -410,17 +410,80 @@ const CommonPagesBlock = styled.div`
     .common-cart-pages-block-left {
       padding: 0px 15px 0px 30px;
       width: 50%;
-
+      .title-left {
+        padding: 32px 10px;
+        h2 {
+          font-size: 22px;
+          line-height: 28px;
+          color: #000;
+          font-weight: 500;
+        }
+      }
+      .top-shoping-title {
+        padding: 24px 20px;
+        border: 1px solid rgba(208, 213, 221, 0.6);
+        border-radius: 12px;
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+        margin-bottom: 32px;
+        .top-shoping-title-inner {
+          display: flex;
+          align-items: center;
+          margin-bottom: 30px;
+          h2 {
+            font-size: 22px;
+            line-height: 28px;
+            color: #000;
+            font-weight: 500;
+            padding-left: 12px;
+          }
+        }
+        .btn-block {
+          display: flex;
+          margin: 0px -5px;
+          .btn-block-inner {
+            width: 50%;
+            padding: 0px 5px;
+            button {
+              width: 100%;
+              font-size: 14px;
+              font-weight: 700;
+              color: #000;
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+              border: 1px solid rgba(208, 213, 221, 0.6);
+              border-radius: 30px;
+              padding: 16px;
+            }
+            &:last-child {
+              button {
+                border-color: #fda29b;
+                color: #d92d20;
+              }
+            }
+          }
+        }
+      }
       .common-cart-pages-block-left-inner {
         padding: 32px 20px;
         border: 1px solid rgba(208, 213, 221, 0.6);
         border-radius: 12px;
-        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-          0px 1px 2px rgba(16, 24, 40, 0.06);
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
         margin-bottom: 32px;
-
+        &.diff-shop-page {
+          border: 2px dashed rgba(208, 213, 221, 0.6);
+        }
         &:last-child {
           margin-bottom: 0px;
+        }
+        .label-block-days {
+          margin-bottom: 32px;
+          span {
+            font-size: 16px;
+            color: #175cd3;
+            padding: 12px;
+            border: 1px solid rgba(208, 213, 221, 0.6);
+            background-color: #f5faff;
+            border-radius: 8px;
+          }
         }
         .top-block-cart {
           padding: 16px 12px;
@@ -462,9 +525,26 @@ const CommonPagesBlock = styled.div`
         }
         .cart-dropdown-block-inner {
           margin-bottom: 32px;
+          .title-inner-cart-block {
+            position: relative;
+            &::before {
+              content: '';
+              position: absolute;
+              left: 0px;
+              width: 56px;
+              border: 1px dashed rgba(208, 213, 221, 0.6);
+              height: 1px;
+              top: 7px;
+            }
+            h4 {
+              color: #667085;
+              font-size: 12px;
+              line-height: 20px;
+              padding-left: 65px;
+            }
+          }
           .cart-dropdown-block-inner-block {
             padding: 20px 0px;
-            border-bottom: 1px solid rgba(208, 213, 221, 0.6);
             display: flex;
             &:last-child {
               border: none;
@@ -538,6 +618,27 @@ const CommonPagesBlock = styled.div`
               }
             }
           }
+          .last-btn {
+            button {
+              padding: 17px 24px;
+              border-radius: 30px;
+              border: 1px solid rgba(208, 213, 221, 0.6);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+              width: 100%;
+              span {
+                padding-left: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #000;
+              }
+              svg {
+                width: 24px;
+              }
+            }
+          }
         }
         .cart-toal-block {
           padding: 16px 12px;
@@ -608,8 +709,7 @@ const CommonPagesBlock = styled.div`
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               img {
                 width: 20px;
               }
@@ -652,8 +752,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 12px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               span {
@@ -669,8 +768,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 12px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               width: 100%;
@@ -691,8 +789,7 @@ const CommonPagesBlock = styled.div`
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-              0px 1px 2px rgba(16, 24, 40, 0.06);
+            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
             width: 100%;
             span {
               padding-left: 8px;
@@ -821,7 +918,7 @@ const CommonPagesBlock = styled.div`
                 color: #000;
               }
             }
-            input[type="radio"]:checked + label {
+            input[type='radio']:checked + label {
               .radio-buttons-content {
                 background-color: rgba(249, 201, 60, 0.2);
                 border-color: #ffc93c;
