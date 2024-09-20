@@ -40,15 +40,15 @@ module.exports = {
   //   domains: ["fetishfinder-media.dryrun.click"],
   // },
   reactStrictMode: false,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "",
-        pathname: "**",
-      },
-    ],
-  },
+  // images: {
+  //   remotePatterns: [
+  //     {
+  //       protocol: "https",
+  //       hostname: "",
+  //       pathname: "**",
+  //     },
+  //   ],
+  // },
 };
 
 // export default nextConfig;

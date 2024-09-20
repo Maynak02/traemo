@@ -91,11 +91,13 @@ const Productdetail = () => {
                 {...settingsThumbnail}
                 asNavFor={nav1}
                 ref={(slider2) => setNav2(slider2)}
-                className="setting-thumbnail"
               >
-                {productList.map((item) => {
+                {productList.map((item, index) => {
                   return (
-                    <div className="product-details-main-left-thumbnail">
+                    <div
+                      key={index}
+                      className="product-details-main-left-thumbnail"
+                    >
                       <img alt="" src={item.imageUrl} />
                     </div>
                   );
@@ -108,9 +110,9 @@ const Productdetail = () => {
                 asNavFor={nav2}
                 ref={(slider1) => setNav1(slider1)}
               >
-                {productList.map((item) => {
+                {productList.map((item, index) => {
                   return (
-                    <div className="product-details-main-left-img">
+                    <div key={index} className="product-details-main-left-img">
                       <div className="product-details-main-left-img-inner">
                         <img alt="" src={item.imageUrl} />
                       </div>

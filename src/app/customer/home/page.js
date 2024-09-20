@@ -323,9 +323,12 @@ const CustomerDashboard = () => {
                       </div>
                       <div className="tab-panel-custom">
                         <div className="tab-panel-data-block">
-                          {productList.map((item) => {
+                          {productList.map((item, index) => {
                             return (
-                              <div className="tab-panel-data-block-main">
+                              <div
+                                key={index}
+                                className="tab-panel-data-block-main"
+                              >
                                 <Link
                                   href={`/customer/productdetail/${item.productid}`}
                                 >
