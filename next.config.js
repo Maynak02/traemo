@@ -10,7 +10,11 @@ module.exports = {
 
     return config;
   },
-  i18n,
+  i18n: {
+    locales: ["de", "en"],
+    defaultLocale: "de",
+    localeDetection: false,
+  },
   compiler: {
     styledComponents: true,
   },
