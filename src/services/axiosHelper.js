@@ -1,4 +1,5 @@
 import axiosInstance from "@/utils/axios";
+import { getData } from "@/utils/storage";
 
 export const axiosPost = async (
   url,
@@ -6,14 +7,27 @@ export const axiosPost = async (
   contentType = "application/json"
 ) => {
   let response = {};
+  let header = {};
+  const token = getData("token");
+  const userAuth = token?.access_token;
+  if (userAuth) {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+      Authorization: `Bearer ${userAuth}`,
+    };
+  } else {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+    };
+  }
   try {
     const result = await axiosInstance.post(url, data, {
-      headers: {
-        "Content-Type": contentType,
-      },
+      headers: header,
     });
-    response.data = result?.data || result?.data?.data;
-    response.status = result?.status;
+    response.data = result.data;
+    response.status = [200, 201].includes(result.status);
   } catch (e) {
     response.status = false;
     response.message = e?.response?.data?.detail;
@@ -29,11 +43,27 @@ export const axiosGet = async (
   contentType = "application/json"
 ) => {
   let response = {};
+  let header = {};
+
+  const token = getData("token");
+  console.log("get__token", token);
+  const userAuth = token?.access_token;
+
+  if (userAuth) {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+      Authorization: `Bearer ${userAuth}`,
+    };
+  } else {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+    };
+  }
   try {
     const result = await axiosInstance.get(url, {
-      headers: {
-        "Content-Type": contentType,
-      },
+      headers: header,
       params,
     });
     response.data = result.data;
@@ -52,11 +82,25 @@ export const axiosPatch = async (
   contentType = "application/json"
 ) => {
   let response = {};
+  let header = {};
+
+  const token = getData("token");
+  const userAuth = token?.access_token;
+  if (userAuth) {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+      Authorization: `Bearer ${userAuth}`,
+    };
+  } else {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+    };
+  }
   try {
     const result = await axiosInstance.patch(url, data, {
-      headers: {
-        "Content-Type": contentType,
-      },
+      headers: header,
     });
     response = result.data;
     response.status = result.data?.status || [200, 201].includes(result.status);
@@ -73,11 +117,24 @@ export const axiosPatch = async (
 
 export const axiosPut = async (url, data, contentType = "application/json") => {
   let response = {};
+  let header = {};
+  const token = getData("token");
+  const userAuth = token?.access_token;
+  if (userAuth) {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+      Authorization: `Bearer ${userAuth}`,
+    };
+  } else {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+    };
+  }
   try {
     const result = await axiosInstance.put(url, data, {
-      headers: {
-        "Content-Type": contentType,
-      },
+      headers: header,
     });
     response = result.data;
     response.status = [200, 201].includes(result.status);
@@ -95,13 +152,66 @@ export const axiosDelete = async (
   contentType = "application/json"
 ) => {
   let response = {};
+  let header = {};
+  const token = getData("token");
+  const userAuth = token?.access_token;
+  if (userAuth) {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+      Authorization: `Bearer ${userAuth}`,
+    };
+  } else {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+    };
+  }
   try {
     const result = await axiosInstance.delete(url, {
-      headers: {
-        "Content-Type": contentType,
-      },
+      headers: header,
     });
     response = result.data;
+    response.status = [200, 201].includes(result.status);
+  } catch (e) {
+    response.status = false;
+    response.message = "something went wrong";
+    response.data = e;
+  }
+  return response;
+};
+
+export const axiosGetProductID = async (
+  url,
+  productid,
+  contentType = "application/json"
+) => {
+  let response = {};
+  let header = {};
+
+  const token = getData("token");
+  console.log("get__token", token);
+  const userAuth = token?.access_token;
+
+  if (userAuth) {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+      Authorization: `Bearer ${userAuth}`,
+    };
+  } else {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+    };
+  }
+  try {
+    const result = await axiosInstance.get(url + productid + "/product", {
+      headers: header,
+    });
+    console.log("result-->======", result);
+
+    response.data = result.data;
     response.status = [200, 201].includes(result.status);
   } catch (e) {
     response.status = false;

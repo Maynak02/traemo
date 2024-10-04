@@ -6,6 +6,9 @@ import {
   authTokenAction,
   logoutAction,
   logoutAllAction,
+  getUserAction,
+  createUserAction,
+  updateUserAction,
 } from "./action";
 
 const initialState = {
@@ -105,6 +108,42 @@ const AuthSlice = createSlice({
         state.error = null;
       })
       .addCase(logoutAllAction.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      })
+      .addCase(getUserAction.pending, (state, { payload }) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getUserAction.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(getUserAction.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      })
+      .addCase(createUserAction.pending, (state, { payload }) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createUserAction.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(createUserAction.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      })
+      .addCase(updateUserAction.pending, (state, { payload }) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateUserAction.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(updateUserAction.rejected, (state, { payload }) => {
         state.isLoading = false;
         state.error = payload;
       });

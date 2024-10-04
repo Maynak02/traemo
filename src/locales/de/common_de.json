@@ -9,7 +9,7 @@
   "Forgot Password ?": "Forgot Password ?",
   "Log in": "Log in",
   "First time here?": "First time here?",
-  "Register": "Register",
+
   "Welcome": "Welcome",
   "Register to your account": "Register to your account",
   "Already here?": "Already here?",
@@ -22,8 +22,11 @@
   "Resend": "Resend",
   "Verify": "Verify",
 
-  "enterEmail": "Please enter email address",
-  "validEmail": "Please enter valid email address",
+  "enterEmail": "Bitte geben Sie eine E-Mail-Adresse ein",
+  "validEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+  "enterFname": "Bitte geben Sie den Vornamen ein",
+  "enterLname": "Bitte geben Sie den Nachnamen ein",
+
   "passwordRequired": "Password is required",
   "oldPasswordRequired": "Old Password is required",
   "oldPasswordIncorrect": "Entered old Password is incorrect",
@@ -52,6 +55,7 @@
   "Addresses": "Adressen",
   "OrderHistory": "Bestellhistorie",
   "ProceedToCheckout": "Zur Kasse gehen",
+  "Support": "Unterstützung",
 
   "Discover": "Entdecken",
   "Discount": "Rabatte",
@@ -83,5 +87,43 @@
   "Previous": "Zurück",
   "Next": "Weiter",
 
-  "Cart": "Wagen"
+  "Cart": "Wagen",
+
+  "EmailAddress": "E-Mail-Adresse",
+  "Register": "Registrieren",
+  "DontHaveAccount": "Sie haben noch kein Konto?",
+  "SignUp": "Registrieren",
+  "Login": "Anmelden",
+  "SignIn": "Anmelden",
+  "Logout": "Abmelden",
+
+  "fname": "Vorname",
+  "lname": "Nachname",
+  "gender": "Geschlecht",
+  "state": "Staat",
+  "city": "Stadt",
+  "country": "Land",
+  "house": "Haus",
+  "postalcode": "Postleitzahl",
+  "AlreadyAccount": "Sie haben bereits ein Konto?",
+
+  "ConfirmLogout": "Abmeldung bestätigen",
+  "WantToLogout": "Möchten Sie sich wirklich abmelden?",
+  "Cancel": "Abbrechen",
+
+  "SelectDeliveryDate": "Wählen Sie bitte den gewünschten Liefertermin aus und geben Sie ggf. die erforderlichen Lieferanweisungen ein.",
+  "AddInstruction": "Tippen, um Lieferanweisungen hinzuzufügen",
+  "DeliveryBy": "Lieferung bis ",
+  "Sum": "Summe",
+  "Deliveryfees": "Liefergebühren",
+  "Intotal": "Insgesamt",
+  "OrderNowForFee": "Jetzt kostenpflichtig bestellen",
+
+  "Sunday": "Sonntags",
+  "Monday": "Montags",
+  "Tuesday": "Dienstags",
+  "Wednesday": "Mittwochs",
+  "Thursday": "Donnerstags",
+  "Friday": "Freitags",
+  "Saturday": "Samstags"
 }

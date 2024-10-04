@@ -2,7 +2,16 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { toast } from "react-toastify";
 import { saveData } from "@/utils/storage";
-import { AuthLink, AuthToken, LoginUser, Logout, LogoutAll } from "./services";
+import {
+  AuthLink,
+  AuthToken,
+  CreateUser,
+  GetUser,
+  LoginUser,
+  Logout,
+  LogoutAll,
+  UpdateUser,
+} from "./services";
 
 export const loginAction = createAsyncThunk(
   "authSlice/loginAction",
@@ -43,6 +52,9 @@ export const authLinkAction = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const { data, status, message } = await AuthLink(payload);
+      if (data?.access_token) {
+        saveData("token", data);
+      }
       return { data, status, message };
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -55,10 +67,10 @@ export const authLinkAction = createAsyncThunk(
 
 export const logoutAction = createAsyncThunk(
   "authSlice/logoutAction",
-  async ({ rejectWithValue }) => {
+  async (payload, { rejectWithValue }) => {
     try {
-      const { data, status, message } = await Logout();
-      return { data, status, message };
+      const { status, message } = await Logout(payload);
+      return { status, message };
     } catch (err) {
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
@@ -72,6 +84,53 @@ export const logoutAllAction = createAsyncThunk(
   async ({ rejectWithValue }) => {
     try {
       const { data, status, message } = await LogoutAll();
+      return { data, status, message };
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message);
+      }
+      return rejectWithValue(err.message);
+    }
+  }
+);
+export const getUserAction = createAsyncThunk(
+  "user/getUserAction",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data, status, message } = await GetUser(payload);
+      return { data, status, message };
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message);
+      }
+      return rejectWithValue(err.message);
+    }
+  }
+);
+export const createUserAction = createAsyncThunk(
+  "user/createUserAction",
+  async (payload, { rejectWithValue }) => {
+    try {
+      console.log("payload", payload);
+
+      const { data, status, message } = await CreateUser(
+        JSON.stringify(payload)
+      );
+
+      return { data, status, message };
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message);
+      }
+      return rejectWithValue(err.message);
+    }
+  }
+);
+export const updateUserAction = createAsyncThunk(
+  "user/updateUserAction",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data, status, message } = await UpdateUser(payload);
       return { data, status, message };
     } catch (err) {
       if (err instanceof AxiosError) {
