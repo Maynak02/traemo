@@ -85,7 +85,7 @@ const Header = styled.div`
       }
       .cart-dropdown {
         position: absolute;
-        width: 455px;
+        width: 435px;
         border: 1px solid rgba(208, 213, 221, 0.6);
         box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.15);
         z-index: 9;
@@ -188,7 +188,7 @@ const Header = styled.div`
                       font-size: 18px;
                     }
                     input {
-                      width: 75px;
+                      width: 53px;
                       height: 34px;
                       border-radius: 8px;
                       border: 1px solid rgba(208, 213, 221, 0.6);
@@ -237,7 +237,7 @@ const Header = styled.div`
   }
   .cart-dropdown {
     position: absolute;
-    width: 455px;
+    width: 435px;
     border: 1px solid rgba(208, 213, 221, 0.6);
     box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.15);
     z-index: 9;
@@ -329,17 +329,17 @@ const Header = styled.div`
                 }
               }
               .cart-price {
-                width: 50%;
+                width: 30%;
                 display: flex;
                 align-items: flex-end;
                 flex-direction: column;
                 h3 {
                   color: #f9c93c;
                   font-weight: 600;
-                  font-size: 16px;
+                  font-size: 18px;
                 }
                 input {
-                  width: 75px;
+                  width: 53px;
                   height: 34px;
                   border-radius: 8px;
                   border: 1px solid rgba(208, 213, 221, 0.6);

@@ -2,7 +2,7 @@
 import { decodeData, encodeData } from "./jwt";
 
 export const saveData = (key, value) => {
-  console.log("value", key);
+    console.log("value",key);
 
   if (window) {
     try {
@@ -10,7 +10,8 @@ export const saveData = (key, value) => {
 
       window.localStorage.setItem(key, encryptedData);
     } catch (error) {
-      console.log("error", error);
+      console.log("error",error);
+
     }
   }
 };

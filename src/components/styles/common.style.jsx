@@ -50,22 +50,16 @@ const CommonPagesBlock = styled.div`
               padding: 12px 16px;
               font-size: 12px;
               line-height: 14px;
-              color: #98a2b3;
+              /* color: #98a2b3; */
               border: none;
               font-weight: 400;
               border-radius: 24px;
               transition: 0.5s;
-              margin-right: 20px;
-              &:hover {
+              /* &:hover {
                 background-color: rgba(249, 201, 60, 0.15);
                 color: #ffc93c;
                 font-weight: 400;
-              }
-              &.active {
-                background-color: rgba(249, 201, 60, 0.15);
-                color: #ffc93c;
-                font-weight: 400;
-              }
+              } */
             }
           }
           .tab-panel-custom {
@@ -429,8 +423,7 @@ const CommonPagesBlock = styled.div`
         padding: 24px 20px;
         border: 1px solid rgba(208, 213, 221, 0.6);
         border-radius: 12px;
-        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-          0px 1px 2px rgba(16, 24, 40, 0.06);
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
         margin-bottom: 32px;
         .top-shoping-title-inner {
           display: flex;
@@ -455,8 +448,7 @@ const CommonPagesBlock = styled.div`
               font-size: 14px;
               font-weight: 700;
               color: #000;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 30px;
               padding: 16px;
@@ -474,8 +466,7 @@ const CommonPagesBlock = styled.div`
         padding: 32px 20px;
         border: 1px solid rgba(208, 213, 221, 0.6);
         border-radius: 12px;
-        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-          0px 1px 2px rgba(16, 24, 40, 0.06);
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
         margin-bottom: 32px;
         &.diff-shop-page {
           border: 2px dashed rgba(208, 213, 221, 0.6);
@@ -537,7 +528,7 @@ const CommonPagesBlock = styled.div`
           .title-inner-cart-block {
             position: relative;
             &::before {
-              content: "";
+              content: '';
               position: absolute;
               left: 0px;
               width: 56px;
@@ -635,8 +626,7 @@ const CommonPagesBlock = styled.div`
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               width: 100%;
               span {
                 padding-left: 8px;
@@ -719,8 +709,7 @@ const CommonPagesBlock = styled.div`
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               img {
                 width: 20px;
               }
@@ -763,8 +752,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 12px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               span {
@@ -780,8 +768,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 12px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               width: 100%;
@@ -802,8 +789,7 @@ const CommonPagesBlock = styled.div`
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-              0px 1px 2px rgba(16, 24, 40, 0.06);
+            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
             width: 100%;
             span {
               padding-left: 8px;
@@ -932,7 +918,7 @@ const CommonPagesBlock = styled.div`
                 color: #000;
               }
             }
-            input[type="radio"]:checked + label {
+            input[type='radio']:checked + label {
               .radio-buttons-content {
                 background-color: rgba(249, 201, 60, 0.2);
                 border-color: #ffc93c;
@@ -1061,71 +1047,6 @@ const CommonPagesBlock = styled.div`
         }
       }
     }
-  }
-  /* DatePicker Input */
-  .react-datepicker__input-container input {
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 25px;
-    border: 1px solid #ccc;
-  }
-
-  /* Calendar background */
-  .react-datepicker {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Day styling */
-  .react-datepicker__day {
-    color: black;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 25px;
-    width: 50px;
-    height: 50px;
-  }
-
-  /* Selected day */
-  .react-datepicker__day--selected {
-    background-color: #ffc93c;
-    color: white;
-  }
-
-  /* Hover effect on day */
-  .react-datepicker__day:hover {
-    background-color: #ffc93c;
-    color: white;
-  }
-
-  /* Navigation buttons */
-  .react-datepicker__navigation {
-    top: 0px;
-    /* background-color: #ffc93c; */
-    border-radius: 20px;
-    width: 40px;
-    height: 40px;
-  }
-
-  /* Month header */
-  .react-datepicker__current-month {
-    font-size: 18px;
-    font-weight: bold;
-    color: black;
-  }
-  .react-datepicker__day-names {
-    display: flex;
-    justify-content: space-around;
-    background-color: #f0f0f0;
-    padding: 10px;
-  }
-
-  .react-datepicker__day-name {
-    font-weight: bold;
-    color: black;
-    font-size: 16px;
   }
 `;
 

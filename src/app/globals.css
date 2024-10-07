@@ -601,6 +601,3 @@ input[type="radio"]:checked + label {
   top: 18px;
   left: 18px;
 }
-.modal-content {
-  @apply bg-theme p-6 rounded-none shadow-lg w-[40%] sm:w-[50%] lg:w-[30%] xl:w-[30%] 2xl:w-[20%];
-}

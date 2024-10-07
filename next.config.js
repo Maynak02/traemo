@@ -20,8 +20,11 @@ module.exports = {
   },
 
   env: {
-    NEXT_APP_HOST_API: process.env.NEXT_APP_HOST_API,
-    GOOGLE_PLACE_API_KEY: process.env.GOOGLE_PLACE_API_KEY,
+    NEXT_PUBLIC_PROJECT_ENV: process.env.NEXT_PUBLIC_PROJECT_ENV,
+    // SECRET_KEY: process.env.SECRET_KEY,
+    // GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    // GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    // NEXT_APP_GOOGLE_LOCATION: process.env.NEXT_APP_GOOGLE_LOCATION,
   },
   // serverRuntimeConfig: {
   //   NEXT_PUBLIC_PROJECT_ENV: process.env.NEXT_PUBLIC_PROJECT_ENV,

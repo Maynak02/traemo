@@ -149,9 +149,9 @@ const Wallet = () => {
                       <path
                         d="M8.00004 4.66807L1.33337 11.3347V14.668H4.66671L11.3334 8.00138M8.00004 4.66807L10.3905 2.27752L10.392 2.2761C10.721 1.94703 10.8859 1.78221 11.0759 1.72048C11.2433 1.66609 11.4235 1.66609 11.591 1.72048C11.7808 1.78217 11.9455 1.9468 12.274 2.2754L13.7239 3.72523C14.0539 4.05525 14.219 4.22033 14.2808 4.41061C14.3352 4.57798 14.3351 4.75826 14.2808 4.92563C14.219 5.11577 14.0542 5.2806 13.7246 5.61014L13.7239 5.61085L11.3334 8.00138M8.00004 4.66807L11.3334 8.00138"
                         stroke="#475467"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
                       />
                     </svg>
                     <span>Charge now</span>
@@ -170,48 +170,48 @@ const Wallet = () => {
                     <path
                       d="M1.66663 8.33594H17"
                       stroke="#292D32"
-                      strokeWidth="2"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      stroke-width="2"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                     <path
                       opacity="0.4"
                       d="M7 19H9.66667"
                       stroke="#292D32"
-                      strokeWidth="2"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      stroke-width="2"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                     <path
                       opacity="0.4"
                       d="M13 19H18.3333"
                       stroke="#292D32"
-                      strokeWidth="2"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      stroke-width="2"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                     <path
                       d="M28.3333 13.0413V18.4813C28.3333 23.1613 27.1466 24.3346 22.4133 24.3346H7.58663C2.85329 24.3346 1.66663 23.1613 1.66663 18.4813V7.5213C1.66663 2.8413 2.85329 1.66797 7.58663 1.66797H17"
                       stroke="#292D32"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
                     />
                     <g opacity="0.4">
                       <path
                         d="M21 5.33594H28.3333"
                         stroke="#292D32"
-                        strokeWidth="2"
-                        strokeLinecap="round"
+                        stroke-width="2"
+                        stroke-linecap="round"
                       />
                       <path
                         d="M24.6666 9.0013V1.66797"
                         stroke="#292D32"
-                        strokeWidth="2"
-                        strokeLinecap="round"
+                        stroke-width="2"
+                        stroke-linecap="round"
                       />
                     </g>
                   </svg>
@@ -231,48 +231,48 @@ const Wallet = () => {
                   <path
                     d="M1.66663 8.33594H17"
                     stroke="#292D32"
-                    strokeWidth="2"
-                    strokeMiterlimit="10"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke-width="2"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
                     opacity="0.4"
                     d="M7 19H9.66667"
                     stroke="#292D32"
-                    strokeWidth="2"
-                    strokeMiterlimit="10"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke-width="2"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
                     opacity="0.4"
                     d="M13 19H18.3333"
                     stroke="#292D32"
-                    strokeWidth="2"
-                    strokeMiterlimit="10"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke-width="2"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
                     d="M28.3333 13.0413V18.4813C28.3333 23.1613 27.1466 24.3346 22.4133 24.3346H7.58663C2.85329 24.3346 1.66663 23.1613 1.66663 18.4813V7.5213C1.66663 2.8413 2.85329 1.66797 7.58663 1.66797H17"
                     stroke="#292D32"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <g opacity="0.4">
                     <path
                       d="M21 5.33594H28.3333"
                       stroke="#292D32"
-                      strokeWidth="2"
-                      strokeLinecap="round"
+                      stroke-width="2"
+                      stroke-linecap="round"
                     />
                     <path
                       d="M24.6666 9.0013V1.66797"
                       stroke="#292D32"
-                      strokeWidth="2"
-                      strokeLinecap="round"
+                      stroke-width="2"
+                      stroke-linecap="round"
                     />
                   </g>
                 </svg>
@@ -316,9 +316,9 @@ const Wallet = () => {
                       <path
                         d="M8.00004 4.66807L1.33337 11.3347V14.668H4.66671L11.3334 8.00138M8.00004 4.66807L10.3905 2.27752L10.392 2.2761C10.721 1.94703 10.8859 1.78221 11.0759 1.72048C11.2433 1.66609 11.4235 1.66609 11.591 1.72048C11.7808 1.78217 11.9455 1.9468 12.274 2.2754L13.7239 3.72523C14.0539 4.05525 14.219 4.22033 14.2808 4.41061C14.3352 4.57798 14.3351 4.75826 14.2808 4.92563C14.219 5.11577 14.0542 5.2806 13.7246 5.61014L13.7239 5.61085L11.3334 8.00138M8.00004 4.66807L11.3334 8.00138"
                         stroke="#475467"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
                       />
                     </svg>
                     <span>Charge now</span>
@@ -345,16 +345,16 @@ const Wallet = () => {
                   <path
                     d="M10 4.5V20.5L4 15"
                     stroke="#1C274C"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                   <path
                     d="M14 20.5V4.5L20 10"
                     stroke="#1C274C"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   />
                 </svg>
                 <h2>Transactions</h2>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import DashboardHeader from "@/components/DashboardHeader";
 import CommonPagesBlock from "@/components/styles/common.style";
 import "slick-carousel/slick/slick.css";
@@ -14,18 +14,6 @@ import {
 } from "react-accessible-accordion";
 import "react-accessible-accordion/dist/fancy-example.css";
 import { useTranslation } from "react-i18next";
-import { useParams } from "next/navigation";
-import { GetProductByIdServiceAction } from "@/redux/Product/action";
-import { toast } from "react-toastify";
-import { TOAST_ALERTS } from "@/constants/keywords";
-import { useDispatch, useSelector } from "react-redux";
-import axiosInstance from "@/utils/axios";
-import { HOST_API } from "@/config";
-import { API_ROUTER } from "@/services/apiRouter";
-import { getData } from "@/utils/storage";
-import { object } from "yup";
-import { setUpdatedCartList } from "@/redux/Cart/CartReducer";
-
 const Productdetail = () => {
   var settings = {
     dots: true,
@@ -46,45 +34,52 @@ const Productdetail = () => {
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
 
-  const { productid } = useParams();
-  console.log("Product ID", productid);
-
   const { t } = useTranslation("common");
 
-  const cartData = useSelector((state) => state.cartData.cartList);
-  console.log("A----cartData----", cartData);
-
-  const [productdetail, setProductDetail] = useState();
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    getProductDetails();
-  }, []);
-
-  const getProductDetails = async () => {
-    try {
-      const { payload: res } = await dispatch(
-        GetProductByIdServiceAction(productid)
-      );
-      const { data, status, message } = res;
-      console.log("getProductsServiceAction", data);
-
-      if (status) {
-        setProductDetail(data);
-      } else {
-        toast.error(message);
-      }
-    } catch (error) {
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
-  };
-
-  const checkIfIdExists = () => {
-    return cartData.some((product) => product.id === productdetail?.id);
-  };
-
+  const [productList, setProductList] = useState([
+    {
+      productid: 1,
+      productName: "Käsebrötchen",
+      imageUrl: "/cheeseball.png",
+      finalPrice: "30.30",
+      quantity: "70 gm",
+    },
+    {
+      productid: 2,
+      productName: "Rosinenbrötchen",
+      imageUrl: "/raisingball.png",
+      finalPrice: "30.30",
+      quantity: "70 gm",
+    },
+    {
+      productid: 3,
+      productName: "Vollkornbrötchen",
+      imageUrl: "/wholemealroll.png",
+      finalPrice: "30.30",
+      quantity: "70 gm",
+    },
+    {
+      productid: 4,
+      productName: "Laugenbrötchen",
+      imageUrl: "/pretzelroll.png",
+      finalPrice: "30.30",
+      quantity: "70 gm",
+    },
+    {
+      productid: 5,
+      productName: "Laugenbrötchen",
+      imageUrl: "/wholemealroll.png",
+      finalPrice: "30.30",
+      quantity: "70 gm",
+    },
+    {
+      productid: 6,
+      productName: "Laugenbrötchen",
+      imageUrl: "/pretzelroll.png",
+      finalPrice: "30.30",
+      quantity: "70 gm",
+    },
+  ]);
   return (
     <div>
       <DashboardHeader />
@@ -98,13 +93,13 @@ const Productdetail = () => {
                 ref={(slider2) => setNav2(slider2)}
                 className="setting-thumbnail"
               >
-                {productdetail?.images.map((item, index) => {
+                {productList.map((item, index) => {
                   return (
                     <div
                       key={index}
                       className="product-details-main-left-thumbnail"
                     >
-                      <img src={item} />
+                      <img alt="" src={item.imageUrl} />
                     </div>
                   );
                 })}
@@ -116,11 +111,11 @@ const Productdetail = () => {
                 asNavFor={nav2}
                 ref={(slider1) => setNav1(slider1)}
               >
-                {productdetail?.images.map((item, index) => {
+                {productList.map((item, index) => {
                   return (
                     <div key={index} className="product-details-main-left-img">
                       <div className="product-details-main-left-img-inner">
-                        <img src={item} />
+                        <img alt="" src={item.imageUrl} />
                       </div>
                     </div>
                   );
@@ -133,40 +128,24 @@ const Productdetail = () => {
               <div className="product-details-main-right-inner-top">
                 <div className="product-top-block">
                   <div className="product-top-block-left">
-                    <h2>
-                      {productdetail?.title}&nbsp;-&nbsp;
-                      {productdetail?.quantity}&nbsp;
-                      {productdetail?.unit}
-                    </h2>
-                    <p>
-                      {productdetail?.quantity}&nbsp;
-                      {productdetail?.unit}
-                    </p>
+                    <h2>Cheese sandwiches -500g </h2>
+                    <p>12 Pieces</p>
                   </div>
                   <div className="block-content">
                     <div className="block-content-left">
-                      <h3>{productdetail?.price_net}</h3>
+                      <h3>30.30</h3>
                       <h3>CHF</h3>
                     </div>
                     <div className="block-content-right">
                       <h5>
-                        <del>{productdetail?.price_gross}</del>
+                        <del>30.30</del>
                       </h5>
                       <h6>CHF</h6>
                     </div>
                   </div>
                 </div>
                 <div className="add-to-cart">
-                  <button
-                    className="common-btn btn"
-                    onClick={() => {
-                      if (cartData.length > 0) {
-                        dispatch(setUpdatedCartList(productdetail));
-                      } else {
-                        dispatch(setUpdatedCartList(productdetail));
-                      }
-                    }}
-                  >
+                  <button className="common-btn btn">
                     <svg
                       width="24"
                       height="24"
@@ -177,9 +156,9 @@ const Productdetail = () => {
                       <path
                         d="M2 12H22M12 2V22"
                         stroke="white"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
                       />
                     </svg>
                     <span>{t("AddToCart")}</span>
@@ -197,35 +176,62 @@ const Productdetail = () => {
                         <div className="accordian-block-data">
                           <div className="accordian-block-data-inner">
                             <h3>{t("Description")}</h3>
-                            <p>{productdetail?.description}</p>
+                            <p>
+                              Our cheese rolls are a delicious combination of
+                              airy, fresh dough and hearty cheese. They are
+                              ideal as a snack between meals, for breakfast or
+                              as a side dish to soups and salads.
+                            </p>
                           </div>
                           <div className="accordian-block-data-inner diff-pad">
                             <h3>{t("Ingredients")}</h3>
-                            {productdetail?.ingredients != undefined &&
-                              Object.entries(productdetail?.ingredients).map(
-                                ([key, value]) => {
-                                  return (
-                                    <p key={key}>
-                                      <span>{key}</span>
-                                      <span>{value}</span>
-                                    </p>
-                                  );
-                                }
-                              )}
+                            <p>
+                              <span>Ingredients</span>
+                              <span>30% </span>
+                            </p>
+                            <p>
+                              <span>Type of fruit</span>
+                              <span>14% </span>
+                            </p>
+                            <p>
+                              <span>another type of fruit</span>
+                              <span>14% </span>
+                            </p>
+                            <p>
+                              <span>hazelnuts</span>
+                              <span>14% </span>
+                            </p>
                           </div>
                           <div className="accordian-block-data-inner diff-pad">
                             <h3>{t("Nutrition")}</h3>
-                            {productdetail?.nutrition != undefined &&
-                              Object.entries(productdetail?.nutrition).map(
-                                ([key, value]) => {
-                                  return (
-                                    <p key={key}>
-                                      <span>{key}</span>
-                                      <span>{value}</span>
-                                    </p>
-                                  );
-                                }
-                              )}
+                            <p>
+                              <span>Energy ( kg/kcal )</span>
+                              <span>30% </span>
+                            </p>
+                            <p>
+                              <span>Fett</span>
+                              <span>14% </span>
+                            </p>
+                            <p>
+                              <span>of which total fatty acids</span>
+                              <span>14% </span>
+                            </p>
+                            <p>
+                              <span>Carbohydrates</span>
+                              <span>14% </span>
+                            </p>
+                            <p>
+                              <span>of which sugar</span>
+                              <span>14% </span>
+                            </p>
+                            <p>
+                              <span>protein</span>
+                              <span>14% </span>
+                            </p>
+                            <p>
+                              <span>Salz</span>
+                              <span>14% </span>
+                            </p>
                           </div>
                         </div>
                       </AccordionItemPanel>

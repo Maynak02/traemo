@@ -11,20 +11,17 @@ import { TOAST_ALERTS } from "@/constants/keywords";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
-import { createUserAction } from "@/redux/Auth/action";
+import { authTokenAction } from "@/redux/Auth/action";
 import { FormProvider, RHFTextInput } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { useTranslation } from "react-i18next";
 
 const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [emailAddress, setEmailAddress] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
-
-  const { t } = useTranslation("common");
 
   const defaultValues = useMemo(
     () => ({
@@ -39,14 +36,23 @@ const RegisterPage = () => {
     return yup
       .object()
       .shape({
-        firstname: yup.string().required(t("enterFname")).trim(t("enterFname")),
-        lastname: yup.string().required(t("enterLname")).trim(t("enterLname")),
+        firstname: yup
+          .string()
+          .required("Please enter First name")
+          .trim("Please enter First name"),
+        lastname: yup
+          .string()
+          .required("Please enter Last name")
+          .trim("Please enter valid email address"),
         email: yup
           .string()
-          .required(t("enterEmail"))
-          .email(t("validEmail"))
-          .trim(t("validEmail"))
-          .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, t("validEmail")),
+          .required("Please enter email address")
+          .email("Please enter valid email address")
+          .trim("Please enter valid email address")
+          .matches(
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            "Please enter a valid email address"
+          ),
       })
       .required()
       .strict(true);
@@ -65,32 +71,30 @@ const RegisterPage = () => {
   } = methods;
 
   const onSubmitForm = async (formData) => {
-    const { email, firstname, lastname } = formData;
-
-    setIsLoading(true);
-    const objParam = {
-      email: email,
-      firstname: firstname,
-      lastname: lastname,
-      locale: "de_CH",
-    };
-    console.log("payload==>", objParam);
-
-    try {
-      const { payload: res } = await dispatch(createUserAction(objParam));
-      const { data, status, message } = res;
-      if (status) {
-        setIsLoading(false);
-        router.push("/login");
-      } else {
-        setIsLoading(false);
-        toast.error(message);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
+    console.log("formData", formData);
+    router.push("/customer/home");
+    // const { email, firstname, lastname } = formData;
+    // setIsLoading(true);
+    // const objParam = {
+    //   email: email,
+    //   firstname: firstname,
+    //   lastname: lastname,
+    // };
+    // console.log("payload==>", objParam);
+    // try {
+    //   const { payload: res } = await dispatch(authTokenAction(objParam));
+    //   const { data, status, message } = res;
+    //   if (status) {
+    //     setIsLoading(false);
+    //   } else {
+    //     setIsLoading(false);
+    //     toast.error(message);
+    //   }
+    // } catch (error) {
+    //   setIsLoading(false);
+    //   toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+    //   console.log("Error", error);
+    // }
   };
 
   return (
@@ -100,7 +104,7 @@ const RegisterPage = () => {
       ) : (
         <div className="login-main">
           <div className="login-main-inner">
-            <h1>{t("Register")}</h1>
+            <h1>Register</h1>
             <FormProvider
               methods={methods}
               onSubmit={handleSubmit(onSubmitForm)}
@@ -109,49 +113,21 @@ const RegisterPage = () => {
               <div className="form-login">
                 <div className="two-from-group">
                   <div className="form-group">
-                    <RHFTextInput name="firstname" placeholder={t("fname")} />
+                    <RHFTextInput name="firstname" placeholder="First Name" />
                   </div>
                   <div className="form-group">
-                    <RHFTextInput name="lastname" placeholder={t("lname")} />
+                    <RHFTextInput name="lastname" placeholder="Last Name" />
                   </div>
                 </div>
                 <div className="form-group">
-                  <RHFTextInput name="email" placeholder={t("EmailAddress")} />
+                  <RHFTextInput name="email" placeholder="Email address" />
                 </div>
-                {/* <div className="two-from-group">
-                  <div className="form-group">
-                    <RHFTextInput name="gender" placeholder={t("gender")} />
-                  </div>
-                  <div className="form-group">
-                    <RHFTextInput name="country" placeholder={t("country")} />
-                  </div>
-                </div>
-                <div className="two-from-group">
-                  <div className="form-group">
-                    <RHFTextInput name="state" placeholder={t("state")} />
-                  </div>
-                  <div className="form-group">
-                    <RHFTextInput name="city" placeholder={t("city")} />
-                  </div>
-                </div>
-                <div className="two-from-group">
-                  <div className="form-group">
-                    <RHFTextInput name="house" placeholder={t("house")} />
-                  </div>
-                  <div className="form-group">
-                    <RHFTextInput
-                      name="postal_code"
-                      placeholder={t("postalcode")}
-                    />
-                  </div>
-                </div> */}
                 <div className="btn-form">
-                  <button className="btn button-common">{t("Register")}</button>
+                  <button className="btn button-common">Register</button>
                 </div>
                 <div className="last-link">
                   <p>
-                    {t("AlreadyAccount")}{" "}
-                    <Link href="/login">{t("SignIn")}</Link>
+                    Already have an account? <Link href="/login">Sign In</Link>
                   </p>
                 </div>
               </div>
