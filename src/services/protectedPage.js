@@ -7,8 +7,8 @@ import { useSelector } from "react-redux";
 const ProtectedPageService = () => {
   const router = useRouter();
   const path = usePathname();
-  const user = getData("user");
-  const userAuth = user?.token;
+  const user = getData("token");
+  const userAuth = user?.access_token;
   const selector = useSelector((state) => state.registerApi);
 
   const afterLoginProtectedPages = [

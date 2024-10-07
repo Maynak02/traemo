@@ -1,4 +1,9 @@
-import { axiosDelete, axiosGet, axiosPost } from "@/services/axiosHelper";
+import {
+  axiosDelete,
+  axiosGet,
+  axiosPatch,
+  axiosPost,
+} from "@/services/axiosHelper";
 import { API_ROUTER } from "@/services/apiRouter";
 
 export const LoginUser = (data) => {
@@ -19,4 +24,16 @@ export const Logout = () => {
 
 export const LogoutAll = () => {
   return axiosDelete(API_ROUTER.AUTH_LOGOUT_ALL);
+};
+
+export const GetUser = (data) => {
+  return axiosGet(API_ROUTER.GET_ME, data);
+};
+
+export const CreateUser = (data) => {
+  return axiosPost(API_ROUTER.CREATE_USER, data);
+};
+
+export const UpdateUser = (data) => {
+  return axiosPatch(API_ROUTER.UPDATE_USER, data);
 };

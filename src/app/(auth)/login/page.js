@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import LoginMain from "@/components/styles/auth.style";
 import "../../globals.css";
-import { loginAction } from "@/redux/Auth/action";
+import { authLinkAction, loginAction } from "@/redux/Auth/action";
 import { toast } from "react-toastify";
 import { TOAST_ALERTS } from "@/constants/keywords";
 import { useDispatch } from "react-redux";
@@ -13,12 +13,15 @@ import { FormProvider, RHFTextInput } from "@/components/hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [emailAddress, setEmailAddress] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
+
+  const { t } = useTranslation("common");
 
   const defaultValues = useMemo(
     () => ({
@@ -33,9 +36,9 @@ const LoginPage = () => {
       .shape({
         email: yup
           .string()
-          .required("Please enter email address")
-          .email("Please enter valid email address")
-          .trim("Please enter valid email address"),
+          .required(t("enterEmail"))
+          .email(t("validEmail"))
+          .trim(t("validEmail")),
       })
       .required()
       .strict(true);
@@ -53,27 +56,49 @@ const LoginPage = () => {
     setValue,
   } = methods;
   const onSubmitForm = async (formData) => {
-    router.push("/customer/home");
-    // const { email } = formData;
+    const { email } = formData;
+    setIsLoading(true);
+    const objParam = {
+      email: email,
+    };
+    try {
+      const { payload: res } = await dispatch(loginAction(objParam));
+      const { data, status, message } = res;
+      if (status) {
+        console.log("ress--->key", data.message);
+        authMagicLink(data.message);
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
+
+  const authMagicLink = async (key) => {
     // setIsLoading(true);
-    // const objParam = {
-    //   email: email,
-    // };
-    // try {
-    //   const { payload: res } = await dispatch(loginAction(objParam));
-    //   const { data, status, message } = res;
-    //   if (status) {
-    //     setIsLoading(false);
-    //     router.push("/register");
-    //   } else {
-    //     setIsLoading(false);
-    //     toast.error(message);
-    //   }
-    // } catch (error) {
-    //   setIsLoading(false);
-    //   toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-    //   console.log("Error", error);
-    // }
+    const objParam = {
+      link: key,
+    };
+    try {
+      const { payload: res } = await dispatch(authLinkAction(objParam));
+      const { data, status, message } = res;
+      if (status) {
+        setIsLoading(false);
+        console.log("ress--->", data);
+        router.push("/customer/home");
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
   };
 
   return (
@@ -83,7 +108,7 @@ const LoginPage = () => {
       ) : (
         <div className="login-main">
           <div className="login-main-inner">
-            <h1>Login</h1>
+            <h1>{t("Login")}</h1>
             <FormProvider
               methods={methods}
               onSubmit={handleSubmit(onSubmitForm)}
@@ -91,14 +116,15 @@ const LoginPage = () => {
             >
               <div className="form-login">
                 <div className="form-group">
-                  <RHFTextInput name="email" placeholder="Email address" />
+                  <RHFTextInput name="email" placeholder={t("EmailAddress")} />
                 </div>
                 <div className="btn-form">
-                  <button className="btn button-common">Register</button>
+                  <button className="btn button-common">{t("Register")}</button>
                 </div>
                 <div className="last-link">
                   <p>
-                    Don’t have an account? <Link href="/register">Sign Up</Link>
+                    {t("DontHaveAccount")}{" "}
+                    <Link href="/register">{t("SignUp")}</Link>
                   </p>
                 </div>
               </div>

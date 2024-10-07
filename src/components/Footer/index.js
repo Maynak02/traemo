@@ -4,7 +4,7 @@ import "./global.css";
 import { usePathname } from "next/navigation";
 const Footer = () => {
   const path = usePathname();
-  const [showFooter, setShowFooter] = useState(false);
+  const [showFooter, setShowFooter] = useState(true);
 
   const visitorPages = [
     "/",

@@ -100,9 +100,9 @@ const StatusIcon = ({ status }) => {
           <path
             d="M10 3L4.5 8.5L2 6"
             stroke="#12B76A"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       );
@@ -118,9 +118,9 @@ const StatusIcon = ({ status }) => {
           <path
             d="M4.5 7L2 4.5M2 4.5L4.5 2M2 4.5H8C8.53043 4.5 9.03914 4.71071 9.41421 5.08579C9.78929 5.46086 10 5.96957 10 6.5V10"
             stroke="#667085"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       );
@@ -136,9 +136,9 @@ const StatusIcon = ({ status }) => {
           <path
             d="M9 3L3 9M3 3L9 9"
             stroke="#F04438"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       );
@@ -153,7 +153,7 @@ export default function OrderHistory() {
   return (
     <div>
       <DashboardHeader />
-      <div className="container mx-auto border mt-6 rounded-lg">
+      <div className="mx-auto border mt-6 rounded-lg">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
