@@ -125,5 +125,32 @@
   "Wednesday": "Wednesday",
   "Thursday": "Thursday",
   "Friday": "Friday",
-  "Saturday": "Saturday"
+  "Saturday": "Saturday",
+
+  "Name": "Name",
+  "DeliveryInstructions": "Delivery Instructions",
+  "Street": "Street",
+
+  "SelectedAddress": "Selected address",
+  "SaveAddress": "Save address",
+
+  "StandingOrders": "Standing orders",
+  "Pause": "Pause",
+  "Finish": "Finish",
+  "AddMore": "Add more",
+  "TopupIfBalanceLow": "With automatic top-up, you don't have to worry about anything. Our system automatically tops up enough credit to deliver your next orders. The amount of a top-up is determined by your next orders. Unused credit can be paid out at any time.",
+  "CreditAvailable": "Credit available",
+  "PayOut": "Pay out",
+  "ChargeNow": "Charge now",
+  "AutomaticCharging": "Automatic charging",
+  "StartSetup": "Start setup",
+  "Transactions": "Transactions",
+  "OwnAmount": "Own amount",
+  "SelectPaymentMethod": "Select payment method",
+  "FewerTopup": "Fewer top-ups",
+  "LessCredit": "Less credit",
+  "SystemReduceTopups": "Our system reduces the number of top-ups by selecting higher amounts per top-up.",
+  "SystemAvailableTopups": "Our system reduces the available balance by selecting lower amounts per top-up.",
+  "Done": "Done",
+  "InputValidation": "Input should be greater than or equal to 2000"
 }

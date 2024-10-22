@@ -1,8 +1,6 @@
 "use client";
-import CardList from "@/components/CardList";
-import CategoryTabs from "@/components/CategoryTabs";
+
 import DashboardHeader from "@/components/DashboardHeader";
-import SubCategoryTabs from "@/components/SubCategoryTabs";
 import React, { useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -16,25 +14,53 @@ import { setCartTotal, setUpdatedCartList } from "@/redux/Cart/CartReducer";
 import {
   getProductsServiceAction,
   listCategorieServiceAction,
+  readCategoryServiceAction,
 } from "@/redux/Product/action";
 import { toast } from "react-toastify";
 import { TOAST_ALERTS } from "@/constants/keywords";
+import Loader from "@/components/Loader";
+import LoginMain from "@/components/styles/auth.style";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const CustomerDashboard = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [subCategoryList, setSubCategoryList] = useState([]);
   const [subCategoryType, setSubCategoryType] = useState("");
+  const [subCategoryId, setSubCategoryId] = useState("");
   const [productList, setProductList] = useState([]);
+  const [filteredProductList, setFilteredProductList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [offset, setOffset] = useState(0);
+  const limit = 100;
+
+  const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
 
   const { t } = useTranslation("common");
 
   const storeDispatch = useDispatch();
-
+  let hasAddress = false;
   useEffect(() => {
+    if (fetchAddressData && Object.keys(fetchAddressData).length > 0) {
+      hasAddress = true;
+    } else {
+      hasAddress = false;
+    }
+    getProductListApi(0);
     GetListCategories();
   }, []);
 
+  useEffect(() => {
+    if (productList.length > 0) {
+      const filtered = productList.filter(
+        (product) => subCategoryId === product.subcategory_id
+      );
+      setFilteredProductList(filtered);
+    }
+  }, [subCategoryId]);
+
   const GetListCategories = async () => {
+    setIsLoading(true);
     try {
       const { payload: res } = await storeDispatch(
         listCategorieServiceAction()
@@ -44,91 +70,162 @@ const CustomerDashboard = () => {
         setCategoryList(data);
         setSubCategoryList(data[0]?.subcategories);
         setSubCategoryType(data[0]?.subcategories[0]?.name);
-        getProductListApi();
+        setSubCategoryId(data[0]?.subcategories[0]?.id);
+
+        setIsLoading(false);
       } else {
+        setIsLoading(false);
         toast.error(message);
       }
     } catch (error) {
+      setIsLoading(false);
       toast.error(TOAST_ALERTS.ERROR_MESSAGE);
       console.log("Error", error);
     }
   };
-  const getProductListApi = async () => {
+  const GetCategoryById = async (id) => {
+    setIsLoading(true);
+    try {
+      const { payload: res } = await storeDispatch(
+        readCategoryServiceAction(id)
+      );
+      const { data, status, message } = res;
+      if (status) {
+        setIsLoading(false);
+        setSubCategoryList(data.subcategories);
+        setSubCategoryType(data?.subcategories[0]?.name);
+        setSubCategoryId(data?.subcategories[0]?.id);
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
+  const getProductListApi = async (newOffset) => {
+    // setIsLoading(true);
     const objParam = {
-      lat: 46.37468949473951,
-      long: 9.334408964095253,
+      // lat: fetchAddressData.latitude,
+      // long: fetchAddressData.longitude,
+      offset: newOffset,
+      limit: limit,
+      ...(hasAddress === true && {
+        filters: `lat$eq${fetchAddressData.latitude} and lon$eq${fetchAddressData.longitude}`,
+      }),
     };
+    console.log("objParam", objParam);
+
     try {
       const { payload: res } = await storeDispatch(
         getProductsServiceAction(objParam)
       );
       const { data, status, message } = res;
-      console.log("getProductsServiceAction", data);
 
       if (status) {
         const list = data.map((product) => ({
           ...product,
-          displayPrice: product.price_net, // or product.price_gross, or any custom calculation
+          displayPrice: product.price_discounted,
         }));
-        setProductList(list);
+        console.log("list======>>>", list);
+
+        // setProductList(list);
+        setProductList((prevList) => [...prevList, ...list]);
+        const filtered = list.filter(
+          (product) => list[0]?.subcategory_id === product.subcategory_id
+        );
+        // setFilteredProductList(filtered);
+
+        setFilteredProductList((prevList) => [...prevList, ...filtered]);
+        // setIsLoading(false);
       } else {
+        // setIsLoading(false);
         toast.error(message);
       }
     } catch (error) {
+      // setIsLoading(false);
       toast.error(TOAST_ALERTS.ERROR_MESSAGE);
       console.log("Error", error);
     }
+  };
+
+  const fetchMoreData = async () => {
+    console.log("Fetch More Data");
+    const newOffset = offset + limit;
+    setOffset(newOffset);
+    getProductListApi(newOffset);
   };
 
   const renderProductList = () => {
     return (
       <div className="tab-panel-block">
         <div className="tab-panel-block-inner">
-          <div className="tab-panel-custom">
-            <div className="tab-panel-data-block">
-              {productList.map((item, index) => {
-                return (
-                  <div key={index} className="tab-panel-data-block-main">
-                    <Link href={`/customer/productdetail/${item.id}`}>
-                      <div className="tab-panel-data-block-inner">
-                        <div className="block-img-tab">
-                          <img alt="" src={"/cheeseball.png"} />
-                        </div>
-                        <div className="block-content">
-                          <div className="block-content-left">
-                            <h3>{item.price_net}</h3>
-                            <h3>CHF</h3>
+          <InfiniteScroll
+            dataLength={filteredProductList.length}
+            next={fetchMoreData}
+            style={{ display: "flex", flexDirection: "column" }}
+            hasMore={true}
+            scrollableTarget="scrollableDiv"
+          >
+            <div className="tab-panel-custom">
+              <div className="tab-panel-data-block">
+                {filteredProductList.map((item, index) => {
+                  return (
+                    <div key={index} className="tab-panel-data-block-main">
+                      <Link href={`/customer/productdetail/${item.id}`}>
+                        <div className="tab-panel-data-block-inner">
+                          <div className="block-img-tab">
+                            <img src={item?.images[0]} />
                           </div>
-                          <div className="block-content-right">
-                            <h5>
-                              <del>{item.price_gross}</del>
-                            </h5>
-                            <h6>CHF</h6>
+                          <div className="block-content">
+                            <div className="block-content-left">
+                              <h3>
+                                {(item.price_discounted / 100).toLocaleString(
+                                  "de-DE"
+                                )}
+                              </h3>
+                              <h3>CHF</h3>
+                            </div>
+                            <div className="block-content-right">
+                              <h5>
+                                <del>
+                                  {(item.price_gross / 100).toLocaleString(
+                                    "de-DE"
+                                  )}
+                                </del>
+                              </h5>
+                              <h6>CHF</h6>
+                            </div>
+                          </div>
+                          <div className="bottom-content">
+                            <h3>
+                              {item?.title.charAt(0).toUpperCase() +
+                                item?.title.slice(1)}
+                            </h3>
+                            <p>
+                              {item.quantity}&nbsp;{item.unit}
+                            </p>
                           </div>
                         </div>
-                        <div className="bottom-content">
-                          <h3>{item.title}</h3>
-                          <p>
-                            {item.quantity}&nbsp;{item.unit}
-                          </p>
-                        </div>
+                      </Link>
+                      <div className="plus-icon">
+                        <button
+                          className="add-icon-button"
+                          onClick={() => {
+                            storeDispatch(setUpdatedCartList(item));
+                          }}
+                        >
+                          <img src="/addcard.svg" />
+                        </button>
                       </div>
-                    </Link>
-                    <div className="plus-icon">
-                      <button
-                        className="add-icon-button"
-                        onClick={() => {
-                          storeDispatch(setUpdatedCartList(item));
-                        }}
-                      >
-                        <img alt="" src="/addcard.svg" />
-                      </button>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          </InfiniteScroll>
         </div>
       </div>
     );
@@ -149,8 +246,8 @@ const CustomerDashboard = () => {
                         <button
                           className="tabs-block-link"
                           onClick={() => {
-                            setSubCategoryList(item?.subcategories);
-                            setSubCategoryType(item?.subcategories[0]?.name);
+                            console.log("categoryList", item.id);
+                            GetCategoryById(item.id);
                           }}
                         >
                           <svg
@@ -192,6 +289,9 @@ const CustomerDashboard = () => {
                           }`}
                           onClick={() => {
                             setSubCategoryType(item.name);
+                            console.log("Sub Category ID", item.id);
+
+                            setSubCategoryId(item.id);
                           }}
                         >
                           {item.name}
@@ -201,8 +301,9 @@ const CustomerDashboard = () => {
                   </div>
                 </div>
               </div>
-
-              {renderProductList()}
+              <div className="bg-white h-screen w-[100%]">
+                {isLoading ? <Loader /> : renderProductList()}
+              </div>
             </div>
           </div>
         </CommonPagesBlock>

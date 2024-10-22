@@ -32,7 +32,7 @@ module.exports = {
         purpleF3: "#F3E8FF",
         pitchFF: "#FFE2E5",
         yellowFF: "#FFF4DE",
-        greenDC: "#DCFCE7",
+        greenDC: "#008000",
         subTextColor: "#9d9d9d",
         subTextColor: "#9d9d9d",
         serviceTextColor: "#98A2B3",

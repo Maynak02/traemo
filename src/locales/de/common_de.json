@@ -125,5 +125,32 @@
   "Wednesday": "Mittwochs",
   "Thursday": "Donnerstags",
   "Friday": "Freitags",
-  "Saturday": "Samstags"
+  "Saturday": "Samstags",
+
+  "Name": "Name",
+  "DeliveryInstructions": "Lieferanweisungen",
+  "Street": "Straße",
+
+  "SelectedAddress": "Ausgewählte Adresse",
+  "SaveAddress": "Adresse speichern",
+
+  "StandingOrders": "Daueraufträge",
+  "Pause": "Pause",
+  "Finish": "Fertig",
+  "AddMore": "Mehr hinzufügen",
+  "TopupIfBalanceLow": "Mit der automatischen Aufladung müssen Sie sich um nichts mehr kümmern. Unser System lädt automatisch genug Guthaben auf um Ihre nächsten Bestellungen liefern zu können. Die Höhe einer Aufladung bestimmt sich anhand ihrer nächsten Bestellungen. Nicht benutztes Guthaben kann jederzeit ausgezahlt werden.",
+  "CreditAvailable": "Kredit verfügbar",
+  "PayOut": "Auszahlen",
+  "ChargeNow": "Jetzt laden",
+  "AutomaticCharging": "Automatisches Laden",
+  "StartSetup": "Setup starten",
+  "Transactions": "Transaktionen",
+  "OwnAmount": "Eigener Betrag",
+  "SelectPaymentMethod": "Bezahlmethode auswählen",
+  "FewerTopup": "Weniger Aufladungen",
+  "LessCredit": "Weniger Guthaben",
+  "SystemReduceTopups": "Unser System reduziert die Anzahl an Aufladungen indem es höhrere Beträge pro Aufladung auswählt.",
+  "SystemAvailableTopups": "Unser System reduziert das vorhandene Guthaben indem es niedrigere Beträge pro Aufladung auswählt.",
+  "Done": "Erledigt",
+  "InputValidation": "Die Eingabe muss größer oder gleich 2000 sein."
 }

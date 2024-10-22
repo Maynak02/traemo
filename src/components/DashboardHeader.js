@@ -1,6 +1,5 @@
 import { useCallback, useRef, useEffect } from "react";
 import React, { useMemo, useState } from "react";
-import Toggle from "./toggle";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import Modal from "react-modal";
@@ -24,19 +23,26 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import { GOOGLE_PLACE_API_KEY } from "@/config";
-import { createOrUpdateAddress } from "@/redux/Dashboard/action";
+import { createOrUpdateAddress, listAddress } from "@/redux/Dashboard/action";
 import Loader from "./Loader";
 import { ThreeDots } from "react-loader-spinner";
+import { FormProvider, RHFTextInput } from "@/components/hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import LoginMain from "./styles/auth.style";
+import CommonPagesBlock from "./styles/common.style";
 
 const libraries = ["places"];
 
 const DashboardHeader = ({ className = "" }) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsInnerOpen, setIsInnerOpen] = React.useState(false);
   const router = useRouter();
   const storeDispatch = useDispatch();
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyCwgNAfoR_pFw6Bj-egPPtiaK-Myf0l4cU",
+    googleMapsApiKey: process.env.GOOGLE_PLACE_API_KEY,
     libraries,
   });
 
@@ -79,14 +85,74 @@ const DashboardHeader = ({ className = "" }) => {
   const [latitude, setLatitude] = useState(46.37468949473951);
   const [longitude, setLongitude] = useState(9.334408964095253);
 
+  const [addressList, setAddressList] = useState([]);
+
+  // const [hasAddress, sethasAddress] = useState(false);
+
   useEffect(() => {
     const token = getData("token");
     console.log("user", token);
     if (token) {
       setUserAuth(token?.access_token);
       getUserData();
+      listAddressData();
+
+      // fetchAddress
     }
   }, []);
+
+  let hasAddress = false;
+
+  const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
+
+  if (fetchAddressData && Object.keys(fetchAddressData).length > 0) {
+    hasAddress = true;
+  } else {
+    hasAddress = false;
+  }
+
+  const listAddressData = async () => {
+    setIsLoading(true);
+    const objParam = {
+      offset: 0,
+      limit: 10,
+      sort_direction: "desc",
+    };
+    try {
+      const { payload: res } = await storeDispatch(listAddress());
+      const { data, status, message } = res;
+      if (status) {
+        setAddressList(data);
+        if (data.length > 0) {
+          const resData = data[0];
+          const tempData = {
+            id: resData?.id,
+            name: resData?.name,
+            delivery_instructions: "",
+            house: resData?.house,
+            city: resData?.city,
+            street: resData?.street,
+            country: resData?.country,
+            postcode: resData?.postcode,
+            latitude: resData?.location.coordinates[1],
+            longitude: resData?.location.coordinates[0],
+          };
+          setFormData(tempData);
+          storeDispatch(setAddressForList(tempData));
+        } else {
+          setIsOpen(true);
+        }
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
 
   const getUserData = async () => {
     try {
@@ -105,16 +171,19 @@ const DashboardHeader = ({ className = "" }) => {
     }
   };
 
-  const CreateAddress = async (locationData) => {
-    console.log("locationData", locationData);
+  const CreateAddress = async () => {
+    console.log("locationData", formData);
 
     setIsLoading(true);
     const objParam = {
-      country: locationData.country,
-      postcode: locationData.postal_code,
-      city: locationData.city,
-      street: locationData.street,
-      house: locationData.house,
+      name: formData.name,
+      country: formData.country,
+      postcode: formData.postcode,
+      city: formData.city,
+      street: formData.street,
+      house: formData.house,
+      delivery_instructions: formData.delivery_instructions,
+      delivery_picture: "",
     };
     try {
       const { payload: res } = await storeDispatch(
@@ -126,6 +195,8 @@ const DashboardHeader = ({ className = "" }) => {
 
         storeDispatch(setAddressForList(locationData));
         setIsLoading(false);
+        setIsInnerOpen(false);
+        closeModal();
       } else {
         setIsLoading(false);
         toast.error(message);
@@ -140,7 +211,7 @@ const DashboardHeader = ({ className = "" }) => {
   // Fetch Data
   const cartData = useSelector((state) => state.cartData.cartList);
 
-  console.log("cartData", cartData);
+  // console.log("cartData", cartData);
 
   const totalPrice = cartData.reduce((acc, current) => {
     return acc + parseFloat(current.displayPrice);
@@ -210,7 +281,7 @@ const DashboardHeader = ({ className = "" }) => {
           ? {
               ...item,
               givenQuantity: newQuantity,
-              displayPrice: item.price_net * newQuantity,
+              displayPrice: item.price_discounted * newQuantity,
             }
           : item
       );
@@ -240,7 +311,20 @@ const DashboardHeader = ({ className = "" }) => {
       console.log("locationDetails-->", locationDetails);
 
       if (userAuth !== null) {
-        CreateAddress(locationDetails);
+        setFormData({
+          id: "",
+          name: "",
+          delivery_instructions: "",
+          house: locationDetails.house ? locationDetails.house : "",
+          city: locationDetails.city,
+          street: locationDetails.street,
+          country: locationDetails.country,
+          postcode: locationDetails.postal_code,
+          latitude: locationDetails.latitude,
+          longitude: locationDetails.longitude,
+        });
+        setIsInnerOpen(true);
+        // CreateAddress(locationDetails);
       } else {
         storeDispatch(setAddressForList(locationDetails));
         closeModal();
@@ -250,12 +334,34 @@ const DashboardHeader = ({ className = "" }) => {
     }
   };
 
+  const [formData, setFormData] = useState({
+    id: "",
+    name: "",
+    delivery_instructions: "",
+    house: "",
+    city: "",
+    street: "",
+    country: "",
+    postcode: "",
+    latitude: null,
+    longitude: null,
+  });
+
+  const handleChange = (e) => {
+    console.log("e-->", e.target);
+
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const extractDetails = (place) => {
     const location = {
       country: "",
       street: "",
       city: "",
-      state: "",
+      // state: "",
       house: "",
       postal_code: "",
 
@@ -265,10 +371,6 @@ const DashboardHeader = ({ className = "" }) => {
 
     setLatitude(place.geometry.location.lat());
     setLongitude(place.geometry.location.lng());
-
-    // "name": "Test",
-    // "delivery_instructions": "string",
-    // "delivery_picture": "string"
 
     place.address_components.forEach((component) => {
       const types = component.types;
@@ -280,10 +382,10 @@ const DashboardHeader = ({ className = "" }) => {
       if (types.includes("locality")) {
         location.city = component.long_name;
       }
-
-      if (types.includes("administrative_area_level_1")) {
-        location.state = component.short_name;
-      }
+      // For Get State Name
+      // if (types.includes("administrative_area_level_1")) {
+      //   location.state = component.short_name;
+      // }
 
       if (types.includes("postal_code")) {
         location.postal_code = component.long_name;
@@ -316,10 +418,28 @@ const DashboardHeader = ({ className = "" }) => {
               </Link>
             </div>
             <div className="map-header">
-              <div className="map-header-link" onClick={openModal}>
-                <img alt="" src="/location.svg" />
-                <p>{t("EnterDeliveryAddress")}</p>
-                <img className="arrow-icon" alt="" src="/chevrondown@2x.png" />
+              <div
+                className={`map-header-link  ${
+                  hasAddress ? "bg-white" : "bg-theme"
+                }`}
+                onClick={openModal}
+              >
+                <img
+                  alt=""
+                  src={hasAddress ? "/location_black.svg" : "/location.svg"}
+                />
+                <p className={`${hasAddress ? "text-gray-700" : "text-white"}`}>
+                  {hasAddress
+                    ? fetchAddressData.street + fetchAddressData.city
+                    : t("EnterDeliveryAddress")}
+                </p>
+                <img
+                  className="arrow-icon"
+                  alt=""
+                  src={
+                    hasAddress ? "/chevrondown-1@2x.png" : "/chevrondown@2x.png"
+                  }
+                />
               </div>
             </div>
             <div className="toggle-header">
@@ -346,7 +466,8 @@ const DashboardHeader = ({ className = "" }) => {
             {cartData.length > 0 && (
               <div className="header-right-cart" onClick={openCartDropdown}>
                 <img alt="" src="/frame.svg" />
-                <p>€{totalPrice}</p>
+                <p>€{(totalPrice / 100).toLocaleString("de-DE")}</p>
+
                 <img
                   className="arrow-icon"
                   alt=""
@@ -387,17 +508,25 @@ const DashboardHeader = ({ className = "" }) => {
                           className="cart-dropdown-block-inner-block"
                         >
                           <div className="img-block">
-                            <img alt="" src={item.imageUrl} />
+                            <img alt="" src={item.images[0]} />
                           </div>
                           <div className="cart-block">
                             <div className="cart-block-left">
-                              <h5>{item.title}</h5>
+                              <h5>
+                                {item?.title.charAt(0).toUpperCase() +
+                                  item?.title.slice(1)}
+                              </h5>
                               <p>
                                 {item.quantity}&nbsp;{item.unit}
                               </p>
                             </div>
                             <div className="cart-price">
-                              <h3>CHF {item.displayPrice}</h3>
+                              <h3>
+                                CHF&nbsp;
+                                {(item.displayPrice / 100).toLocaleString(
+                                  "de-DE"
+                                )}
+                              </h3>
                               <div className="flex items-center">
                                 <button
                                   onClick={() =>
@@ -440,7 +569,7 @@ const DashboardHeader = ({ className = "" }) => {
                   >
                     <img alt="" src="/cart-img.svg" />
                     <p>{t("ProceedToCheckout")}</p>
-                    <h4>€{totalPrice}</h4>
+                    <h4>€{(totalPrice / 100).toLocaleString("de-DE")}</h4>
                   </button>
                 </div>
               </div>
@@ -463,61 +592,243 @@ const DashboardHeader = ({ className = "" }) => {
                 <img src="/Brotkorb_Traemo.png" alt="Traemo" />
               </div>
             </div>
-            <div className="two-block-modal-inner-right">
-              <div className="btn-close-block">
-                <button onClick={closeModal}>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 6L6 18M6 6L18 18"
-                      stroke="#101828"
-                      // strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-              {isLoading ? (
-                <div className="flex justify-center items-center h-[100%]">
-                  <ThreeDots
-                    visible={true}
-                    height="80"
-                    width="80"
-                    color="#FAB300"
-                    radius="18"
-                    ariaLabel="three-dots-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                  />
+
+            {!modalIsInnerOpen ? (
+              <div className="two-block-modal-inner-right">
+                <div className="btn-close-block">
+                  <button onClick={closeModal}>
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 6L6 18M6 6L18 18"
+                        stroke="#101828"
+                        // strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
                 </div>
-              ) : (
-                <div className="search-address">
-                  <h3>{t("SelectAddress")}</h3>
-                  <form>
-                    <div className="form-group">
-                      <button>
-                        <img src="/search-icon.svg" alt="Traemo" />
+                {isLoading ? (
+                  <div className="flex justify-center items-center h-[100%]">
+                    <ThreeDots
+                      visible={true}
+                      height="80"
+                      width="80"
+                      color="#FAB300"
+                      radius="18"
+                      ariaLabel="three-dots-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </div>
+                ) : (
+                  <div className="search-address">
+                    <h3>{t("SelectAddress")}</h3>
+                    <form>
+                      <div className="form-group">
+                        <button>
+                          <img src="/search-icon.svg" alt="Traemo" />
+                        </button>
+                        <Autocomplete
+                          onLoad={onLoad}
+                          onPlaceChanged={onPlaceChanged}
+                        >
+                          <input
+                            type="text"
+                            placeholder={t("EnterAddress")}
+                          ></input>
+                        </Autocomplete>
+                        {userAuth && (
+                          <div className="mt-4">
+                            {addressList.map((item, index) => {
+                              return (
+                                <ul
+                                  className="space-y-2 mb-4"
+                                  key={index}
+                                  onClick={() => {
+                                    setFormData({
+                                      id: item.id,
+                                      name: item.name,
+                                      delivery_instructions: "",
+                                      house: item.house,
+                                      city: item.city,
+                                      street: item.street,
+                                      country: item.country,
+                                      postcode: item.postcode,
+                                      latitude: item.location.coordinates[1],
+                                      longitude: item.location.coordinates[0],
+                                    });
+                                    setIsInnerOpen(true);
+                                    // storeDispatch(setAddressForList(item));
+                                  }}
+                                >
+                                  <li className="border-b border-gray-300 pb-2">
+                                    <strong>{item.name}</strong>
+                                    <p className="text-sm text-gray-500">
+                                      {[
+                                        item.house,
+                                        item.street,
+                                        item.city,
+                                        item.postcode,
+                                        item.country,
+                                      ]
+                                        .filter(Boolean)
+                                        .join(", ")}
+                                    </p>
+                                  </li>
+                                </ul>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="two-block-modal-inner-right">
+                <CommonPagesBlock>
+                  <div className="custom-container">
+                    {/* Close Button */}
+                    <div className="btn-close-block-left">
+                      <button onClick={() => setIsInnerOpen(false)}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="2"
+                          stroke="#667085"
+                          class="w-6 h-6"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
                       </button>
-                      <Autocomplete
-                        onLoad={onLoad}
-                        onPlaceChanged={onPlaceChanged}
-                      >
+                      <h2 className="custom-title">{t("SelectedAddress")}</h2>
+                    </div>
+                    {/* city country postalcode */}
+
+                    <div className="form-login">
+                      <div className="form-group">
+                        <label className="custom-label">{t("Name")}</label>
                         <input
                           type="text"
-                          placeholder={t("EnterAddress")}
-                        ></input>
-                      </Autocomplete>
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          className="custom-input"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="custom-label">
+                          {t("DeliveryInstructions")}
+                        </label>
+                        <input
+                          type="text"
+                          name="delivery_instructions"
+                          value={formData.delivery_instructions}
+                          onChange={handleChange}
+                          className="custom-input"
+                        />
+                      </div>
+                      <div className="two-from-group">
+                        <div className="form-group">
+                          <label className="custom-label">{t("house")}</label>
+                          <input
+                            type="text"
+                            name="house"
+                            value={formData.house}
+                            onChange={handleChange}
+                            className="custom-input"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="custom-label">{t("Street")}</label>
+                          <input
+                            type="text"
+                            name="street"
+                            value={formData.street}
+                            onChange={handleChange}
+                            disabled
+                            className="custom-input"
+                          />
+                        </div>
+                      </div>
+                      <div className="two-from-group">
+                        <div className="form-group">
+                          <label className="custom-label">{t("city")}</label>
+                          <input
+                            type="text"
+                            name="street"
+                            value={formData.city}
+                            onChange={handleChange}
+                            disabled
+                            className="custom-input"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="custom-label">
+                            {t("postalcode")}
+                          </label>
+                          <input
+                            type="text"
+                            name="country"
+                            value={formData.postcode}
+                            onChange={handleChange}
+                            disabled
+                            className="custom-input"
+                          />
+                        </div>
+                      </div>
+                      <div className="from-group">
+                        <div className="form-group">
+                          <label className="custom-label">{t("country")}</label>
+                          <input
+                            type="text"
+                            name="country"
+                            value={formData.country}
+                            onChange={handleChange}
+                            disabled
+                            className="custom-input"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </form>
-                </div>
-              )}
-            </div>
+                    <div className="btn-form">
+                      <button
+                        className="btn button-common"
+                        onClick={() => {
+                          console.log("formData", formData);
+                          if (formData.name == "") {
+                            toast.error("Please Enter your Name");
+                          } else if (formData.house == "") {
+                            toast.error("Please House");
+                          } else if (formData.id == "") {
+                            CreateAddress();
+                          } else {
+                            setIsInnerOpen(false);
+                            storeDispatch(setAddressForList(formData));
+                            closeModal();
+                          }
+                        }}
+                      >
+                        {t("SaveAddress")}
+                      </button>
+                    </div>
+                  </div>
+                </CommonPagesBlock>
+              </div>
+            )}
           </div>
         </Modal>
       </div>
@@ -537,14 +848,14 @@ const DashboardHeader = ({ className = "" }) => {
                 <span className="text-green-500 font-semibold">€0</span>
               </li>
             </Link>
-            <Link href="/customer/profile">
+            {/* <Link href="/customer/profile">
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_profile.svg" />
                 <span className="font-inter text-black text-[16px]">
                   {t("Profile")}
                 </span>
               </li>
-            </Link>
+            </Link> */}
             <Link href="/customer/standingorders">
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_premium.svg" />
@@ -562,14 +873,14 @@ const DashboardHeader = ({ className = "" }) => {
               </li>
             </Link>
 
-            <Link href="/customer/history">
+            {/* <Link href="/customer/history">
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_history.svg" />
                 <span className="font-inter text-black text-[16px]">
                   {t("OrderHistory")}
                 </span>
               </li>
-            </Link>
+            </Link> */}
             <Link href="/customer/support">
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_support.svg" />

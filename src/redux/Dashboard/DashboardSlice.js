@@ -4,6 +4,7 @@ import {
   readAddressFromID,
   createOrUpdateAddress,
   listAddress,
+  getAddressID,
 } from "./action";
 
 const initialState = {
@@ -41,6 +42,7 @@ const DashboardSlice = createSlice({
         state.isLoading = false;
         state.error = payload;
       })
+      // GET_ADDRESS_BY_ID
       //   readAddressFromID
       .addCase(readAddressFromID.pending, (state, { payload }) => {
         state.isLoading = true;
@@ -77,6 +79,18 @@ const DashboardSlice = createSlice({
         state.error = null;
       })
       .addCase(listAddress.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      })
+      .addCase(getAddressID.pending, (state, { payload }) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getAddressID.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(getAddressID.rejected, (state, { payload }) => {
         state.isLoading = false;
         state.error = payload;
       });

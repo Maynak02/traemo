@@ -32,8 +32,6 @@ export const axiosPost = async (
     response.status = false;
     response.message = e?.response?.data?.detail;
     response.data = e?.response?.data || e;
-
-    console.log("🚀 ~ response:", response);
   }
   return response;
 };
@@ -46,7 +44,6 @@ export const axiosGet = async (
   let header = {};
 
   const token = getData("token");
-  console.log("get__token", token);
   const userAuth = token?.access_token;
 
   if (userAuth) {
@@ -190,7 +187,6 @@ export const axiosGetProductID = async (
   let header = {};
 
   const token = getData("token");
-  console.log("get__token", token);
   const userAuth = token?.access_token;
 
   if (userAuth) {
@@ -206,10 +202,9 @@ export const axiosGetProductID = async (
     };
   }
   try {
-    const result = await axiosInstance.get(url + productid + "/product", {
+    const result = await axiosInstance.get(url + productid, {
       headers: header,
     });
-    console.log("result-->======", result);
 
     response.data = result.data;
     response.status = [200, 201].includes(result.status);

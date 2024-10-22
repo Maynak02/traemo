@@ -5,12 +5,12 @@ export const GetFunds = (data) => {
   return axiosGet(API_ROUTER.GET_FUNDS, data);
 };
 
-export const CreatePayment = (data, isFormData, formDataHeader) => {
-  return axiosPost(API_ROUTER.CREATE_PAYMENT, data, formDataHeader, isFormData);
+export const CreatePayment = (data) => {
+  return axiosPost(API_ROUTER.CREATE_PAYMENT, data);
 };
 
-export const ChargeUser = (data, isFormData, formDataHeader) => {
-  return axiosPost(API_ROUTER.CHARGE_USER, data, formDataHeader, isFormData);
+export const ChargeUser = (data) => {
+  return axiosPost(API_ROUTER.CHARGE_USER, data);
 };
 
 export const ListPaymentMethod = (data) => {

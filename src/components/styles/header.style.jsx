@@ -21,15 +21,16 @@ const Header = styled.div`
         display: flex;
         align-items: center;
         padding: 11px 16px;
+        border: 1px solid rgba(208, 213, 221, 0.6);
         box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
           0px 1px 2px rgba(16, 24, 40, 0.06);
-        background-color: #f9c93c;
+        /* background-color: #f9c93c; */
         border-radius: 12px;
         cursor: pointer;
         p {
           font-weight: 400;
           font-size: 14px;
-          color: #fff;
+          /* color: #fff; */
           padding: 0px 5px 0px 8px;
           overflow: hidden !important;
           text-overflow: ellipsis;

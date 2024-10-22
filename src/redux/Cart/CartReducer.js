@@ -35,13 +35,13 @@ const CartReducer = createSlice({
         state.cartList[existingItemIndex].givenQuantity += 1;
         state.cartList[existingItemIndex].displayPrice =
           state.cartList[existingItemIndex].givenQuantity *
-          state.cartList[existingItemIndex].price_net;
+          state.cartList[existingItemIndex].price_discounted;
       } else {
         // If the item doesn't exist, add it to the cart with quantity 1
         state.cartList.push({
           ...itemToUpdate,
           givenQuantity: 1,
-          displayPrice: itemToUpdate?.price_net,
+          displayPrice: itemToUpdate?.price_discounted,
         });
       }
 
@@ -60,7 +60,7 @@ const CartReducer = createSlice({
         state.cartList[existingItemIndex].givenQuantity -= 1;
         state.cartList[existingItemIndex].displayPrice =
           state.cartList[existingItemIndex].givenQuantity *
-          state.cartList[existingItemIndex].price_net;
+          state.cartList[existingItemIndex].price_discounted;
 
         if (state.cartList[existingItemIndex].givenQuantity == 0) {
           state.cartList.splice(existingItemIndex, 1);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DashboardHeader from "@/components/DashboardHeader";
 import CommonPagesBlock from "@/components/styles/common.style";
 import "slick-carousel/slick/slick.css";
@@ -11,18 +11,267 @@ import { useTranslation } from "react-i18next";
 import RadioButton from "@/components/RadioButton";
 import { registerLocale } from "react-datepicker";
 import de from "date-fns/locale/de";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { TOAST_ALERTS } from "@/constants/keywords";
+import { listAddress } from "@/redux/Dashboard/action";
+import { useRouter } from "next/navigation";
+import {
+  setDecreaseQuantity,
+  setUpdatedCartList,
+} from "@/redux/Cart/CartReducer";
+import { CreateUpdateOrderPlanAction } from "@/redux/Order/action";
+import { now } from "moment";
 registerLocale("de", de);
 
 const ShoppingCart = () => {
-  const [startDate, setStartDate] = useState(new Date());
   const { t } = useTranslation("common");
-  const [selectedValue, setSelectedValue] = useState("");
-
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [startDate, setStartDate] = useState(new Date());
   const [locale, setLocale] = useState("de");
 
-  const handleRadioChange = (e) => {
-    console.log("Selected value:", e.target.value);
-    setSelectedValue(e.target.value);
+  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [addressList, setAddressList] = useState([]);
+  const [instruction, setInstruction] = useState("");
+
+  const cartData = useSelector((state) => state.cartData.cartList);
+  const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
+  let hasAddress = false;
+  if (fetchAddressData && Object.keys(fetchAddressData).length > 0) {
+    hasAddress = true;
+  } else {
+    hasAddress = false;
+  }
+
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const [selectedDays, setSelectedDays] = useState([]);
+  const toggleDay = (day) => {
+    if (selectedDays.includes(day)) {
+      setSelectedDays(
+        selectedDays.filter((selectedDay) => selectedDay !== day)
+      );
+    } else {
+      setSelectedDays([...selectedDays, day]);
+    }
+  };
+
+  useEffect(() => {
+    listAddressData();
+  }, []);
+
+  const handleInstructionChange = (e) => {
+    setInstruction(e.target.value);
+  };
+
+  const onTapCreateOrder = () => {
+    console.log("cartData", cartData);
+
+    // const addRecurring = (weekday, products) => {
+    let recurringArray = [];
+    let recurringTemp = [];
+    let onceDataArray = [];
+    cartData.map((product) => {
+      let recurring = {};
+      let once = {};
+      recurring.quantity = product.givenQuantity;
+      recurring.product_id = product.id;
+      recurring.address_id = fetchAddressData?.id;
+      recurringTemp.push(recurring);
+
+      once.quantity = product.givenQuantity;
+      once.product_id = product.id;
+      once.address_id = fetchAddressData?.id;
+      once.ts_start = startDate;
+      onceDataArray.push(once);
+    });
+
+    console.log("productData", recurringTemp);
+
+    selectedDays.map((days) => {
+      let abc = {};
+      abc.weekday = days.charAt(0).toLowerCase() + days.slice(1);
+      abc.products = recurringTemp;
+      recurringArray.push(abc);
+    });
+    console.log("recurring", recurringTemp);
+
+    const orderData = {
+      recurring: selectedDays.length > 0 ? recurringArray : [],
+      once: selectedDays.length > 0 ? [] : onceDataArray,
+      ts_start: startDate,
+      // pause_plan: true,
+      ts_paused_start: new Date(),
+      // ts_paused_end: "",
+    };
+    CreateOrUpdateOrderApi(orderData);
+    console.log("Tap Order Now", orderData);
+    // router.push("/customer/wallet");
+  };
+
+  const CreateOrUpdateOrderApi = async (orderData) => {
+    setIsLoading(true);
+    try {
+      const { payload: res } = await dispatch(
+        CreateUpdateOrderPlanAction(orderData)
+      );
+      const { data, status, message } = res;
+      if (status) {
+        console.log("Create Order=-", data);
+        toast.success("Order Create Successfully");
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
+
+  // const handleRadioChange = (e) => {
+  //   console.log("target value:", e.target.value);
+  //   setSelectedValue(e.target.value);
+  // };
+
+  const listAddressData = async () => {
+    setIsLoading(true);
+    const objParam = {
+      offset: 0,
+      limit: 10,
+      sort_direction: "desc",
+    };
+    try {
+      const { payload: res } = await dispatch(listAddress());
+      const { data, status, message } = res;
+      if (status) {
+        setAddressList(
+          data.map((address) => {
+            const fullAddress = `${address?.house}, ${address?.street}, ${address?.city}, ${address?.country}`;
+            return { ...address, full_address: fullAddress };
+          })
+        );
+
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
+
+  const renderCart = () => {
+    return (
+      <div>
+        {cartData.map((data, idx) => {
+          const calculatedPrice = (
+            (data.price_discounted * data.givenQuantity) /
+            100
+          ).toLocaleString("de-DE");
+          const totalSum = (
+            (data.price_discounted * data.givenQuantity + 499) /
+            100
+          ).toLocaleString("de-DE");
+          return (
+            <div key={idx} className="common-cart-pages-block-left-inner">
+              <div className="top-block-cart">
+                <div className="top-block-cart-left">
+                  <h2>{data?.hub?.name}</h2>
+                  <p>
+                    {t("DeliveryBy")}
+                    <span>9:00 am</span>
+                  </p>
+                </div>
+                <div className="top-block-cart-right">
+                  <img alt="" src={data?.hub?.logo} />
+                </div>
+              </div>
+              <div className="cart-dropdown-block-inner">
+                <div className="cart-dropdown-block-inner-block">
+                  <div className="img-block">
+                    <img alt="" src={data?.images[0]} />
+                  </div>
+                  <div className="cart-block">
+                    <div className="cart-block-left">
+                      <h5>
+                        {data?.title.charAt(0).toUpperCase() +
+                          data?.title.slice(1)}
+                      </h5>
+                      <p>
+                        {data?.quantity}&nbsp;
+                        {data?.unit}
+                      </p>
+                    </div>
+                    <div className="cart-price">
+                      <h3>
+                        €
+                        {(data?.price_discounted / 100).toLocaleString("de-DE")}
+                      </h3>
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => dispatch(setDecreaseQuantity(data))}
+                          className="bg-gray-100 -mr-2 px-2 py-1 text-lg rounded-l-lg z-20"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="text"
+                          placeholder="1"
+                          value={data?.givenQuantity}
+                          disabled
+                        />
+                        <button
+                          onClick={() => dispatch(setUpdatedCartList(data))}
+                          className="bg-gray-100 -ml-2 px-2 py-1 text-lg rounded-r-lg"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="cart-toal-block">
+                <p>
+                  <span>{t("Sum")}</span>
+                  <span>€{calculatedPrice}</span>
+                </p>
+                <p>
+                  <span>{t("Deliveryfees")}</span>
+                  <span>€4,99</span>
+                </p>
+                <div className="cart-total-bold">
+                  <p>
+                    <span>{t("Intotal")}</span>
+                    <span>€{totalSum}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const selectedAddressOption = (selectedValue) => {
+    setSelectedAddress(selectedValue?.value);
   };
 
   return (
@@ -30,139 +279,16 @@ const ShoppingCart = () => {
       <DashboardHeader />
       <CommonPagesBlock>
         <div className="common-cart-pages-block">
-          <div className="common-cart-pages-block-left">
-            <div className="common-cart-pages-block-left-inner">
-              <div className="top-block-cart">
-                <div className="top-block-cart-left">
-                  <h2>Müller Bakery</h2>
-                  <p>
-                    {t("DeliveryBy")}
-                    <span>9:00 am</span>
-                  </p>
-                </div>
-                <div className="top-block-cart-right">
-                  <img alt="" src="/cart-img.png" />
-                </div>
-              </div>
-              <div className="cart-dropdown-block-inner">
-                <div className="cart-dropdown-block-inner-block">
-                  <div className="img-block">
-                    <img alt="" src="/cheeseball.png" />
-                  </div>
-                  <div className="cart-block">
-                    <div className="cart-block-left">
-                      <h5>Cheese Sandwiches</h5>
-                      <p>12 Piece ( 500g )</p>
-                    </div>
-                    <div className="cart-price">
-                      <h3>€3,00</h3>
-                      <input type="text" placeholder="1"></input>
-                    </div>
-                  </div>
-                </div>
-                <div className="cart-dropdown-block-inner-block">
-                  <div className="img-block">
-                    <img alt="" src="/cheeseball.png" />
-                  </div>
-                  <div className="cart-block">
-                    <div className="cart-block-left">
-                      <h5>Cheese Sandwiches</h5>
-                      <p>12 Piece ( 500g )</p>
-                    </div>
-                    <div className="cart-price">
-                      <h3>€3,00</h3>
-                      <input type="text" placeholder="1"></input>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="cart-toal-block">
-                <p>
-                  <span>{t("Sum")}</span>
-                  <span>€8,00</span>
-                </p>
-                <p>
-                  <span>{t("Deliveryfees")}</span>
-                  <span>€4,99</span>
-                </p>
-                <div className="cart-total-bold">
-                  <p>
-                    <span>{t("Intotal")}</span>
-                    <span>€8,00</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="common-cart-pages-block-left-inner">
-              <div className="top-block-cart">
-                <div className="top-block-cart-left">
-                  <h2>Müller Bakery</h2>
-                  <p>
-                    {t("DeliveryBy")}
-                    <span>9:00 am</span>
-                  </p>
-                </div>
-                <div className="top-block-cart-right">
-                  <img alt="" src="/cart-img.png" />
-                </div>
-              </div>
-              <div className="cart-dropdown-block-inner">
-                <div className="cart-dropdown-block-inner-block">
-                  <div className="img-block">
-                    <img alt="" src="/cheeseball.png" />
-                  </div>
-                  <div className="cart-block">
-                    <div className="cart-block-left">
-                      <h5>Cheese Sandwiches</h5>
-                      <p>12 Piece ( 500g )</p>
-                    </div>
-                    <div className="cart-price">
-                      <h3>€3,00</h3>
-                      <input type="text" placeholder="1"></input>
-                    </div>
-                  </div>
-                </div>
-                <div className="cart-dropdown-block-inner-block">
-                  <div className="img-block">
-                    <img alt="" src="/cheeseball.png" />
-                  </div>
-                  <div className="cart-block">
-                    <div className="cart-block-left">
-                      <h5>Cheese Sandwiches</h5>
-                      <p>12 Piece ( 500g )</p>
-                    </div>
-                    <div className="cart-price">
-                      <h3>€3,00</h3>
-                      <input type="text" placeholder="1"></input>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="cart-toal-block">
-                <p>
-                  <span>{t("Sum")}</span>
-                  <span>€8,00</span>
-                </p>
-                <p>
-                  <span>{t("Deliveryfees")}</span>
-                  <span>€4,99</span>
-                </p>
-                <div className="cart-total-bold">
-                  <p>
-                    <span>{t("Intotal")}</span>
-                    <span>€8,00</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div className="common-cart-pages-block-left">{renderCart()}</div>
           <div className="common-cart-pages-block-right">
             <div className="common-cart-pages-block-right-inner">
               <div className="common-cart-search">
                 <input
                   type="text"
                   placeholder="Brandenburger Tor Pariser Platz 10117 Berlin Germany"
-                ></input>
+                  // disabled
+                  value={`${fetchAddressData?.house}, ${fetchAddressData?.street}, ${fetchAddressData?.city}, ${fetchAddressData?.country}`}
+                />
                 <svg
                   width="16"
                   height="20"
@@ -245,7 +371,21 @@ const ShoppingCart = () => {
                   </svg>
                   <p>{t("SelectDeliveryDate")}</p>
                 </div>
-                <div className="radio-buttons-main">
+                <div className="radio-buttons-main-data">
+                  {days.map((day) => (
+                    <div className="radio-buttons" key={day}>
+                      <button
+                        className={`button ${
+                          selectedDays.includes(day) ? "active" : ""
+                        }`}
+                        onClick={() => toggleDay(day)}
+                      >
+                        {day}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {/* <div className="radio-buttons-main">
                   <RadioButton
                     id="1"
                     name="day"
@@ -302,9 +442,14 @@ const ShoppingCart = () => {
                     onChange={handleRadioChange}
                     selectedValue={selectedValue}
                   />
-                </div>
+                </div> */}
                 <div className="delivery-intruction-block">
-                  <input type="text" placeholder={t("AddInstruction")}></input>
+                  <input
+                    type="text"
+                    placeholder={t("AddInstruction")}
+                    value={instruction}
+                    onChange={handleInstructionChange}
+                  ></input>
                   <button>
                     <svg
                       width="20"
@@ -324,7 +469,10 @@ const ShoppingCart = () => {
                   </button>
                 </div>
                 <div className="add-to-cart">
-                  <button className="common-btn btn">
+                  <button
+                    className="common-btn btn"
+                    onClick={() => onTapCreateOrder()}
+                  >
                     <svg
                       width="24"
                       height="24"

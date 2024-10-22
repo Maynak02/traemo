@@ -12,8 +12,8 @@ export const API_ROUTER = {
   UPDATE_USER: "/users",
 
   // PAYMENTS
-  CREATE_PAYMENT: "/payments",
-  LIST_PAYMENT_METHODS: "/payments/methods",
+  CREATE_PAYMENT: "/paymentmethods",
+  LIST_PAYMENT_METHODS: "/paymentmethods",
 
   GET_FUNDS: "/funds",
   CHARGE_USER: "/funds",
@@ -23,25 +23,29 @@ export const API_ROUTER = {
 
   GET_TRANSACTIONS: "/transactions",
   // AUTO TOPUP
-  GET_AUTO_TOPUP: "/autotopup",
-  CREATE_UPDATE_AUTO_TOPUP: "/autotopup",
+  GET_AUTO_TOPUP: "/autotopups",
+  CREATE_UPDATE_AUTO_TOPUP: "/autotopups",
 
   // ADDRESS
   UPDATE_ADDRESS: "/addresses/",
   CREATE_ADDRESS: "/addresses",
+  GET_ADDRESS: "/addresses/",
 
   // Municipality
   GET_MUNICIPALITY_ID: "/municipalities/",
   GET_MUNICIPALITY_LIST: "/municipalities",
 
   // CATEGORY
-  READ_CATEGORY: "/categories/",
+  READ_CATEGORY: "/categories",
   LIST_CATEGORIES: "/categories",
 
   // CREATE_PRODUCT: "/products",
   GET_PRODUCTS: "/products",
   LIST_PRODUCTS_ME: "/products/me",
-  GET_PRODUCT_BY_ID: "/products",
+  GET_PRODUCT_BY_ID: "/products/",
   // UPDATE_PRODUCT: "/products/",
   // DELETE_PRODUCT: "/products/",
+  // ORDER_HISTORY
+  GET_ORDER_HISTORY: "/orders",
+  UPCOMING_ORDER_LIST: "/orderplans",
 };

@@ -7,7 +7,7 @@ import {
 import { API_ROUTER } from "@/services/apiRouter";
 
 export const ReadCategory = (data) => {
-  return axiosGet(API_ROUTER.READ_CATEGORY, data);
+  return axiosGet(API_ROUTER.READ_CATEGORY + "/" + data);
 };
 export const ListCategories = (data) => {
   return axiosGet(API_ROUTER.LIST_CATEGORIES, data);

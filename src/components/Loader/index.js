@@ -3,7 +3,7 @@ import { ThreeCircles, ThreeDots } from "react-loader-spinner";
 
 export default function Loader() {
   return (
-    <div className={`h-full z-10 bg-black bg-opacity-30`}>
+    <div className={`h-full z-10 bg-white`}>
       {/* <div
       className={`h-full z-10 bg-black bg-opacity-30 ${
         isAuth ? "fixed top-0 left-0 right-0 bottom-0" : ""
