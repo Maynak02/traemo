@@ -21,7 +21,6 @@ import {
   setUpdatedCartList,
 } from "@/redux/Cart/CartReducer";
 import { CreateUpdateOrderPlanAction } from "@/redux/Order/action";
-import { now } from "moment";
 registerLocale("de", de);
 
 const ShoppingCart = () => {
