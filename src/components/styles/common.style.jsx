@@ -7,10 +7,22 @@ const CommonPagesBlock = styled.div`
     position: relative;
     .tabs-block {
       .react-tabs {
+        @media (max-width: 1199px) {
+          overflow-x: scroll;
+        }
         .react-tabs__tab-list {
           margin: 0px 32px;
           padding: 16px 0px;
           border-bottom: 0px solid rgba(208, 213, 221, 0.6);
+          @media (max-width: 1400px) {
+            margin: 0px 20px;
+          }
+          @media (max-width: 767px) {
+            margin: 0px 15px;
+          }
+          @media (max-width: 1199px) {
+            min-width: 1215px;
+          }
           .react-tabs__tab {
             border: none;
             padding: 0px;
@@ -18,6 +30,9 @@ const CommonPagesBlock = styled.div`
               display: flex;
               align-items: center;
               padding: 8px 16px;
+              @media (max-width: 1400px) {
+                padding: 8px 13px;
+              }
               p {
                 color: #98a2b3;
                 font-size: 14px;
@@ -46,6 +61,12 @@ const CommonPagesBlock = styled.div`
           .tab-button {
             padding: 12px 32px 16px 32px;
             border-bottom: 1px solid rgba(208, 213, 221, 0.6);
+            @media (max-width: 1400px) {
+              padding: 12px 20px 16px 20px;
+            }
+            @media (max-width: 767px) {
+              padding: 12px 15px 16px;
+            }
             button {
               padding: 12px 16px;
               font-size: 12px;
@@ -56,6 +77,9 @@ const CommonPagesBlock = styled.div`
               border-radius: 24px;
               transition: 0.5s;
               margin-right: 20px;
+              @media (max-width: 767px) {
+                margin-right: 5px;
+              }
               &:hover {
                 background-color: rgba(249, 201, 60, 0.15);
                 color: #ffc93c;
@@ -730,7 +754,7 @@ const CommonPagesBlock = styled.div`
             .chf-wallet {
               background-color: rgba(249, 201, 60, 0.1);
               border: 1px solid #ffc93c;
-              color: #f79009;
+              color: rgb(247, 144, 9);
               padding: 16px 24px;
               font-size: 22px;
               border-radius: 8px;
@@ -787,24 +811,6 @@ const CommonPagesBlock = styled.div`
                 color: #667085;
               }
             }
-            .another-button {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 62px;
-              border: 1px solid rgba(208, 213, 221, 0.6);
-              border-radius: 12px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
-              font-size: 18px;
-              color: #027a48;
-              width: 20%;
-              text {
-                font-size: 14px;
-                font-weight: 500;
-                color: #667085;
-              }
-            }
             input {
               display: flex;
               align-items: center;
@@ -815,10 +821,9 @@ const CommonPagesBlock = styled.div`
               box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
                 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
-              color: #027a48;
-              width: 78%;
+              color: #fab300;
+              width: 100%;
               text-align: center;
-              margin-right: 2%;
               &::placeholder {
                 color: #667085;
               }

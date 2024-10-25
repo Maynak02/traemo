@@ -112,7 +112,7 @@ const LoginPage = () => {
             <FormProvider
               methods={methods}
               onSubmit={handleSubmit(onSubmitForm)}
-              className="mt-[20px] mb-[40px]"
+              
             >
               <div className="form-login">
                 <div className="form-group">

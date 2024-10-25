@@ -21,7 +21,7 @@ export const getFundServiceAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -38,7 +38,7 @@ export const createPaymentServiceAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -55,7 +55,7 @@ export const chargeUserServiceAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -72,7 +72,7 @@ export const listPaymentServiceAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -89,7 +89,7 @@ export const createRefundServiceAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -106,7 +106,7 @@ export const getTransactionServiceAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -123,7 +123,7 @@ export const getAutoTopupServiceAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -140,7 +140,7 @@ export const createUpdateAutoTopupAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }

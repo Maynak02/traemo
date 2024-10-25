@@ -522,6 +522,8 @@ input[type="radio"]:checked + label {
   height: 616px;
   border-radius: 24px;
   background-color: #fff;
+  outline: none;
+  border: none;
 }
 .two-block-modal-inner {
   height: 100%;
@@ -535,7 +537,11 @@ input[type="radio"]:checked + label {
   flex-direction: column;
   justify-content: space-between;
   background-color: #fdf3d6;
-  padding: 64px 32px 0px 32px;
+  padding: 64px 32px 10px 32px;
+  position: relative;
+}
+.two-block-modal-inner-left .btn-close-block {
+  display: none;
 }
 .top-block-top h2 {
   font-size: 40px;
@@ -549,6 +555,7 @@ input[type="radio"]:checked + label {
   line-height: 28px;
   font-weight: 500;
   color: #f8b302;
+  margin-bottom: 10px;
 }
 .top-block-bottom img {
   width: 100%;
@@ -631,4 +638,104 @@ input[type="radio"]:checked + label {
 
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(255, 255, 255, 0.3);
+}
+
+.mobile-block-z-index { 
+  z-index: 999;
+}
+
+
+@media (max-width: 991px) {
+  .common-modal-block {
+    width: 95%;
+    height: auto;
+  }
+  .two-block-modal-inner-left {
+    padding: 20px 20px 10px 20px;
+  }
+  .top-block-top h2 {
+    font-size: 30px;
+    line-height: 40px;
+  }
+  .top-block-top p {
+    font-size: 14px;
+    line-height: 26px;
+  }
+  .two-block-modal-inner-right {
+    width: 66.66%;
+    padding: 25px;
+  }
+  .search-address h3 {
+    font-size: 22px;
+    line-height: 28px;
+  }
+  .search-address .form-group input {
+    width: 100%;
+    height: 52px;
+  }
+  
+}
+@media (max-width: 767px) {
+  .two-block-modal-inner {
+    display: block;
+  }
+  .two-block-modal-inner-left {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .two-block-modal-inner-right {
+    width: 100%;
+  }
+  .two-block-modal-inner-left .top-block-top {
+    width: 70%;
+    padding-right: 8px;
+  }
+  .two-block-modal-inner-left .top-block-bottom {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ReactModal__Overlay {
+    overflow-y: auto;
+  }
+  .top-block-bottom img {
+    width: 110px;
+  }
+  .two-block-modal-inner-left .btn-close-block {
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  .two-block-modal-inner-right  .btn-close-block {
+    display: none;
+  }
+  .common-modal-block {
+    margin-top: 75px;
+  }
+  .two-block-modal-inner-left {
+    padding: 60px 20px 10px 20px;
+  }
+  .top-block-top h2 {
+    font-size: 26px;
+    line-height: 32px;
+    margin-bottom: 7px;
+  }
+  .search-address {
+    margin-top: 0px;
+  }
+  .search-address h3 {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  .overflow-height-data {
+    height: 140px;
+    overflow-y: auto;
+  }
+  .form-login .custom-label {
+    font-size: 12px !important;
+  }
 }

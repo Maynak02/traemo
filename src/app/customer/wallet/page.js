@@ -24,11 +24,14 @@ import Loader from "@/components/Loader";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useRouter } from "next/navigation";
+import { removeAll } from "@/utils/storage";
 
 const Wallet = () => {
   const [startDate, setStartDate] = useState(new Date());
 
   const dispatch = useDispatch();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const [autoTopupList, setAutoTopupList] = useState({});
@@ -41,7 +44,7 @@ const Wallet = () => {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [transactionList, setTransactionList] = useState([]);
   const [offset, setOffset] = useState(0);
-  const limit = 10;
+  const limit = 15;
   const { t } = useTranslation("common");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -51,9 +54,7 @@ const Wallet = () => {
 
   const handleOptionClick = (option) => {
     const { brand, last4, exp_month, exp_year } = option.details;
-    setSelected(
-      `${brand.toUpperCase()} ****${last4} (Exp: ${exp_month}/${exp_year})`
-    );
+    setSelected(`${brand} ****${last4} (Exp: ${exp_month}/${exp_year})`);
     setIsOpen(false);
     ChargeUserService(option.id);
   };
@@ -94,13 +95,18 @@ const Wallet = () => {
     try {
       const { payload: res } = await dispatch(getFundServiceAction());
       const { data, status, message } = res;
+      console.log("data---", data);
       if (status) {
-        console.log("data---", data);
         setCurrentBalance(data?.total_funds);
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push("/login");
+          removeAll();
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -126,7 +132,12 @@ const Wallet = () => {
         // setTransactionList(data);
         setTransactionList((prevList) => [...prevList, ...data]);
       } else {
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push("/login");
+          removeAll();
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       toast.error(TOAST_ALERTS.ERROR_MESSAGE);
@@ -144,7 +155,12 @@ const Wallet = () => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push("/login");
+          removeAll();
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -169,7 +185,12 @@ const Wallet = () => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push("/login");
+          removeAll();
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -196,7 +217,12 @@ const Wallet = () => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push("/login");
+          removeAll();
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -217,7 +243,12 @@ const Wallet = () => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push("/login");
+          removeAll();
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -239,7 +270,12 @@ const Wallet = () => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push("/login");
+          removeAll();
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -317,7 +353,7 @@ const Wallet = () => {
           <div
             id="scrollableDiv"
             style={{
-              height: 700,
+              height: 900,
               overflow: "auto",
               display: "flex",
               flexDirection: "column",
@@ -375,7 +411,7 @@ const Wallet = () => {
   };
 
   const handleChangeAmount = (e) => {
-    console.log("e-->", e.target);
+    console.log("e-->", e.target.value);
     setSelectedAmount(e.target.value);
   };
 
@@ -432,18 +468,6 @@ const Wallet = () => {
                   value={selectedAmount}
                   onChange={handleChangeAmount}
                 />
-                <button
-                  className="another-button"
-                  onClick={() => {
-                    if (selectedAmount < 2000) {
-                      toast.error(t("InputValidation"));
-                    } else {
-                      setCustomAmountShow(false);
-                    }
-                  }}
-                >
-                  <text>{t("Done")}</text>
-                </button>
               </div>
             ) : (
               <button onClick={() => setCustomAmountShow(true)}>
@@ -478,16 +502,58 @@ const Wallet = () => {
             <div className="py-1">
               {listPaymentMethod.map((method, index) => (
                 <div key={index}>
-                  <button
-                    onClick={() => handleOptionClick(method)}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    {`${method.details.brand.toUpperCase()} ****${
-                      method.details.last4
-                    } (Exp: ${method.details.exp_month}/${
-                      method.details.exp_year
-                    })`}
-                  </button>
+                  {method.type === "paypal" ? (
+                    <button
+                      onClick={() => handleOptionClick(method)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/paypal.png"
+                        alt="Card"
+                        className="w-6 h-6 mr-2 rounded"
+                      />
+                      {`${method.details.payer_email}`}
+                    </button>
+                  ) : method.type === "card" ? (
+                    <button
+                      onClick={() => handleOptionClick(method)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/creditcard.png"
+                        alt="Card"
+                        className="w-6 h-6 mr-2"
+                      />
+
+                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
+                    </button>
+                  ) : method.type === "googlepay" ? (
+                    <button
+                      onClick={() => handleOptionClick(method)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/googlepay.png"
+                        alt="Card"
+                        className="w-6 h-6 mr-2"
+                      />
+
+                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleOptionClick(method)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/applepay.png"
+                        alt="Card"
+                        className="w-6 h-6 mr-2"
+                      />
+                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
+                    </button>
+                  )}
+
                   {index < listPaymentMethod.length - 1 && (
                     <div className="border-b border-gray-200"></div>
                   )}

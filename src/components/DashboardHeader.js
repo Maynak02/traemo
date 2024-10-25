@@ -409,168 +409,218 @@ const DashboardHeader = ({ className = "" }) => {
 
   return (
     <>
-      <div className="">
+      <div className=''>
         <Header>
-          <div className="header-left">
-            <div className="logo-header">
-              <Link href="/customer/home">
-                <img alt="logo" src="/image-1@2x.png" />
+          <div className='header-left'>
+            <div className='logo-header'>
+              <Link href='/customer/home'>
+                <img alt='logo' src='/image-1@2x.png' />
               </Link>
             </div>
-            <div className="map-header">
-              <div
-                className={`map-header-link  ${
-                  hasAddress ? "bg-white" : "bg-theme"
-                }`}
-                onClick={openModal}
-              >
-                <img
-                  alt=""
-                  src={hasAddress ? "/location_black.svg" : "/location.svg"}
-                />
-                <p className={`${hasAddress ? "text-gray-700" : "text-white"}`}>
-                  {hasAddress
-                    ? fetchAddressData.street + fetchAddressData.city
-                    : t("EnterDeliveryAddress")}
+            <div className='map-header'>
+              <div className={`map-header-link  ${hasAddress ? 'bg-white' : 'bg-theme'}`} onClick={openModal}>
+                <img alt='' src={hasAddress ? '/location_black.svg' : '/location.svg'} />
+                <p className={`${hasAddress ? 'text-gray-700' : 'text-white'}`}>
+                  {hasAddress ? fetchAddressData.street + fetchAddressData.city : t('EnterDeliveryAddress')}
                 </p>
-                <img
-                  className="arrow-icon"
-                  alt=""
-                  src={
-                    hasAddress ? "/chevrondown-1@2x.png" : "/chevrondown@2x.png"
-                  }
-                />
+                <img className='arrow-icon' alt='' src={hasAddress ? '/chevrondown-1@2x.png' : '/chevrondown@2x.png'} />
               </div>
             </div>
-            <div className="toggle-header">
-              <div className="toggle-header-inner  shadow-[0px_1px_3px_rgba(16,_24,_40,_0.1),_0px_1px_2px_rgba(16,_24,_40,_0.06)]">
-                <span className="mr-3 text-gray-700">{t("Subscription")}</span>
+            <div className='toggle-header'>
+              <div className='toggle-header-inner  shadow-[0px_1px_3px_rgba(16,_24,_40,_0.1),_0px_1px_2px_rgba(16,_24,_40,_0.06)]'>
+                <span className='mr-3 text-gray-700'>{t('Subscription')}</span>
                 <button
-                  type="button"
-                  aria-pressed={enabled ? "true" : "false"}
+                  type='button'
+                  aria-pressed={enabled ? 'true' : 'false'}
                   className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ${
-                    enabled ? "bg-theme" : "bg-gray-300"
+                    enabled ? 'bg-theme' : 'bg-gray-300'
                   }`}
-                  onClick={() => setEnabled(!enabled)}
-                >
+                  onClick={() => setEnabled(!enabled)}>
                   <span
                     className={`${
-                      enabled ? "translate-x-6" : "translate-x-1"
+                      enabled ? 'translate-x-6' : 'translate-x-1'
                     } inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200`}
                   />
                 </button>
               </div>
             </div>
           </div>
-          <div className="header-right">
-            {cartData.length > 0 && (
-              <div className="header-right-cart" onClick={openCartDropdown}>
-                <img alt="" src="/frame.svg" />
-                <p>€{(totalPrice / 100).toLocaleString("de-DE")}</p>
+          <div className='header-right'>
+            <div className='toggle-bar-block'>
+              <button>
+                <span></span>
+                <span></span>
+                <span></span>
+              </button>
+            </div>
+            <div className='sidebar-block'>
+              <div className='sidebar-block-inner'>
+                <div className='logo-close-block'>
+                  <div className='logo-block'>
+                    <Link href='/customer/home'>
+                      <img alt='logo' src='/image-1@2x.png' />
+                    </Link>
+                  </div>
+                  <div className='close-icon-block'>
+                    <button>
+                      <img alt='logo' src='/close-icon.svg' />
+                    </button>
+                  </div>
+                </div>
+                <div className='map-header'>
+                  <div className={`map-header-link  ${hasAddress ? 'bg-white' : 'bg-theme'}`} onClick={openModal}>
+                    <img alt='' src={hasAddress ? '/location_black.svg' : '/location.svg'} />
+                    <p className={`${hasAddress ? 'text-gray-700' : 'text-white'}`}>
+                      {hasAddress ? fetchAddressData.street + fetchAddressData.city : t('EnterDeliveryAddress')}
+                    </p>
+                    {/* <img
+                      className='arrow-icon'
+                      alt=''
+                      src={hasAddress ? '/chevrondown-1@2x.png' : '/chevrondown@2x.png'}
+                    /> */}
+                  </div>
+                </div>
+                <div className='profile-block-inner'>
+                  <ul className='py-4'>
+                    <Link href='/customer/wallet'>
+                      <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                        <img className='h-6 w-6' src='/images/ic_wallet.svg' />
+                        <span className='font-inter text-black text-[16px]'>{t('TopupNow')}</span>
+                        <span className='text-green-500 font-semibold'>€0</span>
+                      </li>
+                    </Link>
+                    {/* <Link href="/customer/profile">
+              <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
+                <img className="h-6 w-6" src="/images/ic_profile.svg" />
+                <span className="font-inter text-black text-[16px]">
+                  {t("Profile")}
+                </span>
+              </li>
+            </Link> */}
+                    <Link href='/customer/standingorders'>
+                      <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                        <img className='h-6 w-6' src='/images/ic_premium.svg' />
+                        <span className='font-inter text-black text-[16px]'>{t('RecurringOrders')}</span>
+                      </li>
+                    </Link>
+                    <Link href='/customer/address'>
+                      <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                        <img className='h-6 w-6' src='/images/ic_address.svg' />
+                        <span className='font-inter text-black text-[16px]'>{t('Addresses')}</span>
+                      </li>
+                    </Link>
 
-                <img
-                  className="arrow-icon"
-                  alt=""
-                  src="/chevrondown-1@2x.png"
-                />
+                    {/* <Link href="/customer/history">
+              <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
+                <img className="h-6 w-6" src="/images/ic_history.svg" />
+                <span className="font-inter text-black text-[16px]">
+                  {t("OrderHistory")}
+                </span>
+              </li>
+            </Link> */}
+                    <Link href='/customer/support'>
+                      <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                        <img className='h-6 w-6' src='/images/ic_support.svg' />
+                        <span className='font-inter text-black text-[16px]'>{t('Support')}</span>
+                      </li>
+                    </Link>
+                    <button
+                      className='w-[100%]'
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        setIsModalVisible(true);
+                      }}>
+                      <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                        <img className='h-6 w-6' src='/images/ic_logout.svg' />
+                        <span className='font-inter text-black text-[16px]'>{t('Logout')}</span>
+                      </li>
+                    </button>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {cartData.length > 0 && (
+              <div className='header-right-cart' onClick={openCartDropdown}>
+                <div className='header-right-cart-link-left'>
+                  <img alt='' src='/frame.svg' />
+                  <p>€{(totalPrice / 100).toLocaleString('de-DE')}</p>
+                </div>
+                <img className='arrow-icon' alt='' src='/chevrondown-1@2x.png' />
               </div>
             )}
             {userAuth !== null ? (
-              <div
-                className="header-right-dropdwon"
-                onClick={openProfileDropdown}
-              >
+              <div className='header-right-dropdwon' onClick={openProfileDropdown}>
                 <p>
                   {userData?.firstname} {userData?.lastname}
                 </p>
-                <img className="arrow-icon" alt="" src="/chevrondown-2.svg" />
+                <img className='arrow-icon' alt='' src='/chevrondown-2.svg' />
               </div>
             ) : (
-              <div className="header-right-dropdwon" onClick={onTapLogin}>
-                <p>{t("SignIn")}</p>
-                <img className="arrow-icon" alt="" src="/chevrondown-2.svg" />
+              <div className='header-right-dropdwon' onClick={onTapLogin}>
+                <p>{t('SignIn')}</p>
+                <img className='arrow-icon' alt='' src='/chevrondown-2.svg' />
               </div>
             )}
           </div>
           {isCartDropdownOpen && (
-            <div className="cart-dropdown" ref={cartDropdownRef}>
-              <div className="cart-dropdown-inner">
-                <div className="cart-dropdown-inner-top">
-                  <img alt="" src="/frame.svg"></img>
-                  <h5>{t("Cart")}</h5>
-                </div>
-                <div className="cart-dropdown-block">
-                  <div className="cart-dropdown-block-inner">
-                    {cartData.map((item, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="cart-dropdown-block-inner-block"
-                        >
-                          <div className="img-block">
-                            <img alt="" src={item.images[0]} />
-                          </div>
-                          <div className="cart-block">
-                            <div className="cart-block-left">
-                              <h5>
-                                {item?.title.charAt(0).toUpperCase() +
-                                  item?.title.slice(1)}
-                              </h5>
-                              <p>
-                                {item.quantity}&nbsp;{item.unit}
-                              </p>
+            <div className='cart-dropdown-mobile'>
+              <div className='cart-dropdown' ref={cartDropdownRef}>
+                <div className='cart-dropdown-inner'>
+                  <div className='cart-dropdown-inner-top'>
+                    <img alt='' src='/frame.svg'></img>
+                    <h5>{t('Cart')}</h5>
+                  </div>
+                  <div className='cart-dropdown-block'>
+                    <div className='cart-dropdown-block-inner'>
+                      {cartData.map((item, index) => {
+                        return (
+                          <div key={index} className='cart-dropdown-block-inner-block'>
+                            <div className='img-block'>
+                              <img alt='' src={item.images[0]} />
                             </div>
-                            <div className="cart-price">
-                              <h3>
-                                CHF&nbsp;
-                                {(item.displayPrice / 100).toLocaleString(
-                                  "de-DE"
-                                )}
-                              </h3>
-                              <div className="flex items-center">
-                                <button
-                                  onClick={() =>
-                                    storeDispatch(setDecreaseQuantity(item))
-                                  }
-                                  className="bg-gray-100 -mr-2 px-2 py-1 text-lg rounded-l-lg z-20"
-                                >
-                                  -
-                                </button>
-                                <input
-                                  type="text"
-                                  placeholder="1"
-                                  disabled
-                                  value={item.givenQuantity}
-                                ></input>
-                                <button
-                                  onClick={() =>
-                                    storeDispatch(setUpdatedCartList(item))
-                                  }
-                                  className="bg-gray-100 -ml-2 px-2 py-1 text-lg rounded-r-lg"
-                                >
-                                  +
-                                </button>
+                            <div className='cart-block'>
+                              <div className='cart-block-left'>
+                                <h5>{item?.title.charAt(0).toUpperCase() + item?.title.slice(1)}</h5>
+                                <p>
+                                  {item.quantity}&nbsp;{item.unit}
+                                </p>
+                              </div>
+                              <div className='cart-price'>
+                                <h3>
+                                  CHF&nbsp;
+                                  {(item.displayPrice / 100).toLocaleString('de-DE')}
+                                </h3>
+                                <div className='flex items-center'>
+                                  <button
+                                    onClick={() => storeDispatch(setDecreaseQuantity(item))}
+                                    className='bg-gray-100 -mr-2 px-2 py-1 text-lg rounded-l-lg z-20'>
+                                    -
+                                  </button>
+                                  <input type='text' placeholder='1' disabled value={item.givenQuantity}></input>
+                                  <button
+                                    onClick={() => storeDispatch(setUpdatedCartList(item))}
+                                    className='bg-gray-100 -ml-2 px-2 py-1 text-lg rounded-r-lg'>
+                                    +
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-                <div className="cart-footer">
-                  <button
-                    className="btn btn-footer"
-                    onClick={() => {
-                      userAuth !== null
-                        ? router.push("/customer/cart")
-                        : router.push("/login");
-                    }}
-                  >
-                    <img alt="" src="/cart-img.svg" />
-                    <p>{t("ProceedToCheckout")}</p>
-                    <h4>€{(totalPrice / 100).toLocaleString("de-DE")}</h4>
-                  </button>
+                  <div className='cart-footer'>
+                    <button
+                      className='btn btn-footer'
+                      onClick={() => {
+                        userAuth !== null ? router.push('/customer/cart') : router.push('/login');
+                      }}>
+                      <img alt='' src='/cart-img.svg' />
+                      <p>{t('ProceedToCheckout')}</p>
+                      <h4>€{(totalPrice / 100).toLocaleString('de-DE')}</h4>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -578,108 +628,101 @@ const DashboardHeader = ({ className = "" }) => {
         </Header>
         <Modal
           isOpen={modalIsOpen}
-          className="common-modal-block"
+          className='common-modal-block'
           onRequestClose={closeModal}
-          contentLabel="Example Modal"
-        >
-          <div className="two-block-modal-inner">
-            <div className="two-block-modal-inner-left">
-              <div className="top-block-top">
-                <h2>{t("EnterYourAddress")}</h2>
-                <p>{t("DeliverAtHome")}</p>
+          contentLabel='Example Modal'>
+          <div className='two-block-modal-inner'>
+            <div className='two-block-modal-inner-left'>
+              <div className='btn-close-block'>
+                <button onClick={closeModal}>
+                  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                    <path
+                      d='M18 6L6 18M6 6L18 18'
+                      stroke='#101828'
+                      // strokeWidth="2"
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                    />
+                  </svg>
+                </button>
               </div>
-              <div className="top-block-bottom">
-                <img src="/Brotkorb_Traemo.png" alt="Traemo" />
+              <div className='top-block-top'>
+                <h2>{t('EnterYourAddress')}</h2>
+                <p>{t('DeliverAtHome')}</p>
+              </div>
+              <div className='top-block-bottom'>
+                <img src='/Brotkorb_Traemo.png' alt='Traemo' />
               </div>
             </div>
 
             {!modalIsInnerOpen ? (
-              <div className="two-block-modal-inner-right">
-                <div className="btn-close-block">
+              <div className='two-block-modal-inner-right'>
+                <div className='btn-close-block'>
                   <button onClick={closeModal}>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                       <path
-                        d="M18 6L6 18M6 6L18 18"
-                        stroke="#101828"
+                        d='M18 6L6 18M6 6L18 18'
+                        stroke='#101828'
                         // strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
                       />
                     </svg>
                   </button>
                 </div>
                 {isLoading ? (
-                  <div className="flex justify-center items-center h-[100%]">
+                  <div className='flex justify-center items-center h-[100%]'>
                     <ThreeDots
                       visible={true}
-                      height="80"
-                      width="80"
-                      color="#FAB300"
-                      radius="18"
-                      ariaLabel="three-dots-loading"
+                      height='80'
+                      width='80'
+                      color='#FAB300'
+                      radius='18'
+                      ariaLabel='three-dots-loading'
                       wrapperStyle={{}}
-                      wrapperClass=""
+                      wrapperClass=''
                     />
                   </div>
                 ) : (
-                  <div className="search-address">
-                    <h3>{t("SelectAddress")}</h3>
+                  <div className='search-address'>
+                    <h3>{t('SelectAddress')}</h3>
                     <form>
-                      <div className="form-group">
+                      <div className='form-group'>
                         <button>
-                          <img src="/search-icon.svg" alt="Traemo" />
+                          <img src='/search-icon.svg' alt='Traemo' />
                         </button>
-                        <Autocomplete
-                          onLoad={onLoad}
-                          onPlaceChanged={onPlaceChanged}
-                        >
-                          <input
-                            type="text"
-                            placeholder={t("EnterAddress")}
-                          ></input>
+                        <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                          <input type='text' placeholder={t('EnterAddress')}></input>
                         </Autocomplete>
                         {userAuth && (
-                          <div className="mt-4">
+                          <div className='mt-4'>
                             {addressList.map((item, index) => {
                               return (
                                 <ul
-                                  className="space-y-2 mb-4"
+                                  className='space-y-2 mb-4'
                                   key={index}
                                   onClick={() => {
                                     setFormData({
                                       id: item.id,
                                       name: item.name,
-                                      delivery_instructions: "",
+                                      delivery_instructions: '',
                                       house: item.house,
                                       city: item.city,
                                       street: item.street,
                                       country: item.country,
                                       postcode: item.postcode,
                                       latitude: item.location.coordinates[1],
-                                      longitude: item.location.coordinates[0],
+                                      longitude: item.location.coordinates[0]
                                     });
                                     setIsInnerOpen(true);
                                     // storeDispatch(setAddressForList(item));
-                                  }}
-                                >
-                                  <li className="border-b border-gray-300 pb-2">
+                                  }}>
+                                  <li className='border-b border-gray-300 pb-2'>
                                     <strong>{item.name}</strong>
-                                    <p className="text-sm text-gray-500">
-                                      {[
-                                        item.house,
-                                        item.street,
-                                        item.city,
-                                        item.postcode,
-                                        item.country,
-                                      ]
+                                    <p className='text-sm text-gray-500'>
+                                      {[item.house, item.street, item.city, item.postcode, item.country]
                                         .filter(Boolean)
-                                        .join(", ")}
+                                        .join(', ')}
                                     </p>
                                   </li>
                                 </ul>
@@ -693,136 +736,126 @@ const DashboardHeader = ({ className = "" }) => {
                 )}
               </div>
             ) : (
-              <div className="two-block-modal-inner-right">
+              <div className='two-block-modal-inner-right'>
                 <CommonPagesBlock>
-                  <div className="custom-container">
+                  <div className='custom-container'>
                     {/* Close Button */}
-                    <div className="btn-close-block-left">
+                    <div className='btn-close-block-left'>
                       <button onClick={() => setIsInnerOpen(false)}>
                         <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="2"
-                          stroke="#667085"
-                          class="w-6 h-6"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M15 19l-7-7 7-7"
-                          />
+                          xmlns='http://www.w3.org/2000/svg'
+                          fill='none'
+                          viewBox='0 0 24 24'
+                          stroke-width='2'
+                          stroke='#667085'
+                          class='w-6 h-6'>
+                          <path stroke-linecap='round' stroke-linejoin='round' d='M15 19l-7-7 7-7' />
                         </svg>
                       </button>
-                      <h2 className="custom-title">{t("SelectedAddress")}</h2>
+                      <h2 className='custom-title'>{t('SelectedAddress')}</h2>
                     </div>
                     {/* city country postalcode */}
 
-                    <div className="form-login">
-                      <div className="form-group">
-                        <label className="custom-label">{t("Name")}</label>
+                    <div className='form-login'>
+                      <div className='form-group'>
+                        <label className='custom-label'>{t('Name')}</label>
                         <input
-                          type="text"
-                          name="name"
+                          type='text'
+                          name='name'
                           value={formData.name}
                           onChange={handleChange}
-                          className="custom-input"
+                          className='custom-input'
                         />
                       </div>
-                      <div className="form-group">
-                        <label className="custom-label">
-                          {t("DeliveryInstructions")}
-                        </label>
+                      <div className='form-group'>
+                        <label className='custom-label'>{t('DeliveryInstructions')}</label>
                         <input
-                          type="text"
-                          name="delivery_instructions"
+                          type='text'
+                          name='delivery_instructions'
                           value={formData.delivery_instructions}
                           onChange={handleChange}
-                          className="custom-input"
+                          className='custom-input'
                         />
                       </div>
-                      <div className="two-from-group">
-                        <div className="form-group">
-                          <label className="custom-label">{t("house")}</label>
+                      <div className='two-from-group'>
+                        <div className='form-group'>
+                          <label className='custom-label'>{t('house')}</label>
                           <input
-                            type="text"
-                            name="house"
+                            type='text'
+                            name='house'
                             value={formData.house}
                             onChange={handleChange}
-                            className="custom-input"
+                            className='custom-input'
                           />
                         </div>
-                        <div className="form-group">
-                          <label className="custom-label">{t("Street")}</label>
+                        <div className='form-group'>
+                          <label className='custom-label'>{t('Street')}</label>
                           <input
-                            type="text"
-                            name="street"
+                            type='text'
+                            name='street'
                             value={formData.street}
                             onChange={handleChange}
                             disabled
-                            className="custom-input"
+                            className='custom-input'
                           />
                         </div>
                       </div>
-                      <div className="two-from-group">
-                        <div className="form-group">
-                          <label className="custom-label">{t("city")}</label>
+                      <div className='two-from-group'>
+                        <div className='form-group'>
+                          <label className='custom-label'>{t('city')}</label>
                           <input
-                            type="text"
-                            name="street"
+                            type='text'
+                            name='street'
                             value={formData.city}
                             onChange={handleChange}
                             disabled
-                            className="custom-input"
+                            className='custom-input'
                           />
                         </div>
-                        <div className="form-group">
-                          <label className="custom-label">
-                            {t("postalcode")}
-                          </label>
+                        <div className='form-group'>
+                          <label className='custom-label'>{t('postalcode')}</label>
                           <input
-                            type="text"
-                            name="country"
+                            type='text'
+                            name='country'
                             value={formData.postcode}
                             onChange={handleChange}
                             disabled
-                            className="custom-input"
+                            className='custom-input'
                           />
                         </div>
                       </div>
-                      <div className="from-group">
-                        <div className="form-group">
-                          <label className="custom-label">{t("country")}</label>
+                      <div className='from-group'>
+                        <div className='form-group'>
+                          <label className='custom-label'>{t('country')}</label>
                           <input
-                            type="text"
-                            name="country"
+                            type='text'
+                            name='country'
                             value={formData.country}
                             onChange={handleChange}
                             disabled
-                            className="custom-input"
+                            className='custom-input'
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="btn-form">
+                    <div className='btn-form'>
                       <button
-                        className="btn button-common"
+                        className='btn button-common'
                         onClick={() => {
-                          console.log("formData", formData);
-                          if (formData.name == "") {
-                            toast.error("Please Enter your Name");
-                          } else if (formData.house == "") {
-                            toast.error("Please House");
-                          } else if (formData.id == "") {
+                          console.log('formData', formData);
+                          if (formData.name == '') {
+                            toast.error('Please Enter your Name');
+                          } else if (formData.house == '') {
+                            toast.error('Please House');
+                          } else if (formData.id == '') {
                             CreateAddress();
                           } else {
                             setIsInnerOpen(false);
                             storeDispatch(setAddressForList(formData));
                             closeModal();
                           }
-                        }}
-                      >
-                        {t("SaveAddress")}
+                        }}>
+                        {t('SaveAddress')}
                       </button>
                     </div>
                   </div>
@@ -836,16 +869,13 @@ const DashboardHeader = ({ className = "" }) => {
       {isProfileDropdownOpen && (
         <div
           ref={dropdownRef}
-          className="absolute z-40 right-8 top-[85px] w-[240px] bg-white border-[1px] br-[8px] rounded-lg px-4 shadow-[0px_1px_3px_rgba(16,_24,_40,_0.1),_0px_1px_2px_rgba(16,_24,_40,_0.06)]"
-        >
-          <ul className="py-4">
-            <Link href="/customer/wallet">
-              <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
-                <img className="h-6 w-6" src="/images/ic_wallet.svg" />
-                <span className="font-inter text-black text-[16px]">
-                  {t("TopupNow")}
-                </span>
-                <span className="text-green-500 font-semibold">€0</span>
+          className='absolute z-40 right-8 top-[85px] w-[240px] bg-white border-[1px] br-[8px] rounded-lg px-4 shadow-[0px_1px_3px_rgba(16,_24,_40,_0.1),_0px_1px_2px_rgba(16,_24,_40,_0.06)]'>
+          <ul className='py-4'>
+            <Link href='/customer/wallet'>
+              <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                <img className='h-6 w-6' src='/images/ic_wallet.svg' />
+                <span className='font-inter text-black text-[16px]'>{t('TopupNow')}</span>
+                <span className='text-green-500 font-semibold'>€0</span>
               </li>
             </Link>
             {/* <Link href="/customer/profile">
@@ -856,20 +886,16 @@ const DashboardHeader = ({ className = "" }) => {
                 </span>
               </li>
             </Link> */}
-            <Link href="/customer/standingorders">
-              <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
-                <img className="h-6 w-6" src="/images/ic_premium.svg" />
-                <span className="font-inter text-black text-[16px]">
-                  {t("RecurringOrders")}
-                </span>
+            <Link href='/customer/standingorders'>
+              <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                <img className='h-6 w-6' src='/images/ic_premium.svg' />
+                <span className='font-inter text-black text-[16px]'>{t('RecurringOrders')}</span>
               </li>
             </Link>
-            <Link href="/customer/address">
-              <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
-                <img className="h-6 w-6" src="/images/ic_address.svg" />
-                <span className="font-inter text-black text-[16px]">
-                  {t("Addresses")}
-                </span>
+            <Link href='/customer/address'>
+              <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                <img className='h-6 w-6' src='/images/ic_address.svg' />
+                <span className='font-inter text-black text-[16px]'>{t('Addresses')}</span>
               </li>
             </Link>
 
@@ -881,26 +907,21 @@ const DashboardHeader = ({ className = "" }) => {
                 </span>
               </li>
             </Link> */}
-            <Link href="/customer/support">
-              <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
-                <img className="h-6 w-6" src="/images/ic_support.svg" />
-                <span className="font-inter text-black text-[16px]">
-                  {t("Support")}
-                </span>
+            <Link href='/customer/support'>
+              <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                <img className='h-6 w-6' src='/images/ic_support.svg' />
+                <span className='font-inter text-black text-[16px]'>{t('Support')}</span>
               </li>
             </Link>
             <button
-              className="w-[100%]"
+              className='w-[100%]'
               onClick={() => {
                 setProfileDropdownOpen(false);
                 setIsModalVisible(true);
-              }}
-            >
-              <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
-                <img className="h-6 w-6" src="/images/ic_logout.svg" />
-                <span className="font-inter text-black text-[16px]">
-                  {t("Logout")}
-                </span>
+              }}>
+              <li className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent'>
+                <img className='h-6 w-6' src='/images/ic_logout.svg' />
+                <span className='font-inter text-black text-[16px]'>{t('Logout')}</span>
               </li>
             </button>
           </ul>
@@ -908,27 +929,17 @@ const DashboardHeader = ({ className = "" }) => {
       )}
 
       {isModalVisible && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-8 shadow-lg w-96">
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              {t("ConfirmLogout")}
-            </h2>
-            <p className="text-gray-700 text-center mb-6">
-              {t("WantToLogout")}
-            </p>
+        <div className='fixed mobile-block-z-index inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50'>
+          <div className='bg-white rounded-lg p-8 shadow-lg w-96'>
+            <h2 className='text-xl font-semibold mb-4 text-center'>{t('ConfirmLogout')}</h2>
+            <p className='text-gray-700 text-center mb-6'>{t('WantToLogout')}</p>
 
-            <div className="flex justify-between space-x-4">
-              <button
-                onClick={() => handleClose()}
-                className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md w-full"
-              >
-                {t("Cancel")}
+            <div className='flex justify-between space-x-4'>
+              <button onClick={() => handleClose()} className='bg-gray-200 text-gray-800 px-4 py-2 rounded-md w-full'>
+                {t('Cancel')}
               </button>
-              <button
-                onClick={handleLogout}
-                className="bg-theme text-white px-4 py-2 rounded-md w-full"
-              >
-                {t("Logout")}
+              <button onClick={handleLogout} className='bg-theme text-white px-4 py-2 rounded-md w-full'>
+                {t('Logout')}
               </button>
             </div>
           </div>

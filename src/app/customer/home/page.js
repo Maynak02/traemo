@@ -21,7 +21,8 @@ import { TOAST_ALERTS } from "@/constants/keywords";
 import Loader from "@/components/Loader";
 import LoginMain from "@/components/styles/auth.style";
 import InfiniteScroll from "react-infinite-scroll-component";
-
+import { useRouter } from "next/navigation";
+import { removeAll } from "@/utils/storage";
 const CustomerDashboard = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [subCategoryList, setSubCategoryList] = useState([]);
@@ -33,7 +34,7 @@ const CustomerDashboard = () => {
 
   const [offset, setOffset] = useState(0);
   const limit = 100;
-
+  const router = useRouter();
   const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
 
   const { t } = useTranslation("common");
@@ -141,7 +142,6 @@ const CustomerDashboard = () => {
         setFilteredProductList((prevList) => [...prevList, ...filtered]);
         // setIsLoading(false);
       } else {
-        // setIsLoading(false);
         toast.error(message);
       }
     } catch (error) {
@@ -250,7 +250,7 @@ const CustomerDashboard = () => {
                             GetCategoryById(item.id);
                           }}
                         >
-                          <svg
+                          {/* <svg
                             width="20"
                             height="20"
                             viewBox="0 0 20 20"
@@ -269,7 +269,7 @@ const CustomerDashboard = () => {
                               strokeLinecap="round"
                               strokeLinejoin="round"
                             />
-                          </svg>
+                          </svg> */}
                           <p>{item.name}</p>
                         </button>
                       </Tab>

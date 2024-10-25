@@ -124,7 +124,7 @@ const AddressSelection = () => {
       if (status) {
         console.log("RES-DATA->", data);
 
-        storeDispatch(setAddressForList(locationData));
+        storeDispatch(setAddressForList(formData));
         setIsLoading(false);
         setIsInnerOpen(false);
         closeModal();
@@ -340,7 +340,7 @@ const AddressSelection = () => {
                         ></input>
                       </Autocomplete>
                       {userAuth && (
-                        <div className="mt-4">
+                        <div className="mt-4 overflow-height-data">
                           {addressList.map((item, index) => {
                             return (
                               <ul

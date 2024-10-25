@@ -8,8 +8,32 @@ const LoginMain = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    @media (max-width: 767px) {
+      margin-top: 250px;
+      height: auto;
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-image: url(../../../elips-img.png);
+        background-size: cover;
+        width: 100%;
+        height: 300px;
+      }
+    }
     .login-main-inner {
       width: 375px;
+      @media (max-width: 767px) {
+        padding: 100px 15px 15px 15px;
+        position: relative;
+        z-index: 9;
+        width: 100%;
+      }
+      @media (max-width: 575px) {
+        padding: 70px 15px 15px 15px;
+      }
       h1 {
         /* font-family: 'Public Sans', sans-serif; */
         font-size: 45px;
@@ -17,6 +41,18 @@ const LoginMain = styled.div`
         color: #000;
         font-weight: 600;
         margin-bottom: 12px;
+        @media (max-width: 1199px) {
+          font-size: 36px;
+          line-height: 50px;
+        }
+        @media (max-width: 991px) {
+          font-size: 30px;
+          line-height: 40px;
+        }
+        @media (max-width: 767px) {
+          font-size: 24px;
+          line-height: 30px;
+        }
       }
       .form-login {
         .two-from-group {
@@ -35,7 +71,7 @@ const LoginMain = styled.div`
             border: 1px solid #cbd5e1;
             border-radius: 12px;
             padding: 12px;
-            font-family: "Public Sans", sans-serif;
+            font-family: 'Public Sans', sans-serif;
             font-size: 13px;
             outline: none;
             box-shadow: none;

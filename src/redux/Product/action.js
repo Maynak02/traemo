@@ -47,9 +47,12 @@ export const getProductsServiceAction = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const { data, status, message } = await GetProducts(payload);
+      console.log("status---", data.status);
+
       return { data, status, message };
     } catch (err) {
-      toast.error(err?.response?.data?.message || err.message);
+      console.log("err---", err);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
