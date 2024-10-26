@@ -3,6 +3,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { getData } from "@/utils/storage";
 import { useSelector } from "react-redux";
+import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 
 const ProtectedPageService = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const ProtectedPageService = () => {
 
   useEffect(() => {
     if (afterLoginNotAccessiblePages.includes(path) && userAuth) {
-      let dashboard_url = `/customer/home`;
+      let dashboard_url = PATH_DASHBOARD.home;
       router.push(dashboard_url);
     }
 
@@ -43,7 +44,7 @@ const ProtectedPageService = () => {
     });
 
     if (isProtectedDynamicPath && !userAuth) {
-      router.push("/login");
+      router.push(PATH_AUTH.login);
     }
   }, [userAuth, path]);
 

@@ -10,6 +10,7 @@ import {
   GetTransaction,
   GetAutoTopup,
   CreateUpdateAutoTopup,
+  DisburseFunds,
 } from "./services";
 import { AxiosError } from "axios";
 
@@ -140,6 +141,26 @@ export const createUpdateAutoTopupAction = createAsyncThunk(
       return { data, status, message };
     } catch (err) {
       // console.log("🚀 ~ err:", err);
+      // toast.error(err?.response?.data?.message || err.message);
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message);
+      }
+      return rejectWithValue(err.message);
+    }
+  }
+);
+export const DisburseFundAction = createAsyncThunk(
+  "payment/DisburseFunds",
+  async (payload, { rejectWithValue }) => {
+    try {
+      console.log("DisburseFunds Before", payload);
+
+      const { data, status, message } = await DisburseFunds(payload);
+      console.log("DisburseFunds After", payload);
+      return { data, status, message };
+    } catch (err) {
+      // console.log("🚀 ~ err:", err);
+      console.log("DisburseFunds Catch", err);
       // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);

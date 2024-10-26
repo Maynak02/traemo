@@ -17,7 +17,7 @@ export const readCategoryServiceAction = createAsyncThunk(
       const { data, status, message } = await ReadCategory(payload);
       return { data, status, message };
     } catch (err) {
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -33,7 +33,7 @@ export const listCategorieServiceAction = createAsyncThunk(
       const { data, status, message } = await ListCategories(payload);
       return { data, status, message };
     } catch (err) {
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -47,11 +47,9 @@ export const getProductsServiceAction = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const { data, status, message } = await GetProducts(payload);
-      console.log("status---", data.status);
 
       return { data, status, message };
     } catch (err) {
-      console.log("err---", err);
       // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
@@ -68,7 +66,7 @@ export const ListProductsMeServiceAction = createAsyncThunk(
       const { data, status, message } = await ListProductsMe(payload);
       return { data, status, message };
     } catch (err) {
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -84,7 +82,7 @@ export const GetProductByIdServiceAction = createAsyncThunk(
       const { data, status, message } = await GetProductById(payload);
       return { data, status, message };
     } catch (err) {
-      toast.error(err?.response?.data?.message || err.message);
+      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }

@@ -29,9 +29,10 @@ import Loader from "@/components/Loader";
 
 const Productdetail = () => {
   var settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     fade: true,
+    arrows: false,
   };
   var settingsThumbnail = {
     dots: false,
@@ -43,6 +44,19 @@ const Productdetail = () => {
     verticalSwiping: true,
     focusOnSelect: true,
     infinite: false,
+    responsive: [
+      {
+        breakpoint: 992,
+        settings: {
+          vertical: false,
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          swipeToSlide: false,
+          verticalSwiping: false,
+          loop: false,
+        },
+      },
+    ],
   };
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -149,16 +163,19 @@ const Productdetail = () => {
                     </h3>
                     <h3>CHF</h3>
                   </div>
-                  <div className="block-content-right">
-                    <h5>
-                      <del>
-                        {(productdetail?.price_gross / 100).toLocaleString(
-                          "de-DE"
-                        )}
-                      </del>
-                    </h5>
-                    <h6>CHF</h6>
-                  </div>
+                  {productdetail?.price_discounted !==
+                    productdetail?.price_gross && (
+                    <div className="block-content-right">
+                      <h5>
+                        <del>
+                          {(productdetail?.price_gross / 100).toLocaleString(
+                            "de-DE"
+                          )}
+                        </del>
+                      </h5>
+                      <h6>CHF</h6>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="add-to-cart">

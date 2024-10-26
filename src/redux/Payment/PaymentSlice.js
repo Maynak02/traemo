@@ -8,6 +8,7 @@ import {
   getTransactionServiceAction,
   getAutoTopupServiceAction,
   createUpdateAutoTopupAction,
+  DisburseFundAction,
 } from "./action";
 
 const initialState = {
@@ -133,6 +134,18 @@ const PaymentSlice = createSlice({
         state.error = null;
       })
       .addCase(createUpdateAutoTopupAction.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      })
+      .addCase(DisburseFundAction.pending, (state, { payload }) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(DisburseFundAction.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(DisburseFundAction.rejected, (state, { payload }) => {
         state.isLoading = false;
         state.error = payload;
       });

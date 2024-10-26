@@ -178,6 +178,42 @@ export const axiosDelete = async (
   return response;
 };
 
+export const axiosDeleteFunds = async (
+  url,
+  data,
+  contentType = "application/json"
+) => {
+  let response = {};
+  let header = {};
+
+  const token = getData("token");
+  const userAuth = token?.access_token;
+  if (userAuth) {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+      Authorization: `Bearer ${userAuth}`,
+    };
+  } else {
+    header = {
+      "Content-Type": contentType,
+      Accept: "*/*",
+    };
+  }
+  try {
+    const result = await axiosInstance.delete(url, {
+      headers: header,
+      data: data,
+    });
+    response = result.data;
+    response.status = [200, 201].includes(result.status);
+  } catch (e) {
+    response.status = false;
+    response.message = "something went wrong";
+    response.data = e;
+  }
+  return response;
+};
 export const axiosGetProductID = async (
   url,
   productid,

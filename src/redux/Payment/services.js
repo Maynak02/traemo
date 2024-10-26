@@ -1,4 +1,9 @@
-import { axiosGet, axiosPost, axiosPut } from "@/services/axiosHelper";
+import {
+  axiosDeleteFunds,
+  axiosGet,
+  axiosPost,
+  axiosPut,
+} from "@/services/axiosHelper";
 import { API_ROUTER } from "@/services/apiRouter";
 
 export const GetFunds = (data) => {
@@ -30,4 +35,7 @@ export const GetAutoTopup = (data) => {
 
 export const CreateUpdateAutoTopup = (data) => {
   return axiosPut(API_ROUTER.CREATE_UPDATE_AUTO_TOPUP, data);
+};
+export const DisburseFunds = (data) => {
+  return axiosDeleteFunds(API_ROUTER.GET_FUNDS, data);
 };

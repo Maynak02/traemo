@@ -22,6 +22,7 @@ import {
 } from "@/redux/Cart/CartReducer";
 import { CreateUpdateOrderPlanAction } from "@/redux/Order/action";
 import { now } from "moment";
+import { PATH_DASHBOARD } from "@/routes/paths";
 registerLocale("de", de);
 
 const ShoppingCart = () => {
@@ -116,7 +117,7 @@ const ShoppingCart = () => {
     };
     CreateOrUpdateOrderApi(orderData);
     console.log("Tap Order Now", orderData);
-    // router.push("/customer/wallet");
+    // router.push(PATH_DASHBOARD.wallet);
   };
 
   const CreateOrUpdateOrderApi = async (orderData) => {
@@ -199,7 +200,9 @@ const ShoppingCart = () => {
                   </p>
                 </div>
                 <div className="top-block-cart-right">
-                  <img alt="" src={data?.hub?.logo} />
+                  <div className="top-block-cart-right-complany">
+                    <img alt="" src={data?.hub?.logo} />
+                  </div>
                 </div>
               </div>
               <div className="cart-dropdown-block-inner">

@@ -184,7 +184,6 @@ export default function OrderHistory() {
       offset: newOffset,
       limit: limit,
     };
-    console.log("payload==>", objParam);
 
     setIsLoading(true);
     try {

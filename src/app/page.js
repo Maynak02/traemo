@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import LoginPage from "./(auth)/login/page";
 import CustomerDashboard from "./customer/home/page";
 
-const Home = () => {
+const Main = () => {
   return (
     <div>
       {/* <LoginPage /> */}
@@ -12,4 +12,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Main;

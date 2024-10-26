@@ -8,7 +8,10 @@ import DatePicker from "react-datepicker";
 import Link from "next/link";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { getUpcomingOrderAction } from "@/redux/Order/action";
+import {
+  CreateUpdateOrderPlanAction,
+  getUpcomingOrderAction,
+} from "@/redux/Order/action";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import Loader from "@/components/Loader";
@@ -17,10 +20,13 @@ import { toast } from "react-toastify";
 import { TOAST_ALERTS } from "@/constants/keywords";
 import { getAddressID, readAddressFromID } from "@/redux/Dashboard/action";
 import moment from "moment";
+import { PATH_AUTH } from "@/routes/paths";
+import { useRouter } from "next/navigation";
 const StandingOrders = () => {
   const [startDate, setStartDate] = useState(new Date());
   const { t } = useTranslation("common");
   const dispatch = useDispatch();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const [orderHistory, setOrderHistory] = useState([]);
@@ -56,7 +62,12 @@ const StandingOrders = () => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push(PATH_AUTH.login);
+          removeAll();
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -265,6 +276,28 @@ const StandingOrders = () => {
       </div>
     );
   };
+
+  const CreateOrUpdateOrderApi = async (orderData) => {
+    setIsLoading(true);
+    try {
+      const { payload: res } = await dispatch(
+        CreateUpdateOrderPlanAction(orderData)
+      );
+      const { data, status, message } = res;
+      if (status) {
+        console.log("Create Order=-", data);
+        toast.success("Order Cancel Successfully");
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
   return (
     <div>
       <DashboardHeader />
@@ -272,7 +305,7 @@ const StandingOrders = () => {
         <Loader />
       ) : (
         <CommonPagesBlock>
-          <div className="common-cart-pages-block">
+          <div className="common-cart-pages-block mb-mobile-diff">
             <div className="common-cart-pages-block-left">
               <div className="top-shoping-title">
                 <div className="top-shoping-title-inner">
@@ -311,9 +344,26 @@ const StandingOrders = () => {
                 </div>
                 <div className="btn-block">
                   <div className="btn-block-inner">
-                    <button>{t("Pause")}</button>
+                    <button
+                      onClick={() => {
+                        const orderData = {
+                          ts_paused_start: new Date().toUTCString(),
+                        };
+                        CreateOrUpdateOrderApi(orderData);
+                      }}
+                    >
+                      {t("Pause")}
+                    </button>
                   </div>
-                  <div className="btn-block-inner">
+                  <div
+                    className="btn-block-inner"
+                    onClick={() => {
+                      const orderData = {
+                        recurring: [],
+                      };
+                      CreateOrUpdateOrderApi(orderData);
+                    }}
+                  >
                     <button>{t("Finish")}</button>
                   </div>
                 </div>

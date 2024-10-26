@@ -17,6 +17,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
+import { PATH_AUTH } from "@/routes/paths";
 
 const RegisterPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +82,7 @@ const RegisterPage = () => {
       const { data, status, message } = res;
       if (status) {
         setIsLoading(false);
-        router.push("/login");
+        router.push(PATH_AUTH.login);
       } else {
         setIsLoading(false);
         toast.error(message);
@@ -149,8 +150,8 @@ const RegisterPage = () => {
                 </div>
                 <div className="last-link">
                   <p>
-                    {t("AlreadyAccount")}{" "}
-                    <Link href="/login">{t("SignIn")}</Link>
+                    {t("AlreadyAccount")}&nbsp;
+                    <Link href={PATH_AUTH.login}>{t("SignIn")}</Link>
                   </p>
                 </div>
               </div>

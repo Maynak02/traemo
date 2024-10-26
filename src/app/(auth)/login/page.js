@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
+import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -89,7 +90,7 @@ const LoginPage = () => {
       if (status) {
         setIsLoading(false);
         console.log("ress--->", data);
-        router.push("/customer/home");
+        router.push(PATH_DASHBOARD.home);
       } else {
         setIsLoading(false);
         toast.error(message);
@@ -112,7 +113,6 @@ const LoginPage = () => {
             <FormProvider
               methods={methods}
               onSubmit={handleSubmit(onSubmitForm)}
-              
             >
               <div className="form-login">
                 <div className="form-group">
@@ -123,8 +123,8 @@ const LoginPage = () => {
                 </div>
                 <div className="last-link">
                   <p>
-                    {t("DontHaveAccount")}{" "}
-                    <Link href="/register">{t("SignUp")}</Link>
+                    {t("DontHaveAccount")}&nbsp;
+                    <Link href={PATH_AUTH.signup}>{t("SignUp")}</Link>
                   </p>
                 </div>
               </div>

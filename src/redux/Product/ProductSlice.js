@@ -10,6 +10,7 @@ import {
 const initialState = {
   isLoading: false,
   data: [],
+  categoryList: [],
 };
 
 const ProductSlice = createSlice({
@@ -42,6 +43,7 @@ const ProductSlice = createSlice({
       })
       .addCase(listCategorieServiceAction.fulfilled, (state, { payload }) => {
         state.isLoading = false;
+        state.categoryList = payload;
         state.error = null;
       })
       .addCase(listCategorieServiceAction.rejected, (state, { payload }) => {
@@ -91,5 +93,5 @@ const ProductSlice = createSlice({
 });
 
 export const productApiSliceReducer = ProductSlice.reducer;
-
+export const authState = (state) => state.auth;
 export const { userStore, resetToInitialState } = ProductSlice.actions;

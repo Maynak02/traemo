@@ -113,7 +113,7 @@ const Header = styled.div`
         border-radius: 30px;
         justify-content: space-between;
         background-color: #ffffff;
-        box-shadow: 0px 3px 6px rgba(148, 163, 184, 0.3);
+        box-shadow: 0px 3px 16px 6px rgba(148, 163, 184, 0.3);
       }
       .header-right-cart-link-left {
         display: flex;
@@ -298,7 +298,7 @@ const Header = styled.div`
       .arrow-icon {
         width: 26px;
       }
-    } 
+    }
   }
   .cart-dropdown-mobile {
     position: absolute;

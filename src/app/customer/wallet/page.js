@@ -1,18 +1,16 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DashboardHeader from "@/components/DashboardHeader";
 import CommonPagesBlock from "@/components/styles/common.style";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import DatePicker from "react-datepicker";
-import Link from "next/link";
-
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch } from "react-redux";
 import {
   chargeUserServiceAction,
   createPaymentServiceAction,
   createUpdateAutoTopupAction,
+  DisburseFundAction,
   getAutoTopupServiceAction,
   getFundServiceAction,
   getTransactionServiceAction,
@@ -26,37 +24,46 @@ import { useTranslation } from "react-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/navigation";
 import { removeAll } from "@/utils/storage";
+import Modal from "react-modal";
+import { PATH_AUTH } from "@/routes/paths";
 
 const Wallet = () => {
-  const [startDate, setStartDate] = useState(new Date());
-
   const dispatch = useDispatch();
   const router = useRouter();
+  const { t } = useTranslation("common");
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const [autoTopupList, setAutoTopupList] = useState({});
+  const [autoTopupData, setAutoTopupData] = useState({});
   const [listPaymentMethod, setListPaymentMethod] = useState([]);
   const [selectedAmount, setSelectedAmount] = useState(0);
 
   const [openiFrameUrl, setOpeniFrameUrl] = useState();
   const [customAmountShow, setCustomAmountShow] = useState(false);
 
+  const [modalIsOpen, setIssOpen] = React.useState(false);
+
   const [currentBalance, setCurrentBalance] = useState(0);
   const [transactionList, setTransactionList] = useState([]);
   const [offset, setOffset] = useState(0);
   const limit = 15;
-  const { t } = useTranslation("common");
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("Select an option");
-
   const toggleDropdown = () => setIsOpen(!isOpen);
 
+  const [isAutoTopupOpen, setIsAutoTopupOpen] = useState(false);
+  const toggleAutoTopupSelectPay = () => setIsAutoTopupOpen(!isAutoTopupOpen);
+
+  const [activeButton, setActiveButton] = useState("lowest_quantity");
+
   const handleOptionClick = (option) => {
-    const { brand, last4, exp_month, exp_year } = option.details;
-    setSelected(`${brand} ****${last4} (Exp: ${exp_month}/${exp_year})`);
     setIsOpen(false);
     ChargeUserService(option.id);
+  };
+
+  const handlePaymentMethodForAutoTopup = (payMethod) => {
+    setIsAutoTopupOpen(false);
+    CreateAutoTopup("ACTIVE", payMethod);
   };
 
   useEffect(() => {
@@ -65,44 +72,19 @@ const Wallet = () => {
     GetAutoTopups();
     ListPayment();
   }, []);
-  const transitionBlockRef = useRef(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        transitionBlockRef.current.scrollTop +
-          transitionBlockRef.current.clientHeight >=
-        transitionBlockRef.current.scrollHeight
-      ) {
-        console.log("Reached the bottom of the scroll");
-        // Perform your logic here, e.g., load more transactions
-      }
-    };
-
-    const refCurrent = transitionBlockRef.current;
-    if (refCurrent) {
-      refCurrent.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (refCurrent) {
-        refCurrent.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
   const GetCurrentBalance = async () => {
     setIsLoading(true);
     try {
       const { payload: res } = await dispatch(getFundServiceAction());
       const { data, status, message } = res;
-      console.log("data---", data);
       if (status) {
         setCurrentBalance(data?.total_funds);
         setIsLoading(false);
       } else {
         setIsLoading(false);
         if (data?.status === 401) {
-          router.push("/login");
+          router.push(PATH_AUTH.login);
           removeAll();
         } else {
           toast.error(message);
@@ -118,22 +100,18 @@ const Wallet = () => {
     const objParam = {
       offset: newOffset,
       limit: limit,
+      sort_column: "ts_created",
     };
-    console.log("objParam", objParam);
-
     try {
       const { payload: res } = await dispatch(
         getTransactionServiceAction(objParam)
       );
       const { data, status, message } = res;
       if (status) {
-        console.log("Transaction List---", data);
-
-        // setTransactionList(data);
         setTransactionList((prevList) => [...prevList, ...data]);
       } else {
         if (data?.status === 401) {
-          router.push("/login");
+          router.push(PATH_AUTH.login);
           removeAll();
         } else {
           toast.error(message);
@@ -150,13 +128,13 @@ const Wallet = () => {
       const { payload: res } = await dispatch(getAutoTopupServiceAction());
       const { data, status, message } = res;
       if (status) {
-        console.log("Topup List---", data);
-        setAutoTopupList(data);
+        setAutoTopupData(data);
+        setActiveButton(data.mode);
         setIsLoading(false);
       } else {
         setIsLoading(false);
         if (data?.status === 401) {
-          router.push("/login");
+          router.push(PATH_AUTH.login);
           removeAll();
         } else {
           toast.error(message);
@@ -168,11 +146,11 @@ const Wallet = () => {
       console.log("Error", error);
     }
   };
-  const CreateAutoTopup = async () => {
+  const CreateAutoTopup = async (activeOrPaused, payMethod) => {
     const objParam = {
-      payment_method_id: autoTopupList.payment_method_id,
-      status: autoTopupList.status,
-      mode: "lowest_quantity",
+      payment_method_id: payMethod,
+      status: activeOrPaused,
+      mode: activeButton,
     };
     setIsLoading(true);
     try {
@@ -183,10 +161,11 @@ const Wallet = () => {
       if (status) {
         console.log("CreateAutoTopup", data);
         setIsLoading(false);
+        GetAutoTopups();
       } else {
         setIsLoading(false);
         if (data?.status === 401) {
-          router.push("/login");
+          router.push(PATH_AUTH.login);
           removeAll();
         } else {
           toast.error(message);
@@ -203,8 +182,6 @@ const Wallet = () => {
       amount: selectedAmount,
       payment_method_id: paymentId,
     };
-    console.log("objParam", objParam);
-
     setIsLoading(true);
     try {
       const { payload: res } = await dispatch(
@@ -212,13 +189,12 @@ const Wallet = () => {
       );
       const { data, status, message } = res;
       if (status) {
-        console.log("ChargeUserService List---", data);
         GetCurrentBalance();
         setIsLoading(false);
       } else {
         setIsLoading(false);
         if (data?.status === 401) {
-          router.push("/login");
+          router.push(PATH_AUTH.login);
           removeAll();
         } else {
           toast.error(message);
@@ -244,7 +220,7 @@ const Wallet = () => {
       } else {
         setIsLoading(false);
         if (data?.status === 401) {
-          router.push("/login");
+          router.push(PATH_AUTH.login);
           removeAll();
         } else {
           toast.error(message);
@@ -262,16 +238,12 @@ const Wallet = () => {
       const { payload: res } = await dispatch(listPaymentServiceAction());
       const { data, status, message } = res;
       if (status) {
-        console.log("ListPayment List---", data);
         setListPaymentMethod(data);
-        // if (data.length !== 0) {
-        //   CreatePayment();
-        // }
         setIsLoading(false);
       } else {
         setIsLoading(false);
         if (data?.status === 401) {
-          router.push("/login");
+          router.push(PATH_AUTH.login);
           removeAll();
         } else {
           toast.error(message);
@@ -279,6 +251,31 @@ const Wallet = () => {
       }
     } catch (error) {
       setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
+
+  const DisburseFundsApi = async (amountData) => {
+    const objParam = JSON.stringify({
+      amount: amountData,
+    });
+    try {
+      const { payload: res } = await dispatch(DisburseFundAction(objParam));
+      console.log("Response ", res);
+      const { data, status, message } = res;
+      if (status) {
+        closeModal();
+        GetCurrentBalance();
+      } else {
+        if (data?.status === 401) {
+          router.push(PATH_AUTH.login);
+          removeAll();
+        } else {
+          toast.error(message);
+        }
+      }
+    } catch (error) {
       toast.error(TOAST_ALERTS.ERROR_MESSAGE);
       console.log("Error", error);
     }
@@ -296,37 +293,129 @@ const Wallet = () => {
             <p className="autotopup-description">{t("TopupIfBalanceLow")}</p>
           </div>
         </div>
-        {autoTopupList.status === "active" && (
+        {autoTopupData.status === "active" && (
           <div className="list-block-wallet">
             <div className="list-block-wallet-outer">
-              <button onClick={() => setCustomAmountShow(true)}>
+              <button
+                onClick={() => {
+                  CreateAutoTopup("PAUSED", autoTopupData.payment_method_id);
+                }}
+              >
                 <span>{t("Pause")}</span>
               </button>
             </div>
             <div className="list-block-wallet-finish">
-              <button onClick={() => setCustomAmountShow(true)}>
+              <button
+                onClick={() => {
+                  CreateAutoTopup("PAUSED", autoTopupData.payment_method_id);
+                }}
+              >
                 <span>{t("Finish")}</span>
               </button>
             </div>
           </div>
         )}
         <div className="start-setup">
-          <button>
+          <button
+            onClick={() => {
+              if (listPaymentMethod.length === 0) {
+                CreatePayment();
+              } else {
+                toggleAutoTopupSelectPay();
+              }
+              // CreateAutoTopup("ACTIVE");
+            }}
+          >
             <span>{t("SelectPaymentMethod")}</span>
           </button>
         </div>
 
+        {isAutoTopupOpen && (
+          <div className="mt-2 w-[100%] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+            <div className="py-1">
+              {listPaymentMethod.map((method, index) => (
+                <div key={index}>
+                  {method.type === "paypal" ? (
+                    <button
+                      onClick={() => handlePaymentMethodForAutoTopup(method.id)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/paypal.png"
+                        alt="Card"
+                        className="w-6 h-6 mr-2 rounded"
+                      />
+                      {`${method.details.payer_email}`}
+                    </button>
+                  ) : method.type === "card" ? (
+                    <button
+                      onClick={() => handlePaymentMethodForAutoTopup(method.id)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/creditcard.png"
+                        alt="Card"
+                        className="w-6 h-6 mr-2"
+                      />
+
+                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
+                    </button>
+                  ) : method.type === "googlepay" ? (
+                    <button
+                      onClick={() => handlePaymentMethodForAutoTopup(method.id)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/googlepay.png"
+                        alt="Card"
+                        className="w-6 h-6 mr-2"
+                      />
+
+                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handlePaymentMethodForAutoTopup(method.id)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <img
+                        src="/images/applepay.png"
+                        alt="Card"
+                        className="w-6 h-6 mr-2"
+                      />
+                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
+                    </button>
+                  )}
+                  {index < listPaymentMethod.length - 1 && (
+                    <div className="border-b border-gray-200"></div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="list-block-wallet-another">
           <button
-            className="list-block-wallet-inner"
-            onClick={() => setSelectedAmount(2000)}
+            className={`list-block-wallet-inner ${
+              activeButton === "lowest_quantity" ? "active" : ""
+            }`}
+            onClick={() => {
+              // lowest_quantity
+              setActiveButton("lowest_quantity");
+            }}
           >
             <h3>{t("FewerTopup")}</h3>
             <h2>{t("SystemReduceTopups")}</h2>
           </button>
           <button
-            className="list-block-wallet-outer"
-            onClick={() => setSelectedAmount(5000)}
+            className={`list-block-wallet-outer ${
+              activeButton === "lowest_balance" ? "active" : ""
+            }`}
+            onClick={() => {
+              // lowest_balance
+              setActiveButton("lowest_balance");
+            }}
           >
             <h3>{t("LessCredit")}</h3>
             <h2>{t("SystemAvailableTopups")}</h2>
@@ -336,7 +425,6 @@ const Wallet = () => {
     );
   };
   const fetchMoreData = async () => {
-    console.log("Fetch More Data");
     const newOffset = offset + limit;
     setOffset(newOffset);
     GetTransactionList(newOffset);
@@ -363,10 +451,8 @@ const Wallet = () => {
             <InfiniteScroll
               dataLength={transactionList.length}
               next={fetchMoreData}
-              style={{ display: "flex", flexDirection: "column" }} //To put endMessage and loader to the top.
-              // inverse={true} //
+              style={{ display: "flex", flexDirection: "column" }}
               hasMore={true}
-              // loader={<h4>Loading...</h4>}
               scrollableTarget="scrollableDiv"
             >
               {transactionList.map((item, index) => {
@@ -398,7 +484,9 @@ const Wallet = () => {
                       </h3>
                     </div>
                     <div className="transition-block-inner-right">
-                      <h2>€{(item.amount / 100).toLocaleString("de-DE")}</h2>
+                      <h2>
+                        CHF&nbsp;{(item.amount / 100).toLocaleString("de-DE")}
+                      </h2>
                     </div>
                   </div>
                 );
@@ -411,7 +499,6 @@ const Wallet = () => {
   };
 
   const handleChangeAmount = (e) => {
-    console.log("e-->", e.target.value);
     setSelectedAmount(e.target.value);
   };
 
@@ -426,7 +513,7 @@ const Wallet = () => {
           <div className="wallet-top-block-right">
             <button
               onClick={() => {
-                console.log("Tap Payout");
+                openModal();
               }}
             >
               <span>{t("PayOut")}</span>
@@ -434,6 +521,7 @@ const Wallet = () => {
             </button>
           </div>
         </div>
+
         <div className="list-block-wallet">
           <button
             className="list-block-wallet-inner"
@@ -481,7 +569,6 @@ const Wallet = () => {
         <div className="last-btn">
           <button
             onClick={() => {
-              console.log("selectedAmount", selectedAmount);
               if (listPaymentMethod.length === 0) {
                 CreatePayment();
               } else {
@@ -553,7 +640,6 @@ const Wallet = () => {
                       {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
                     </button>
                   )}
-
                   {index < listPaymentMethod.length - 1 && (
                     <div className="border-b border-gray-200"></div>
                   )}
@@ -566,6 +652,30 @@ const Wallet = () => {
     );
   };
 
+  function openModal() {
+    setIssOpen(true);
+  }
+  function closeModal() {
+    setIssOpen(false);
+    setAmount(0);
+  }
+
+  const [amount, setAmount] = useState(0);
+
+  const handleSubmit = (e) => {
+    // e.preventDefault();
+    if (e > currentBalance) {
+      toast.error(
+        `Amount cannot exceed your current balance of ${(
+          currentBalance / 100
+        ).toLocaleString("de-DE")}.`
+      );
+    } else if (e < 500) {
+      toast.error("Amount must be at least €5.");
+    } else {
+      DisburseFundsApi(e);
+    }
+  };
   return (
     <div>
       <DashboardHeader />
@@ -582,6 +692,32 @@ const Wallet = () => {
           </div>
         </CommonPagesBlock>
       )}
+      <Modal
+        isOpen={modalIsOpen}
+        className="disburse-amount-modal-block"
+        onRequestClose={closeModal}
+        contentLabel="Disburse Modal"
+      >
+        <div
+          // onSubmit={handleSubmit}
+          className="flex flex-col space-y-6 max-w-md mx-auto p-6 bg-white mt-[10%] rounded-lg"
+        >
+          <label className="font-semibold text-gray-700">Amount:</label>
+          <input
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Enter amount"
+            className="p-3 border border-gray-300 rounded-lg"
+          />
+
+          <button
+            onClick={() => handleSubmit(amount)}
+            className="p-3 bg-redEB text-white font-semibold rounded-lg"
+          >
+            Disburse Funds
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

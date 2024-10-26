@@ -11,6 +11,7 @@ import { getUserAction, logoutAction } from "@/redux/Auth/action";
 import { toast } from "react-toastify";
 import { TOAST_ALERTS } from "@/constants/keywords";
 import { getData, removeData, saveData } from "@/utils/storage";
+import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 
 const SingleHeader = ({ className = "" }) => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const SingleHeader = ({ className = "" }) => {
 
   const onTapLogin = useCallback(() => {
     // setProfileDropdownOpen(true);
-    router.push("/login");
+    router.push(PATH_AUTH.login);
   }, []);
 
   const [userData, setUserData] = useState();
@@ -111,7 +112,7 @@ const SingleHeader = ({ className = "" }) => {
         <Header>
           <div className="header-left">
             <div className="logo-header">
-              <Link href="/customer/home">
+              <Link href={PATH_DASHBOARD.home}>
                 <img alt="logo" src="/image-1@2x.png" />
               </Link>
             </div>
@@ -143,7 +144,7 @@ const SingleHeader = ({ className = "" }) => {
           className="absolute z-40 right-8 top-[85px] w-[240px] bg-white border-[1px] br-[8px] rounded-lg px-4 shadow-[0px_1px_3px_rgba(16,_24,_40,_0.1),_0px_1px_2px_rgba(16,_24,_40,_0.06)]"
         >
           <ul className="py-4">
-            <Link href="/customer/wallet">
+            <Link href={PATH_DASHBOARD.wallet}>
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_wallet.svg" />
                 <span className="font-inter text-black text-[16px]">
@@ -152,15 +153,15 @@ const SingleHeader = ({ className = "" }) => {
                 <span className="text-green-500 font-semibold">€0</span>
               </li>
             </Link>
-            <Link href="/customer/profile">
+            {/* <Link href={PATH_DASHBOARD.profile}>
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_profile.svg" />
                 <span className="font-inter text-black text-[16px]">
                   {t("Profile")}
                 </span>
               </li>
-            </Link>
-            <Link href="/customer/standingorders">
+            </Link> */}
+            <Link href={PATH_DASHBOARD.standingorders}>
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_premium.svg" />
                 <span className="font-inter text-black text-[16px]">
@@ -168,7 +169,7 @@ const SingleHeader = ({ className = "" }) => {
                 </span>
               </li>
             </Link>
-            <Link href="/customer/address">
+            {/* <Link href={PATH_DASHBOARD.address}>
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_address.svg" />
                 <span className="font-inter text-black text-[16px]">
@@ -177,7 +178,7 @@ const SingleHeader = ({ className = "" }) => {
               </li>
             </Link>
 
-            <Link href="/customer/history">
+            <Link href={PATH_DASHBOARD.history}>
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_history.svg" />
                 <span className="font-inter text-black text-[16px]">
@@ -185,14 +186,14 @@ const SingleHeader = ({ className = "" }) => {
                 </span>
               </li>
             </Link>
-            <Link href="/customer/support">
+            <Link href={PATH_DASHBOARD.support}>
               <li className="flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 mb-2 hover:border hover:border-borderbackground rounded-md border border-transparent">
                 <img className="h-6 w-6" src="/images/ic_support.svg" />
                 <span className="font-inter text-black text-[16px]">
                   {t("Support")}
                 </span>
               </li>
-            </Link>
+            </Link> */}
             <button
               className="w-[100%]"
               onClick={() => {
