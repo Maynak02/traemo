@@ -5,6 +5,7 @@ const initialState = {
   updatedCartList: [],
   fetchAddress: {},
   cartTotal: 0,
+  constants: [],
 };
 
 const CartReducer = createSlice({
@@ -21,8 +22,10 @@ const CartReducer = createSlice({
       state.fetchAddress = action.payload;
     },
     setCartTotal: (state, action) => {
-      console.log("action.payload", action.payload);
       state.cartTotal = action.payload;
+    },
+    setConstants: (state, action) => {
+      state.constants = action.payload;
     },
     setUpdatedCartList: (state, action) => {
       const itemToUpdate = action.payload; // The new item passed
@@ -46,7 +49,6 @@ const CartReducer = createSlice({
       }
 
       // Optionally, update any other state if needed
-      console.log("Updated cart list:", state.cartList);
     },
 
     setDecreaseQuantity: (state, action) => {
@@ -66,14 +68,12 @@ const CartReducer = createSlice({
           state.cartList.splice(existingItemIndex, 1);
         }
       }
-
-      // Optionally, update any other state if needed
-      console.log("Updated cart list:", state.cartList);
     },
   },
 });
 
 export const {
+  setConstants,
   setCartList,
   setAddressForList,
   setCartTotal,

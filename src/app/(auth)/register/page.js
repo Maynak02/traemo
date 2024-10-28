@@ -75,7 +75,6 @@ const RegisterPage = () => {
       lastname: lastname,
       locale: "de_CH",
     };
-    console.log("payload==>", objParam);
 
     try {
       const { payload: res } = await dispatch(createUserAction(objParam));

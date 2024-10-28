@@ -21,3 +21,6 @@ export const ListProductsMe = (data) => {
 export const GetProductById = (productid) => {
   return axiosGetProductID(API_ROUTER.GET_PRODUCT_BY_ID, productid);
 };
+export const SearchAllProducts = (data) => {
+  return axiosPost(API_ROUTER.POST_SEARCHES, data);
+};

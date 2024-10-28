@@ -20,3 +20,6 @@ export const CREATE_UPDATE_ADDRESS = (data) => {
 export const LIST_ADDRESS = (data) => {
   return axiosGet(API_ROUTER.CREATE_ADDRESS, data);
 };
+export const GET_CONSTANTS_DATA = (data) => {
+  return axiosGet(API_ROUTER.GET_CONSTANTS, data);
+};

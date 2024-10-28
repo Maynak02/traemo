@@ -17,7 +17,7 @@ import {
   listPaymentServiceAction,
 } from "@/redux/Payment/action";
 import { toast } from "react-toastify";
-import { TOAST_ALERTS } from "@/constants/keywords";
+import { CONSTANT_DATA, TOAST_ALERTS } from "@/constants/keywords";
 import Loader from "@/components/Loader";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -37,9 +37,12 @@ const Wallet = () => {
   const [autoTopupData, setAutoTopupData] = useState({});
   const [listPaymentMethod, setListPaymentMethod] = useState([]);
   const [selectedAmount, setSelectedAmount] = useState(0);
+  const [customAmount, setCustomAmount] = useState(0);
 
   const [openiFrameUrl, setOpeniFrameUrl] = useState();
   const [customAmountShow, setCustomAmountShow] = useState(false);
+
+  const [hideShowOwnAmount, setHideShowOwnAmount] = useState(false);
 
   const [modalIsOpen, setIssOpen] = React.useState(false);
 
@@ -54,7 +57,7 @@ const Wallet = () => {
   const [isAutoTopupOpen, setIsAutoTopupOpen] = useState(false);
   const toggleAutoTopupSelectPay = () => setIsAutoTopupOpen(!isAutoTopupOpen);
 
-  const [activeButton, setActiveButton] = useState("lowest_quantity");
+  const [activeButton, setActiveButton] = useState("LOWEST_QUANTITY");
 
   const handleOptionClick = (option) => {
     setIsOpen(false);
@@ -159,7 +162,6 @@ const Wallet = () => {
       );
       const { data, status, message } = res;
       if (status) {
-        console.log("CreateAutoTopup", data);
         setIsLoading(false);
         GetAutoTopups();
       } else {
@@ -179,7 +181,7 @@ const Wallet = () => {
   };
   const ChargeUserService = async (paymentId) => {
     const objParam = {
-      amount: selectedAmount,
+      amount: customAmountShow ? customAmount : selectedAmount,
       payment_method_id: paymentId,
     };
     setIsLoading(true);
@@ -212,10 +214,8 @@ const Wallet = () => {
       const { payload: res } = await dispatch(createPaymentServiceAction());
       const { data, status, message } = res;
       if (status) {
-        console.log("openiFrameUrl---", data);
         setOpeniFrameUrl(data);
         window.location.href = data.url;
-        // setOpeniFrameModal(true);
         setIsLoading(false);
       } else {
         setIsLoading(false);
@@ -262,7 +262,6 @@ const Wallet = () => {
     });
     try {
       const { payload: res } = await dispatch(DisburseFundAction(objParam));
-      console.log("Response ", res);
       const { data, status, message } = res;
       if (status) {
         closeModal();
@@ -398,11 +397,11 @@ const Wallet = () => {
         <div className="list-block-wallet-another">
           <button
             className={`list-block-wallet-inner ${
-              activeButton === "lowest_quantity" ? "active" : ""
+              activeButton === "LOWEST_QUANTITY" ? "active" : ""
             }`}
             onClick={() => {
-              // lowest_quantity
-              setActiveButton("lowest_quantity");
+              // LOWEST_QUANTITY
+              setActiveButton("LOWEST_QUANTITY");
             }}
           >
             <h3>{t("FewerTopup")}</h3>
@@ -410,11 +409,11 @@ const Wallet = () => {
           </button>
           <button
             className={`list-block-wallet-outer ${
-              activeButton === "lowest_balance" ? "active" : ""
+              activeButton === "LOWEST_BALANCE" ? "active" : ""
             }`}
             onClick={() => {
-              // lowest_balance
-              setActiveButton("lowest_balance");
+              // LOWEST_BALANCE
+              setActiveButton("LOWEST_BALANCE");
             }}
           >
             <h3>{t("LessCredit")}</h3>
@@ -499,7 +498,8 @@ const Wallet = () => {
   };
 
   const handleChangeAmount = (e) => {
-    setSelectedAmount(e.target.value);
+    setSelectedAmount(0);
+    setCustomAmount(e.target.value);
   };
 
   const renderRecarge = () => {
@@ -524,41 +524,63 @@ const Wallet = () => {
 
         <div className="list-block-wallet">
           <button
-            className="list-block-wallet-inner"
-            onClick={() => setSelectedAmount(2000)}
+            className={`list-block-wallet-inner ${
+              selectedAmount === 2000 ? "selected-block" : ""
+            }`}
+            onClick={() => {
+              setCustomAmountShow(false);
+              setSelectedAmount(2000);
+            }}
           >
             <h3>
-              20,00 <span>CHF</span>
+              20 <span>CHF</span>
             </h3>
           </button>
           <button
-            className="list-block-wallet-inner"
-            onClick={() => setSelectedAmount(5000)}
+            className={`list-block-wallet-inner ${
+              selectedAmount === 5000 ? "selected-block" : ""
+            }`}
+            onClick={() => {
+              setCustomAmountShow(false);
+              setSelectedAmount(5000);
+            }}
           >
             <h3>
-              50,00 <span>CHF</span>
+              50 <span>CHF</span>
             </h3>
           </button>
           <button
-            className="list-block-wallet-inner"
-            onClick={() => setSelectedAmount(10000)}
+            className={`list-block-wallet-inner ${
+              selectedAmount === 10000 ? "selected-block" : ""
+            }`}
+            onClick={() => {
+              setCustomAmountShow(false);
+              setSelectedAmount(10000);
+            }}
           >
             <h3>
-              100,00 <span>CHF</span>
+              100 <span>CHF</span>
             </h3>
           </button>
           <div className="list-block-wallet-inner">
-            {customAmountShow ? (
+            {hideShowOwnAmount ? (
               <div style={{ display: "flex" }}>
                 <input
                   type="text"
                   placeholder="Please enter amount"
-                  value={selectedAmount}
+                  value={customAmount}
                   onChange={handleChangeAmount}
+                  onFocus={() => setSelectedAmount(0)}
                 />
               </div>
             ) : (
-              <button onClick={() => setCustomAmountShow(true)}>
+              <button
+                onClick={() => {
+                  setSelectedAmount(0);
+                  setCustomAmountShow(true);
+                  setHideShowOwnAmount(true);
+                }}
+              >
                 <img src={"/images/charge_now.svg"} />
                 <span>{t("OwnAmount")}</span>
               </button>
@@ -572,10 +594,22 @@ const Wallet = () => {
               if (listPaymentMethod.length === 0) {
                 CreatePayment();
               } else {
-                if (selectedAmount < 2000) {
-                  toast.error("Please Select amount first");
+                if (customAmountShow) {
+                  if (customAmount < CONSTANT_DATA.MIN_TOPUP_VALUE) {
+                    toast.error(
+                      `Minimum Topup Value must be ${CONSTANT_DATA.MIN_ORDER_VALUE}`
+                    );
+                  } else {
+                    toggleDropdown();
+                  }
                 } else {
-                  toggleDropdown();
+                  if (selectedAmount < CONSTANT_DATA.MIN_TOPUP_VALUE) {
+                    toast.error(
+                      `Minimum Topup Value must be ${CONSTANT_DATA.MIN_ORDER_VALUE}`
+                    );
+                  } else {
+                    toggleDropdown();
+                  }
                 }
               }
             }}
@@ -670,7 +704,7 @@ const Wallet = () => {
           currentBalance / 100
         ).toLocaleString("de-DE")}.`
       );
-    } else if (e < 500) {
+    } else if (e < CONSTANT_DATA.MIN_DISBURSEMENT_VALUE) {
       toast.error("Amount must be at least €5.");
     } else {
       DisburseFundsApi(e);

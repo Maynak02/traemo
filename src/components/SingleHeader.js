@@ -39,7 +39,6 @@ const SingleHeader = ({ className = "" }) => {
 
   useEffect(() => {
     const token = getData("token");
-    console.log("user", token);
     if (token) {
       setUserAuth(token?.access_token);
       getUserData();
@@ -89,7 +88,6 @@ const SingleHeader = ({ className = "" }) => {
   }, [logoutRef]);
 
   const handleLogout = async () => {
-    console.log("Logged out");
     const { payload: res } = await storeDispatch(logoutAction());
     const { status, message } = res;
     if (status) {

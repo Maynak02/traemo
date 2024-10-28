@@ -66,7 +66,6 @@ const LoginPage = () => {
       const { payload: res } = await dispatch(loginAction(objParam));
       const { data, status, message } = res;
       if (status) {
-        console.log("ress--->key", data.message);
         authMagicLink(data.message);
       } else {
         setIsLoading(false);
@@ -89,7 +88,6 @@ const LoginPage = () => {
       const { data, status, message } = res;
       if (status) {
         setIsLoading(false);
-        console.log("ress--->", data);
         router.push(PATH_DASHBOARD.home);
       } else {
         setIsLoading(false);

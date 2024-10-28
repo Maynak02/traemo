@@ -31,7 +31,8 @@ const Header = styled.div`
         align-items: center;
         padding: 11px 16px;
         border: 1px solid rgba(208, 213, 221, 0.6);
-        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
+          0px 1px 2px rgba(16, 24, 40, 0.06);
         /* background-color: #f9c93c; */
         border-radius: 12px;
         cursor: pointer;
@@ -60,7 +61,8 @@ const Header = styled.div`
         padding: 11px 16px;
         border: 1px solid rgba(208, 213, 221, 0.6);
         border-radius: 8px;
-        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
+          0px 1px 2px rgba(16, 24, 40, 0.06);
         p {
           padding-right: 8px;
           color: #667085;
@@ -102,7 +104,8 @@ const Header = styled.div`
       padding: 11px 16px;
       border: 1px solid rgba(208, 213, 221, 0.6);
       border-radius: 8px;
-      box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+      box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
+        0px 1px 2px rgba(16, 24, 40, 0.06);
       @media (max-width: 767px) {
         position: fixed;
         bottom: 24px;
@@ -279,7 +282,8 @@ const Header = styled.div`
       padding: 11px 16px;
       border: 1px solid rgba(208, 213, 221, 0.6);
       border-radius: 8px;
-      box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+      box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
+        0px 1px 2px rgba(16, 24, 40, 0.06);
       @media (max-width: 767px) {
         display: none;
       }
@@ -543,6 +547,23 @@ const Header = styled.div`
           }
         }
       }
+    }
+  }
+  .loader {
+    border: 2px solid #f3f3f3; /* Light grey */
+    border-top: 2px solid #ffffff; /* White */
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
     }
   }
 `;

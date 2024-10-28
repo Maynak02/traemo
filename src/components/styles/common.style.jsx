@@ -6,6 +6,55 @@ const CommonPagesBlock = styled.div`
   .dasborad-main {
     position: relative;
     .tabs-block {
+      .react-tabs {
+        @media (max-width: 1199px) {
+          overflow-x: scroll;
+        }
+        .react-tabs__tab-list {
+          margin: 0px 32px;
+          padding: 16px 0px;
+          border-bottom: 0px solid rgba(208, 213, 221, 0.6);
+          @media (max-width: 1400px) {
+            margin: 0px 20px;
+          }
+          @media (max-width: 767px) {
+            margin: 0px 15px;
+          }
+          @media (max-width: 1199px) {
+            min-width: 1215px;
+          }
+          .react-tabs__tab {
+            border: none;
+            padding: 0px;
+            @media (max-width: 1400px) {
+              padding: 8px 13px;
+            }
+            .tabs-block-link {
+              display: flex;
+              align-items: center;
+              padding: 8px 16px;
+              p {
+                color: #98a2b3;
+                font-size: 14px;
+                padding-left: 8px;
+              }
+            }
+            &.react-tabs__tab--selected {
+              .tabs-block-link {
+                border-bottom: 1px solid #ffc93c;
+                svg {
+                  path {
+                    stroke: #ffc93c;
+                  }
+                }
+                p {
+                  color: #ffc93c;
+                }
+              }
+            }
+          }
+        }
+      }
       .tabs-block-fixed {
         transition: 0.5s;
         &.scrolled {
@@ -19,7 +68,7 @@ const CommonPagesBlock = styled.div`
           background-color: #fff;
         }
       }
-      .react-tabs {
+      /* .react-tabs {
         @media (max-width: 1199px) {
           overflow-x: scroll;
         }
@@ -67,7 +116,7 @@ const CommonPagesBlock = styled.div`
             }
           }
         }
-      }
+      } */
 
       .tab-panel-block {
         .tab-panel-block-inner {
@@ -146,7 +195,7 @@ const CommonPagesBlock = styled.div`
               }
               .tab-panel-data-block-inner {
                 background-color: #ffffff;
-                box-shadow: 0px 3px 6px rgba(148, 163, 184, 0.3);
+                box-shadow: 0px 3px 6px rgba(148, 163, 184, 0.2);
                 border-radius: 12px;
                 .block-img-tab {
                   width: 100%;
@@ -1147,9 +1196,8 @@ const CommonPagesBlock = styled.div`
             padding: 0px 4px 8px;
             &.selected-block {
               h3 {
-                background-color: rgba(249, 201, 60, 0.2);
-                border-color: #ffc93c;
-                color: #ffc93c;
+                background-color: #ffc93c;
+                color: white;
               }
             }
             h3 {

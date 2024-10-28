@@ -11,8 +11,6 @@ export const getUpcomingOrderAction = createAsyncThunk(
       const { data, status, message } = await GetUpcomingOrder(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -27,8 +25,6 @@ export const CreateUpdateOrderPlanAction = createAsyncThunk(
       const { data, status, message } = await CreateUpdateOrderPlan(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }

@@ -5,6 +5,7 @@ import {
   createOrUpdateAddress,
   listAddress,
   getAddressID,
+  getConstantsDataAction,
 } from "./action";
 
 const initialState = {
@@ -91,6 +92,18 @@ const DashboardSlice = createSlice({
         state.error = null;
       })
       .addCase(getAddressID.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      })
+      .addCase(getConstantsDataAction.pending, (state, { payload }) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getConstantsDataAction.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(getConstantsDataAction.rejected, (state, { payload }) => {
         state.isLoading = false;
         state.error = payload;
       });

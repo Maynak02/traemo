@@ -7,6 +7,7 @@ import {
   GetProducts,
   ListProductsMe,
   GetProductById,
+  SearchAllProducts,
 } from "./services";
 import { AxiosError } from "axios";
 
@@ -80,6 +81,21 @@ export const GetProductByIdServiceAction = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const { data, status, message } = await GetProductById(payload);
+      return { data, status, message };
+    } catch (err) {
+      // toast.error(err?.response?.data?.message || err.message);
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message);
+      }
+      return rejectWithValue(err.message);
+    }
+  }
+);
+export const SearchAllProductsAction = createAsyncThunk(
+  "product/SearchAllProducts",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data, status, message } = await SearchAllProducts(payload);
       return { data, status, message };
     } catch (err) {
       // toast.error(err?.response?.data?.message || err.message);

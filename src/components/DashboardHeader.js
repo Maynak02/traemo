@@ -10,12 +10,13 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setAddressForList,
+  setConstants,
   setDecreaseQuantity,
   setUpdatedCartList,
 } from "@/redux/Cart/CartReducer";
 import { getUserAction, logoutAction } from "@/redux/Auth/action";
 import { toast } from "react-toastify";
-import { TOAST_ALERTS } from "@/constants/keywords";
+import { CONSTANT_DATA, TOAST_ALERTS } from "@/constants/keywords";
 import { getData, removeAll, removeData, saveData } from "@/utils/storage";
 import {
   GoogleMap,
@@ -23,7 +24,11 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import { GOOGLE_PLACE_API_KEY } from "@/config";
-import { createOrUpdateAddress, listAddress } from "@/redux/Dashboard/action";
+import {
+  createOrUpdateAddress,
+  getConstantsDataAction,
+  listAddress,
+} from "@/redux/Dashboard/action";
 import Loader from "./Loader";
 import { ThreeDots } from "react-loader-spinner";
 import { FormProvider, RHFTextInput } from "@/components/hook-form";
@@ -41,6 +46,7 @@ const DashboardHeader = ({ className = "" }) => {
   const [modalIsInnerOpen, setIsInnerOpen] = React.useState(false);
   const router = useRouter();
   const storeDispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.GOOGLE_PLACE_API_KEY,
@@ -88,24 +94,18 @@ const DashboardHeader = ({ className = "" }) => {
 
   const [addressList, setAddressList] = useState([]);
 
-  // const [hasAddress, sethasAddress] = useState(false);
-
   useEffect(() => {
     const token = getData("token");
-    console.log("user", token);
     if (token) {
       setUserAuth(token?.access_token);
       getUserData();
       listAddressData();
-
-      // fetchAddress
+      getConstantData();
     }
   }, []);
 
   let hasAddress = false;
-
   const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
-
   if (fetchAddressData && Object.keys(fetchAddressData).length > 0) {
     hasAddress = true;
   } else {
@@ -183,8 +183,6 @@ const DashboardHeader = ({ className = "" }) => {
   };
 
   const CreateAddress = async () => {
-    console.log("locationData", formData);
-
     setIsLoading(true);
     const objParam = {
       name: formData.name,
@@ -202,8 +200,6 @@ const DashboardHeader = ({ className = "" }) => {
       );
       const { data, status, message } = res;
       if (status) {
-        console.log("RES-DATA->", data);
-
         storeDispatch(setAddressForList(locationData));
         setIsLoading(false);
         setIsInnerOpen(false);
@@ -218,12 +214,31 @@ const DashboardHeader = ({ className = "" }) => {
       console.log("Error", error);
     }
   };
-
-  // Fetch Data
+  const getConstantData = async () => {
+    setIsLoading(true);
+    try {
+      const { payload: res } = await storeDispatch(getConstantsDataAction());
+      const { data, status, message } = res;
+      if (status) {
+        CONSTANT_DATA.DELIVERY_FEE = data.DELIVERY_FEE;
+        CONSTANT_DATA.MIN_DISBURSEMENT_VALUE = data.MIN_DISBURSEMENT_VALUE;
+        CONSTANT_DATA.MIN_ORDER_VALUE = data.MIN_ORDER_VALUE;
+        CONSTANT_DATA.MIN_TOPUP_VALUE = data.MIN_TOPUP_VALUE;
+        CONSTANT_DATA.MOBILE_CUSTOMER_VERSION = data.MOBILE_CUSTOMER_VERSION;
+        CONSTANT_DATA.MOBILE_HUB_VERSION = data.MOBILE_HUB_VERSION;
+        CONSTANT_DATA.WEB_CUSTOMER_VERSION = data.WEB_CUSTOMER_VERSION;
+        CONSTANT_DATA.WEB_HUB_VERSION = data.WEB_HUB_VERSION;
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
   const cartData = useSelector((state) => state.cartData.cartList);
-
-  // console.log("cartData", cartData);
-
   const totalPrice = cartData.reduce((acc, current) => {
     return acc + parseFloat(current.displayPrice);
   }, 0);
@@ -268,20 +283,23 @@ const DashboardHeader = ({ className = "" }) => {
   }, [logoutRef]);
 
   const handleLogout = async () => {
-    console.log("Logged out");
+    setLoading(true);
     const { payload: res } = await storeDispatch(logoutAction());
     const { status, message } = res;
     if (status) {
+      setLoading(false);
       removeData("user");
       removeData("token");
       setIsModalVisible(false);
       onTapLogin();
     } else {
+      setLoading(false);
       toast.error(message);
     }
   };
 
   const handleClose = () => {
+    setIsLoading(false);
     setIsModalVisible(false);
   };
 
@@ -317,10 +335,6 @@ const DashboardHeader = ({ className = "" }) => {
       }
 
       const locationDetails = extractDetails(place);
-      // setDetails(locationDetails);
-      console.log("place-->", place.formatted_address);
-      console.log("locationDetails-->", locationDetails);
-
       if (userAuth !== null) {
         setFormData({
           id: "",
@@ -340,8 +354,6 @@ const DashboardHeader = ({ className = "" }) => {
         storeDispatch(setAddressForList(locationDetails));
         closeModal();
       }
-    } else {
-      console.log("Autocomplete is not loaded yet!");
     }
   };
 
@@ -359,8 +371,6 @@ const DashboardHeader = ({ className = "" }) => {
   });
 
   const handleChange = (e) => {
-    console.log("e-->", e.target);
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -955,7 +965,6 @@ const DashboardHeader = ({ className = "" }) => {
                       <button
                         className="btn button-common"
                         onClick={() => {
-                          console.log("formData", formData);
                           if (formData.name == "") {
                             toast.error("Please Enter your Name");
                           } else if (formData.house == "") {
@@ -1068,10 +1077,18 @@ const DashboardHeader = ({ className = "" }) => {
                 {t("Cancel")}
               </button>
               <button
-                onClick={handleLogout}
-                className="bg-theme text-white px-4 py-2 rounded-md w-full"
+                onClick={() => handleLogout()}
+                className={`${
+                  loading
+                    ? "bg-theme opacity-50 cursor-not-allowed"
+                    : "bg-theme"
+                } text-white px-4 py-2 rounded-md w-full flex justify-center items-center`}
               >
-                {t("Logout")}
+                {loading ? (
+                  <span className="w-4 h-4 border-2 border-t-white border-gray-200 rounded-full animate-spin"></span>
+                ) : (
+                  t("Logout")
+                )}
               </button>
             </div>
           </div>

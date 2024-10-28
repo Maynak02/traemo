@@ -33,7 +33,6 @@ const AddressSelection = () => {
 
   useEffect(() => {
     const token = getData("token");
-    console.log("user", token);
     if (token) {
       setUserAuth(token?.access_token);
       getUserData();
@@ -46,18 +45,12 @@ const AddressSelection = () => {
   let hasAddress = false;
 
   const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
-  console.log("fetchAddressData", typeof fetchAddressData);
 
   if (fetchAddressData && Object.keys(fetchAddressData).length > 0) {
     hasAddress = true;
   } else {
-    console.log("The object is empty or undefined.");
     hasAddress = false;
   }
-
-  // item.house,
-  // item.street,
-  // item.city,
 
   const listAddressData = async () => {
     setIsLoading(true);
@@ -69,9 +62,7 @@ const AddressSelection = () => {
     try {
       const { payload: res } = await storeDispatch(listAddress());
       const { data, status, message } = res;
-      // console.log("RES-res->", res);
       if (status) {
-        console.log("RES-DATA->", data);
         setAddressList(data);
         setIsLoading(false);
       } else {
@@ -103,8 +94,6 @@ const AddressSelection = () => {
   };
 
   const CreateAddress = async () => {
-    console.log("locationData", formData);
-
     setIsLoading(true);
     const objParam = {
       name: formData.name,
@@ -122,8 +111,6 @@ const AddressSelection = () => {
       );
       const { data, status, message } = res;
       if (status) {
-        console.log("RES-DATA->", data);
-
         storeDispatch(setAddressForList(formData));
         setIsLoading(false);
         setIsInnerOpen(false);
@@ -168,9 +155,6 @@ const AddressSelection = () => {
       }
 
       const locationDetails = extractDetails(place);
-      // setDetails(locationDetails);
-      console.log("place-->", place.formatted_address);
-      console.log("locationDetails-->", locationDetails);
 
       if (userAuth !== null) {
         setFormData({
@@ -186,13 +170,11 @@ const AddressSelection = () => {
           longitude: locationDetails.longitude,
         });
         setIsInnerOpen(true);
-        // CreateAddress(locationDetails);
       } else {
         storeDispatch(setAddressForList(locationDetails));
         closeModal();
       }
     } else {
-      console.log("Autocomplete is not loaded yet!");
     }
   };
 
@@ -210,8 +192,6 @@ const AddressSelection = () => {
   });
 
   const handleChange = (e) => {
-    console.log("e-->", e.target);
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -503,7 +483,6 @@ const AddressSelection = () => {
                     <button
                       className="btn button-common"
                       onClick={() => {
-                        console.log("formData", formData);
                         if (formData.name == "") {
                           toast.error("Please Enter your Name");
                         } else if (formData.house == "") {

@@ -2,8 +2,6 @@
 import { decodeData, encodeData } from "./jwt";
 
 export const saveData = (key, value) => {
-  console.log("value", key);
-
   if (window) {
     try {
       const encryptedData = encodeData(value);

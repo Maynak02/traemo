@@ -17,11 +17,9 @@ export const loginAction = createAsyncThunk(
   "authSlice/loginAction",
   async (payload, { rejectWithValue }) => {
     try {
-      console.log("🚀 ~ payload:", payload);
       const { data, status, message } = await LoginUser(payload);
       return { data, status, message };
     } catch (err) {
-      console.log("🚀 ~ err:--->>>", err);
       toast.error(data?.data?.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.detail);
@@ -111,8 +109,6 @@ export const createUserAction = createAsyncThunk(
   "user/createUserAction",
   async (payload, { rejectWithValue }) => {
     try {
-      console.log("payload", payload);
-
       const { data, status, message } = await CreateUser(
         JSON.stringify(payload)
       );

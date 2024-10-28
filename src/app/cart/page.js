@@ -13,7 +13,7 @@ import { registerLocale } from "react-datepicker";
 import de from "date-fns/locale/de";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { TOAST_ALERTS } from "@/constants/keywords";
+import { CONSTANT_DATA, TOAST_ALERTS } from "@/constants/keywords";
 import { listAddress } from "@/redux/Dashboard/action";
 import { useRouter } from "next/navigation";
 import {
@@ -22,7 +22,8 @@ import {
 } from "@/redux/Cart/CartReducer";
 import { CreateUpdateOrderPlanAction } from "@/redux/Order/action";
 import { now } from "moment";
-import { PATH_DASHBOARD } from "@/routes/paths";
+import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
+import { removeAll } from "@/utils/storage";
 registerLocale("de", de);
 
 const ShoppingCart = () => {
@@ -75,9 +76,11 @@ const ShoppingCart = () => {
     setInstruction(e.target.value);
   };
 
-  const onTapCreateOrder = () => {
-    console.log("cartData", cartData);
+  const totalPrice = cartData.reduce((acc, current) => {
+    return acc + parseFloat(current.displayPrice);
+  }, 0);
 
+  const onTapCreateOrder = () => {
     // const addRecurring = (weekday, products) => {
     let recurringArray = [];
     let recurringTemp = [];
@@ -97,15 +100,12 @@ const ShoppingCart = () => {
       onceDataArray.push(once);
     });
 
-    console.log("productData", recurringTemp);
-
     selectedDays.map((days) => {
       let abc = {};
       abc.weekday = days.charAt(0).toLowerCase() + days.slice(1);
       abc.products = recurringTemp;
       recurringArray.push(abc);
     });
-    console.log("recurring", recurringTemp);
 
     const orderData = {
       recurring: selectedDays.length > 0 ? recurringArray : [],
@@ -115,8 +115,20 @@ const ShoppingCart = () => {
       ts_paused_start: new Date(),
       // ts_paused_end: "",
     };
-    CreateOrUpdateOrderApi(orderData);
-    console.log("Tap Order Now", orderData);
+
+    if (
+      totalPrice >=
+      (CONSTANT_DATA.MIN_ORDER_VALUE / 100).toLocaleString("de-DE")
+    ) {
+      CreateOrUpdateOrderApi(orderData);
+    } else {
+      toast.error(
+        `Minimum Order Value must be ${(
+          CONSTANT_DATA.MIN_ORDER_VALUE / 100
+        ).toLocaleString("de-DE")}`
+      );
+    }
+
     // router.push(PATH_DASHBOARD.wallet);
   };
 
@@ -128,24 +140,25 @@ const ShoppingCart = () => {
       );
       const { data, status, message } = res;
       if (status) {
-        console.log("Create Order=-", data);
         toast.success("Order Create Successfully");
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error(message);
+        if (data?.status === 401) {
+          router.push(PATH_AUTH.login);
+          removeAll();
+        } else if (data?.status === 400) {
+          toast.error(data.response.data.detail);
+        } else {
+          toast.error(message);
+        }
       }
     } catch (error) {
       setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      // toast.error(TOAST_ALERTS.ERROR_MESSAGE);
       console.log("Error", error);
     }
   };
-
-  // const handleRadioChange = (e) => {
-  //   console.log("target value:", e.target.value);
-  //   setSelectedValue(e.target.value);
-  // };
 
   const listAddressData = async () => {
     setIsLoading(true);
@@ -257,7 +270,10 @@ const ShoppingCart = () => {
                 </p>
                 <p>
                   <span>{t("Deliveryfees")}</span>
-                  <span>€4,99</span>
+                  <span>
+                    €
+                    {(CONSTANT_DATA.DELIVERY_FEE / 100).toLocaleString("de-DE")}
+                  </span>
                 </p>
                 <div className="cart-total-bold">
                   <p>

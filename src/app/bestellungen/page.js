@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import Loader from "@/components/Loader";
 import { GetProductByIdServiceAction } from "@/redux/Product/action";
 import { toast } from "react-toastify";
-import { TOAST_ALERTS } from "@/constants/keywords";
+import { CONSTANT_DATA, TOAST_ALERTS } from "@/constants/keywords";
 import { getAddressID, readAddressFromID } from "@/redux/Dashboard/action";
 import moment from "moment";
 import { PATH_AUTH } from "@/routes/paths";
@@ -44,19 +44,13 @@ const StandingOrders = () => {
       const { payload: res } = await dispatch(getUpcomingOrderAction());
       const { data, status, message } = res;
       if (status) {
-        console.log("data---", data);
-        console.log("recurring---", data.recurring);
-        console.log("once---", data.once);
-
         const recurringOrderData = combineRecurringData(
           data.recurring,
           data.products
         );
-        console.log("combinedData-==", recurringOrderData);
         setRecurringOrder(recurringOrderData);
 
         const singleOrderData = combineOnceData(data.once, data.products);
-        console.log("singleOrderData-==", singleOrderData);
         setSingleOrder(singleOrderData);
 
         setIsLoading(false);
@@ -261,7 +255,10 @@ const StandingOrders = () => {
                 </p>
                 <p>
                   <span>{t("Deliveryfees")}</span>
-                  <span>€4,99</span>
+                  <span>
+                    €
+                    {(CONSTANT_DATA.DELIVERY_FEE / 100).toLocaleString("de-DE")}
+                  </span>
                 </p>
                 <div className="cart-total-bold">
                   <p>
@@ -285,7 +282,6 @@ const StandingOrders = () => {
       );
       const { data, status, message } = res;
       if (status) {
-        console.log("Create Order=-", data);
         toast.success("Order Cancel Successfully");
         setIsLoading(false);
       } else {

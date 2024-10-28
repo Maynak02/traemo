@@ -6,6 +6,7 @@ import {
   CREATE_UPDATE_ADDRESS,
   LIST_ADDRESS,
   GetAddressByID,
+  GET_CONSTANTS_DATA,
 } from "./services";
 import { AxiosError } from "axios";
 
@@ -35,7 +36,6 @@ export const readAddressFromID = createAsyncThunk(
       );
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
       toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
@@ -83,7 +83,21 @@ export const getAddressID = createAsyncThunk(
       const { data, status, message } = await GetAddressByID(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
+      toast.error(err?.response?.data?.message || err.message);
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message);
+      }
+      return rejectWithValue(err.message);
+    }
+  }
+);
+export const getConstantsDataAction = createAsyncThunk(
+  "constant/GET_CONSTANTS_DATA",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data, status, message } = await GET_CONSTANTS_DATA(payload);
+      return { data, status, message };
+    } catch (err) {
       toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);

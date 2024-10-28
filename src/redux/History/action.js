@@ -11,8 +11,6 @@ export const getHistoryAction = createAsyncThunk(
       const { data, status, message } = await GetHistory(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }

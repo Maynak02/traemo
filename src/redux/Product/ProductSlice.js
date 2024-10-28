@@ -5,6 +5,7 @@ import {
   getProductsServiceAction,
   ListProductsMeServiceAction,
   GetProductByIdServiceAction,
+  SearchAllProductsAction,
 } from "./action";
 
 const initialState = {
@@ -86,6 +87,18 @@ const ProductSlice = createSlice({
         state.error = null;
       })
       .addCase(GetProductByIdServiceAction.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = payload;
+      })
+      .addCase(SearchAllProductsAction.pending, (state, { payload }) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(SearchAllProductsAction.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(SearchAllProductsAction.rejected, (state, { payload }) => {
         state.isLoading = false;
         state.error = payload;
       });

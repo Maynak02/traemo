@@ -21,8 +21,6 @@ export const getFundServiceAction = createAsyncThunk(
       const { data, status, message } = await GetFunds(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -38,8 +36,6 @@ export const createPaymentServiceAction = createAsyncThunk(
       const { data, status, message } = await CreatePayment(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -55,8 +51,6 @@ export const chargeUserServiceAction = createAsyncThunk(
       const { data, status, message } = await ChargeUser(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -72,8 +66,6 @@ export const listPaymentServiceAction = createAsyncThunk(
       const { data, status, message } = await ListPaymentMethod(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -89,8 +81,6 @@ export const createRefundServiceAction = createAsyncThunk(
       const { data, status, message } = await CreateRefund(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -106,8 +96,6 @@ export const getTransactionServiceAction = createAsyncThunk(
       const { data, status, message } = await GetTransaction(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -123,8 +111,6 @@ export const getAutoTopupServiceAction = createAsyncThunk(
       const { data, status, message } = await GetAutoTopup(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -140,8 +126,6 @@ export const createUpdateAutoTopupAction = createAsyncThunk(
       const { data, status, message } = await CreateUpdateAutoTopup(payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
@@ -153,15 +137,9 @@ export const DisburseFundAction = createAsyncThunk(
   "payment/DisburseFunds",
   async (payload, { rejectWithValue }) => {
     try {
-      console.log("DisburseFunds Before", payload);
-
       const { data, status, message } = await DisburseFunds(payload);
-      console.log("DisburseFunds After", payload);
       return { data, status, message };
     } catch (err) {
-      // console.log("🚀 ~ err:", err);
-      console.log("DisburseFunds Catch", err);
-      // toast.error(err?.response?.data?.message || err.message);
       if (err instanceof AxiosError) {
         return rejectWithValue(err?.response?.data?.message);
       }
