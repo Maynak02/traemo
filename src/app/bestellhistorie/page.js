@@ -9,89 +9,6 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-const orders = [
-  {
-    id: "#3066",
-    date: "Jan 6, 2022",
-    status: "Paid",
-    item: "Käsebrötchen",
-    quantity: 3,
-    price: 300,
-  },
-  {
-    id: "#3065",
-    date: "Jan 6, 2022",
-    status: "Paid",
-    item: "Käsebrötchen",
-    quantity: 2,
-    price: 300,
-  },
-  {
-    id: "#3064",
-    date: "Jan 6, 2022",
-    status: "Paid",
-    item: "Käsebrötchen",
-    quantity: 3,
-    price: 300,
-  },
-  {
-    id: "#3063",
-    date: "Jan 5, 2022",
-    status: "Paid",
-    item: "Käsebrötchen",
-    quantity: 2,
-    price: 300,
-  },
-  {
-    id: "#3062",
-    date: "Jan 5, 2022",
-    status: "Refunded",
-    item: "Käsebrötchen",
-    quantity: 3,
-    price: 300,
-  },
-  // {
-  //   id: "#3061",
-  //   date: "Jan 5, 2022",
-  //   status: "Paid",
-  //   item: "Käsebrötchen",
-  //   quantity: 3,
-  //   price: 300,
-  // },
-  {
-    id: "#3060",
-    date: "Jan 4, 2022",
-    status: "Cancelled",
-    item: "Käsebrötchen",
-    quantity: 2,
-    price: 300,
-  },
-  // {
-  //   id: "#3059",
-  //   date: "Jan 3, 2022",
-  //   status: "Paid",
-  //   item: "Käsebrötchen",
-  //   quantity: 3,
-  //   price: 300,
-  // },
-  // {
-  //   id: "#3058",
-  //   date: "Jan 3, 2022",
-  //   status: "Paid",
-  //   item: "Käsebrötchen",
-  //   quantity: 2,
-  //   price: 300,
-  // },
-  // {
-  //   id: "#3057",
-  //   date: "Jan 3, 2022",
-  //   status: "Paid",
-  //   item: "Käsebrötchen",
-  //   quantity: 3,
-  //   price: 300,
-  // },
-];
-
 const StatusIcon = ({ status }) => {
   switch (status) {
     case "DELIVERED":
@@ -331,7 +248,6 @@ export default function OrderHistory() {
             </tbody>
           </table>
           <div className="flex justify-between items-center border-t">
-            {/* Previous Page Button */}
             <button
               onClick={handlePrev}
               disabled={offset === 0}
@@ -352,30 +268,9 @@ export default function OrderHistory() {
               {t("Previous")}
             </button>
 
-            {/* Page Numbers */}
-            {/* <div className="flex space-x-2 m-4">
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    disabled={page === currentPage}
-                    className={`px-3 py-1 rounded-md ${
-                      page === currentPage
-                        ? "bg-[#FFF9EB] text-theme"
-                        : "text-gray-600 border-gray-300"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                )
-              )}
-            </div> */}
-            {/* Next Page Button */}
             <button
               onClick={() => {
                 handleNext();
-                // handlePageChange(currentPage + 1);
               }}
               disabled={totalPages === 0}
               className="border border-gray-300 rounded-md px-4 py-2 text-gray-600 flex items-center m-4"
@@ -395,58 +290,6 @@ export default function OrderHistory() {
               </svg>
             </button>
           </div>
-          {/* <div className="flex justify-between items-center border-t">
-            <button
-              onClick={() => handlePrev()}
-              className="border border-gray-300 rounded-md px-4 py-2 text-gray-600 flex items-center m-4"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {t("Previous")}
-            </button>
-            <div className="flex space-x-2 m-4">
-              {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
-                <button
-                  key={index}
-                  className={`px-3 py-1 rounded-md ${
-                    page === 1
-                      ? "bg-[#FFF9EB] text-theme"
-                      : "text-gray-600 border-gray-300"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => handleNext()}
-              className="border border-gray-300 rounded-md px-4 py-2 text-gray-600 flex items-center m-4"
-            >
-              {t("Next")}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 ml-2"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </div> */}
         </div>
       )}
     </div>

@@ -17,7 +17,12 @@ import { useDispatch } from "react-redux";
 import Loader from "@/components/Loader";
 import { GetProductByIdServiceAction } from "@/redux/Product/action";
 import { toast } from "react-toastify";
-import { CONSTANT_DATA, TOAST_ALERTS } from "@/constants/keywords";
+import {
+  CONSTANT_DATA,
+  formatPrice,
+  formatUnit,
+  TOAST_ALERTS,
+} from "@/constants/keywords";
 import { getAddressID, readAddressFromID } from "@/redux/Dashboard/action";
 import moment from "moment";
 import { PATH_AUTH } from "@/routes/paths";
@@ -131,16 +136,11 @@ const StandingOrders = () => {
                           </h5>
                           <p>
                             {item?.quantity}&nbsp;
-                            {item?.unit}
+                            {formatUnit(item?.unit)}
                           </p>
                         </div>
                         <div className="cart-price">
-                          <h3>
-                            €
-                            {(item?.price_discounted / 100).toLocaleString(
-                              "de-DE"
-                            )}
-                          </h3>
+                          <h3>CHF{formatPrice(item?.price_discounted)}</h3>
                           <input
                             type="text"
                             placeholder="1"
@@ -230,14 +230,11 @@ const StandingOrders = () => {
                           data?.title.slice(1)}
                       </h5>
                       <p>
-                        {data?.quantity}&nbsp;{data?.unit}
+                        {data?.quantity}&nbsp;{formatUnit(data?.unit)}
                       </p>
                     </div>
                     <div className="cart-price">
-                      <h3>
-                        €
-                        {(data?.price_discounted / 100).toLocaleString("de-DE")}
-                      </h3>
+                      <h3>CHF{formatPrice(data?.price_discounted)}</h3>
                       <input
                         type="text"
                         placeholder="1"

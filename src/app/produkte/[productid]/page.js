@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "next/navigation";
 import { GetProductByIdServiceAction } from "@/redux/Product/action";
 import { toast } from "react-toastify";
-import { TOAST_ALERTS } from "@/constants/keywords";
+import { formatPrice, formatUnit, TOAST_ALERTS } from "@/constants/keywords";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "@/utils/axios";
 import { HOST_API } from "@/config";
@@ -44,19 +44,6 @@ const Productdetail = () => {
     verticalSwiping: true,
     focusOnSelect: true,
     infinite: false,
-    responsive: [
-      {
-        breakpoint: 992,
-        settings: {
-          vertical: false,
-          slidesToShow: 4,
-          slidesToScroll: 1,
-          swipeToSlide: false,
-          verticalSwiping: false,
-          loop: false,
-        },
-      },
-    ],
   };
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -147,31 +134,23 @@ const Productdetail = () => {
                       productdetail?.title.slice(1)}
                     &nbsp;-&nbsp;
                     {productdetail?.quantity}&nbsp;
-                    {productdetail?.unit}
+                    {formatUnit(productdetail?.unit)}
                   </h2>
                   <p>
                     {productdetail?.quantity}&nbsp;
-                    {productdetail?.unit}
+                    {formatUnit(productdetail?.unit)}
                   </p>
                 </div>
                 <div className="block-content">
                   <div className="block-content-left">
-                    <h3>
-                      {(productdetail?.price_discounted / 100).toLocaleString(
-                        "de-DE"
-                      )}
-                    </h3>
+                    <h3>{formatPrice(productdetail?.price_discounted)}</h3>
                     <h3>CHF</h3>
                   </div>
                   {productdetail?.price_discounted !==
                     productdetail?.price_gross && (
                     <div className="block-content-right">
                       <h5>
-                        <del>
-                          {(productdetail?.price_gross / 100).toLocaleString(
-                            "de-DE"
-                          )}
-                        </del>
+                        <del>{formatPrice(productdetail?.price_gross)}</del>
                       </h5>
                       <h6>CHF</h6>
                     </div>
@@ -270,7 +249,7 @@ const Productdetail = () => {
 
   return (
     <div>
-      <DashboardHeader />
+      <DashboardHeader open={false} />
       {isLoading ? (
         <Loader />
       ) : (

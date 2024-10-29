@@ -66,7 +66,8 @@ const LoginPage = () => {
       const { payload: res } = await dispatch(loginAction(objParam));
       const { data, status, message } = res;
       if (status) {
-        authMagicLink(data.message);
+        const filterToken = data.message.split("token=")[1];
+        authMagicLink(filterToken);
       } else {
         setIsLoading(false);
         toast.error(message);
@@ -117,7 +118,7 @@ const LoginPage = () => {
                   <RHFTextInput name="email" placeholder={t("EmailAddress")} />
                 </div>
                 <div className="btn-form">
-                  <button className="btn button-common">{t("Register")}</button>
+                  <button className="btn button-common">{t("Login")}</button>
                 </div>
                 <div className="last-link">
                   <p>

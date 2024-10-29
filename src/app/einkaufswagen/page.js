@@ -1,759 +1,470 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DashboardHeader from "@/components/DashboardHeader";
 import CommonPagesBlock from "@/components/styles/common.style";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import DatePicker from "react-datepicker";
+import Link from "next/link";
 import "react-datepicker/dist/react-datepicker.css";
-import { useDispatch } from "react-redux";
-import {
-  chargeUserServiceAction,
-  createPaymentServiceAction,
-  createUpdateAutoTopupAction,
-  DisburseFundAction,
-  getAutoTopupServiceAction,
-  getFundServiceAction,
-  getTransactionServiceAction,
-  listPaymentServiceAction,
-} from "@/redux/Payment/action";
-import { toast } from "react-toastify";
-import { CONSTANT_DATA, TOAST_ALERTS } from "@/constants/keywords";
-import Loader from "@/components/Loader";
-import moment from "moment";
 import { useTranslation } from "react-i18next";
-import InfiniteScroll from "react-infinite-scroll-component";
+import RadioButton from "@/components/RadioButton";
+import { registerLocale } from "react-datepicker";
+import de from "date-fns/locale/de";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import {
+  CONSTANT_DATA,
+  formatPrice,
+  formatUnit,
+  TOAST_ALERTS,
+} from "@/constants/keywords";
+import { listAddress } from "@/redux/Dashboard/action";
 import { useRouter } from "next/navigation";
+import {
+  setDecreaseQuantity,
+  setUpdatedCartList,
+} from "@/redux/Cart/CartReducer";
+import { CreateUpdateOrderPlanAction } from "@/redux/Order/action";
+import { now } from "moment";
+import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 import { removeAll } from "@/utils/storage";
-import Modal from "react-modal";
-import { PATH_AUTH } from "@/routes/paths";
+registerLocale("de", de);
 
-const Wallet = () => {
+const ShoppingCart = () => {
+  const { t } = useTranslation("common");
   const dispatch = useDispatch();
   const router = useRouter();
-  const { t } = useTranslation("common");
+  const [startDate, setStartDate] = useState(new Date());
+  const [locale, setLocale] = useState("de");
 
+  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [addressList, setAddressList] = useState([]);
+  const [instruction, setInstruction] = useState("");
 
-  const [autoTopupData, setAutoTopupData] = useState({});
-  const [listPaymentMethod, setListPaymentMethod] = useState([]);
-  const [selectedAmount, setSelectedAmount] = useState(0);
-  const [customAmount, setCustomAmount] = useState(0);
+  const cartData = useSelector((state) => state.cartData.cartList);
+  const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
+  let hasAddress = false;
+  if (fetchAddressData && Object.keys(fetchAddressData).length > 0) {
+    hasAddress = true;
+  } else {
+    hasAddress = false;
+  }
 
-  const [openiFrameUrl, setOpeniFrameUrl] = useState();
-  const [customAmountShow, setCustomAmountShow] = useState(false);
-
-  const [hideShowOwnAmount, setHideShowOwnAmount] = useState(false);
-
-  const [modalIsOpen, setIssOpen] = React.useState(false);
-
-  const [currentBalance, setCurrentBalance] = useState(0);
-  const [transactionList, setTransactionList] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const limit = 15;
-
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => setIsOpen(!isOpen);
-
-  const [isAutoTopupOpen, setIsAutoTopupOpen] = useState(false);
-  const toggleAutoTopupSelectPay = () => setIsAutoTopupOpen(!isAutoTopupOpen);
-
-  const [activeButton, setActiveButton] = useState("LOWEST_QUANTITY");
-
-  const handleOptionClick = (option) => {
-    setIsOpen(false);
-    ChargeUserService(option.id);
-  };
-
-  const handlePaymentMethodForAutoTopup = (payMethod) => {
-    setIsAutoTopupOpen(false);
-    CreateAutoTopup("ACTIVE", payMethod);
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const [selectedDays, setSelectedDays] = useState([]);
+  const toggleDay = (day) => {
+    if (selectedDays.includes(day)) {
+      setSelectedDays(
+        selectedDays.filter((selectedDay) => selectedDay !== day)
+      );
+    } else {
+      setSelectedDays([...selectedDays, day]);
+    }
   };
 
   useEffect(() => {
-    GetCurrentBalance();
-    GetTransactionList(0);
-    GetAutoTopups();
-    ListPayment();
+    listAddressData();
   }, []);
 
-  const GetCurrentBalance = async () => {
-    setIsLoading(true);
-    try {
-      const { payload: res } = await dispatch(getFundServiceAction());
-      const { data, status, message } = res;
-      if (status) {
-        setCurrentBalance(data?.total_funds);
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        if (data?.status === 401) {
-          router.push(PATH_AUTH.login);
-          removeAll();
-        } else {
-          toast.error(message);
-        }
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
-  };
-  const GetTransactionList = async (newOffset) => {
-    const objParam = {
-      offset: newOffset,
-      limit: limit,
-      sort_column: "ts_created",
-    };
-    try {
-      const { payload: res } = await dispatch(
-        getTransactionServiceAction(objParam)
-      );
-      const { data, status, message } = res;
-      if (status) {
-        setTransactionList((prevList) => [...prevList, ...data]);
-      } else {
-        if (data?.status === 401) {
-          router.push(PATH_AUTH.login);
-          removeAll();
-        } else {
-          toast.error(message);
-        }
-      }
-    } catch (error) {
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
-  };
-  const GetAutoTopups = async () => {
-    setIsLoading(true);
-    try {
-      const { payload: res } = await dispatch(getAutoTopupServiceAction());
-      const { data, status, message } = res;
-      if (status) {
-        setAutoTopupData(data);
-        setActiveButton(data.mode);
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        if (data?.status === 401) {
-          router.push(PATH_AUTH.login);
-          removeAll();
-        } else {
-          toast.error(message);
-        }
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
-  };
-  const CreateAutoTopup = async (activeOrPaused, payMethod) => {
-    const objParam = {
-      payment_method_id: payMethod,
-      status: activeOrPaused,
-      mode: activeButton,
-    };
-    setIsLoading(true);
-    try {
-      const { payload: res } = await dispatch(
-        createUpdateAutoTopupAction(objParam)
-      );
-      const { data, status, message } = res;
-      if (status) {
-        setIsLoading(false);
-        GetAutoTopups();
-      } else {
-        setIsLoading(false);
-        if (data?.status === 401) {
-          router.push(PATH_AUTH.login);
-          removeAll();
-        } else {
-          toast.error(message);
-        }
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
-  };
-  const ChargeUserService = async (paymentId) => {
-    const objParam = {
-      amount: customAmountShow ? customAmount : selectedAmount,
-      payment_method_id: paymentId,
-    };
-    setIsLoading(true);
-    try {
-      const { payload: res } = await dispatch(
-        chargeUserServiceAction(objParam)
-      );
-      const { data, status, message } = res;
-      if (status) {
-        GetCurrentBalance();
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        if (data?.status === 401) {
-          router.push(PATH_AUTH.login);
-          removeAll();
-        } else {
-          toast.error(message);
-        }
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
-  };
-  const CreatePayment = async () => {
-    setIsLoading(true);
-    try {
-      const { payload: res } = await dispatch(createPaymentServiceAction());
-      const { data, status, message } = res;
-      if (status) {
-        setOpeniFrameUrl(data);
-        window.location.href = data.url;
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        if (data?.status === 401) {
-          router.push(PATH_AUTH.login);
-          removeAll();
-        } else {
-          toast.error(message);
-        }
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
-  };
-  const ListPayment = async () => {
-    setIsLoading(true);
-    try {
-      const { payload: res } = await dispatch(listPaymentServiceAction());
-      const { data, status, message } = res;
-      if (status) {
-        setListPaymentMethod(data);
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-        if (data?.status === 401) {
-          router.push(PATH_AUTH.login);
-          removeAll();
-        } else {
-          toast.error(message);
-        }
-      }
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
-      console.log("Error", error);
-    }
+  const handleInstructionChange = (e) => {
+    setInstruction(e.target.value);
   };
 
-  const DisburseFundsApi = async (amountData) => {
-    const objParam = JSON.stringify({
-      amount: amountData,
+  const totalPrice = cartData.reduce((acc, current) => {
+    return acc + parseFloat(current.displayPrice);
+  }, 0);
+
+  const onTapCreateOrder = () => {
+    // const addRecurring = (weekday, products) => {
+    let recurringArray = [];
+    let recurringTemp = [];
+    let onceDataArray = [];
+    cartData.map((product) => {
+      let recurring = {};
+      let once = {};
+      recurring.quantity = product.givenQuantity;
+      recurring.product_id = product.id;
+      recurring.address_id = fetchAddressData?.id;
+      recurringTemp.push(recurring);
+
+      once.quantity = product.givenQuantity;
+      once.product_id = product.id;
+      once.address_id = fetchAddressData?.id;
+      once.ts_start = startDate;
+      onceDataArray.push(once);
     });
+
+    selectedDays.map((days) => {
+      let abc = {};
+      abc.weekday = days.charAt(0).toLowerCase() + days.slice(1);
+      abc.products = recurringTemp;
+      recurringArray.push(abc);
+    });
+
+    const orderData = {
+      recurring: selectedDays.length > 0 ? recurringArray : [],
+      once: selectedDays.length > 0 ? [] : onceDataArray,
+      ts_start: startDate,
+      // pause_plan: true,
+      ts_paused_start: new Date(),
+      // ts_paused_end: "",
+    };
+
+    if (
+      totalPrice >=
+      (CONSTANT_DATA.MIN_ORDER_VALUE / 100).toLocaleString("de-DE")
+    ) {
+      CreateOrUpdateOrderApi(orderData);
+    } else {
+      toast.error(
+        `Minimum Order Value must be ${(
+          CONSTANT_DATA.MIN_ORDER_VALUE / 100
+        ).toLocaleString("de-DE")}`
+      );
+    }
+
+    // router.push(PATH_DASHBOARD.guthaben);
+  };
+
+  const CreateOrUpdateOrderApi = async (orderData) => {
+    setIsLoading(true);
     try {
-      const { payload: res } = await dispatch(DisburseFundAction(objParam));
+      const { payload: res } = await dispatch(
+        CreateUpdateOrderPlanAction(orderData)
+      );
       const { data, status, message } = res;
       if (status) {
-        closeModal();
-        GetCurrentBalance();
+        toast.success("Order Create Successfully");
+        setIsLoading(false);
       } else {
+        setIsLoading(false);
         if (data?.status === 401) {
           router.push(PATH_AUTH.login);
           removeAll();
+        } else if (data?.status === 400) {
+          toast.error(data.response.data.detail);
         } else {
           toast.error(message);
         }
       }
     } catch (error) {
+      setIsLoading(false);
+      // toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
+
+  const listAddressData = async () => {
+    setIsLoading(true);
+    const objParam = {
+      offset: 0,
+      limit: 10,
+      sort_direction: "desc",
+    };
+    try {
+      const { payload: res } = await dispatch(listAddress());
+      const { data, status, message } = res;
+      if (status) {
+        setAddressList(
+          data.map((address) => {
+            const fullAddress = `${address?.house}, ${address?.street}, ${address?.city}, ${address?.country}`;
+            return { ...address, full_address: fullAddress };
+          })
+        );
+
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error(message);
+      }
+    } catch (error) {
+      setIsLoading(false);
       toast.error(TOAST_ALERTS.ERROR_MESSAGE);
       console.log("Error", error);
     }
   };
 
-  const renderAutoTopup = () => {
+  const renderCart = () => {
     return (
-      <div className="common-cart-pages-block-left-inner">
-        <div className="wallet-title">
-          <img src={"/images/automatic_topup.svg"} />
-          <h2>{t("AutomaticCharging")}</h2>
-        </div>
-        <div className="wallet-top-block">
-          <div className="wallet-top-block-left">
-            <p className="autotopup-description">{t("TopupIfBalanceLow")}</p>
-          </div>
-        </div>
-        {autoTopupData.status === "active" && (
-          <div className="list-block-wallet">
-            <div className="list-block-wallet-outer">
-              <button
-                onClick={() => {
-                  CreateAutoTopup("PAUSED", autoTopupData.payment_method_id);
-                }}
-              >
-                <span>{t("Pause")}</span>
-              </button>
-            </div>
-            <div className="list-block-wallet-finish">
-              <button
-                onClick={() => {
-                  CreateAutoTopup("PAUSED", autoTopupData.payment_method_id);
-                }}
-              >
-                <span>{t("Finish")}</span>
-              </button>
-            </div>
-          </div>
-        )}
-        <div className="start-setup">
-          <button
-            onClick={() => {
-              if (listPaymentMethod.length === 0) {
-                CreatePayment();
-              } else {
-                toggleAutoTopupSelectPay();
-              }
-              // CreateAutoTopup("ACTIVE");
-            }}
-          >
-            <span>{t("SelectPaymentMethod")}</span>
-          </button>
-        </div>
-
-        {isAutoTopupOpen && (
-          <div className="mt-2 w-[100%] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-            <div className="py-1">
-              {listPaymentMethod.map((method, index) => (
-                <div key={index}>
-                  {method.type === "paypal" ? (
-                    <button
-                      onClick={() => handlePaymentMethodForAutoTopup(method.id)}
-                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/paypal.png"
-                        alt="Card"
-                        className="w-6 h-6 mr-2 rounded"
-                      />
-                      {`${method.details.payer_email}`}
-                    </button>
-                  ) : method.type === "card" ? (
-                    <button
-                      onClick={() => handlePaymentMethodForAutoTopup(method.id)}
-                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/creditcard.png"
-                        alt="Card"
-                        className="w-6 h-6 mr-2"
-                      />
-
-                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
-                    </button>
-                  ) : method.type === "googlepay" ? (
-                    <button
-                      onClick={() => handlePaymentMethodForAutoTopup(method.id)}
-                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/googlepay.png"
-                        alt="Card"
-                        className="w-6 h-6 mr-2"
-                      />
-
-                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handlePaymentMethodForAutoTopup(method.id)}
-                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/applepay.png"
-                        alt="Card"
-                        className="w-6 h-6 mr-2"
-                      />
-                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
-                    </button>
-                  )}
-                  {index < listPaymentMethod.length - 1 && (
-                    <div className="border-b border-gray-200"></div>
-                  )}
+      <div>
+        {cartData.map((data, idx) => {
+          const calculatedPrice = data.price_discounted * data.givenQuantity;
+          const totalSum =
+            data.price_discounted * data.givenQuantity +
+            CONSTANT_DATA.DELIVERY_FEE;
+          return (
+            <div key={idx} className="common-cart-pages-block-left-inner">
+              <div className="top-block-cart">
+                <div className="top-block-cart-left">
+                  <h2>{data?.hub?.name}</h2>
+                  <p>
+                    {t("DeliveryBy")}
+                    <span>9:00 am</span>
+                  </p>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="list-block-wallet-another">
-          <button
-            className={`list-block-wallet-inner ${
-              activeButton === "LOWEST_QUANTITY" ? "active" : ""
-            }`}
-            onClick={() => {
-              // LOWEST_QUANTITY
-              setActiveButton("LOWEST_QUANTITY");
-            }}
-          >
-            <h3>{t("FewerTopup")}</h3>
-            <h2>{t("SystemReduceTopups")}</h2>
-          </button>
-          <button
-            className={`list-block-wallet-outer ${
-              activeButton === "LOWEST_BALANCE" ? "active" : ""
-            }`}
-            onClick={() => {
-              // LOWEST_BALANCE
-              setActiveButton("LOWEST_BALANCE");
-            }}
-          >
-            <h3>{t("LessCredit")}</h3>
-            <h2>{t("SystemAvailableTopups")}</h2>
-          </button>
-        </div>
-      </div>
-    );
-  };
-  const fetchMoreData = async () => {
-    const newOffset = offset + limit;
-    setOffset(newOffset);
-    GetTransactionList(newOffset);
-  };
-
-  const renderTransactionList = () => {
-    return (
-      <div className="common-cart-pages-block-right">
-        <div className="common-cart-pages-block-right-inner height-full">
-          <div className="title-trans">
-            <img src={"/images/transaction.svg"} />
-            <h2>{t("Transactions")}</h2>
-          </div>
-          <div
-            id="scrollableDiv"
-            style={{
-              height: 900,
-              overflow: "auto",
-              display: "flex",
-              flexDirection: "column",
-            }}
-            className="transition-block"
-          >
-            <InfiniteScroll
-              dataLength={transactionList.length}
-              next={fetchMoreData}
-              style={{ display: "flex", flexDirection: "column" }}
-              hasMore={true}
-              scrollableTarget="scrollableDiv"
-            >
-              {transactionList.map((item, index) => {
-                const isAdd =
-                  item.type === "auto_topup" ||
-                  item.type === "refund" ||
-                  item.type === "topup";
-                return (
-                  <div
-                    key={index}
-                    className={`transition-block-inner ${
-                      isAdd ? "" : "down-transition"
-                    } `}
-                  >
-                    <div className="transition-block-inner-left ">
-                      <div className="transition-icon">
-                        <img
-                          alt=""
-                          src={
-                            isAdd ? "/up-arrow-tra.svg" : "/down-arrow-tra.svg"
-                          }
-                        />
-                      </div>
-                      <h3>
-                        {moment
-                          .utc(item.ts_created)
-                          .local()
-                          .format("MM/ DD /YYYY")}
-                      </h3>
+                <div className="top-block-cart-right">
+                  <div className="top-block-cart-right-complany">
+                    <img alt="" src={data?.hub?.logo} />
+                  </div>
+                </div>
+              </div>
+              <div className="cart-dropdown-block-inner">
+                <div className="cart-dropdown-block-inner-block">
+                  <div className="img-block">
+                    <img alt="" src={data?.images[0]} />
+                  </div>
+                  <div className="cart-block">
+                    <div className="cart-block-left">
+                      <h5>
+                        {data?.title.charAt(0).toUpperCase() +
+                          data?.title.slice(1)}
+                      </h5>
+                      <p>
+                        {data?.quantity}&nbsp;
+                        {formatUnit(data?.unit)}
+                      </p>
                     </div>
-                    <div className="transition-block-inner-right">
-                      <h2>
-                        CHF&nbsp;{(item.amount / 100).toLocaleString("de-DE")}
-                      </h2>
+                    <div className="cart-price">
+                      <h3>
+                        CHF&nbsp;
+                        {formatPrice(data?.price_discounted)}
+                      </h3>
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => dispatch(setDecreaseQuantity(data))}
+                          className="bg-gray-100 -mr-2 px-2 py-1 text-lg rounded-l-lg z-20"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="text"
+                          placeholder="1"
+                          value={data?.givenQuantity}
+                          disabled
+                        />
+                        <button
+                          onClick={() => dispatch(setUpdatedCartList(data))}
+                          className="bg-gray-100 -ml-2 px-2 py-1 text-lg rounded-r-lg"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
-                );
-              })}
-            </InfiniteScroll>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const handleChangeAmount = (e) => {
-    setSelectedAmount(0);
-    setCustomAmount(e.target.value);
-  };
-
-  const renderRecarge = () => {
-    return (
-      <div className="common-cart-pages-block-left-inner">
-        <div className="wallet-top-block">
-          <div className="wallet-top-block-left">
-            <h2>CHF&nbsp;{(currentBalance / 100).toLocaleString("de-DE")}</h2>
-            <p className="available-credit">{t("CreditAvailable")}</p>
-          </div>
-          <div className="wallet-top-block-right">
-            <button
-              onClick={() => {
-                openModal();
-              }}
-            >
-              <span>{t("PayOut")}</span>
-              <img src="/chevrondown-1@2x.png" alt="img"></img>
-            </button>
-          </div>
-        </div>
-
-        <div className="list-block-wallet">
-          <button
-            className={`list-block-wallet-inner ${
-              selectedAmount === 2000 ? "selected-block" : ""
-            }`}
-            onClick={() => {
-              setCustomAmountShow(false);
-              setSelectedAmount(2000);
-            }}
-          >
-            <h3>
-              20 <span>CHF</span>
-            </h3>
-          </button>
-          <button
-            className={`list-block-wallet-inner ${
-              selectedAmount === 5000 ? "selected-block" : ""
-            }`}
-            onClick={() => {
-              setCustomAmountShow(false);
-              setSelectedAmount(5000);
-            }}
-          >
-            <h3>
-              50 <span>CHF</span>
-            </h3>
-          </button>
-          <button
-            className={`list-block-wallet-inner ${
-              selectedAmount === 10000 ? "selected-block" : ""
-            }`}
-            onClick={() => {
-              setCustomAmountShow(false);
-              setSelectedAmount(10000);
-            }}
-          >
-            <h3>
-              100 <span>CHF</span>
-            </h3>
-          </button>
-          <div className="list-block-wallet-inner">
-            {hideShowOwnAmount ? (
-              <div style={{ display: "flex" }}>
-                <input
-                  type="text"
-                  placeholder="Please enter amount"
-                  value={customAmount}
-                  onChange={handleChangeAmount}
-                  onFocus={() => setSelectedAmount(0)}
-                />
-              </div>
-            ) : (
-              <button
-                onClick={() => {
-                  setSelectedAmount(0);
-                  setCustomAmountShow(true);
-                  setHideShowOwnAmount(true);
-                }}
-              >
-                <img src={"/images/charge_now.svg"} />
-                <span>{t("OwnAmount")}</span>
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="last-btn">
-          <button
-            onClick={() => {
-              if (listPaymentMethod.length === 0) {
-                CreatePayment();
-              } else {
-                if (customAmountShow) {
-                  if (customAmount < CONSTANT_DATA.MIN_TOPUP_VALUE) {
-                    toast.error(
-                      `Minimum Topup Value must be ${CONSTANT_DATA.MIN_ORDER_VALUE}`
-                    );
-                  } else {
-                    toggleDropdown();
-                  }
-                } else {
-                  if (selectedAmount < CONSTANT_DATA.MIN_TOPUP_VALUE) {
-                    toast.error(
-                      `Minimum Topup Value must be ${CONSTANT_DATA.MIN_ORDER_VALUE}`
-                    );
-                  } else {
-                    toggleDropdown();
-                  }
-                }
-              }
-            }}
-          >
-            <img src={"/images/automatic_topup.svg"} />
-            <span>{t("ChargeNow")}</span>
-          </button>
-        </div>
-        {isOpen && (
-          <div className="mt-2 w-[100%] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-            <div className="py-1">
-              {listPaymentMethod.map((method, index) => (
-                <div key={index}>
-                  {method.type === "paypal" ? (
-                    <button
-                      onClick={() => handleOptionClick(method)}
-                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/paypal.png"
-                        alt="Card"
-                        className="w-6 h-6 mr-2 rounded"
-                      />
-                      {`${method.details.payer_email}`}
-                    </button>
-                  ) : method.type === "card" ? (
-                    <button
-                      onClick={() => handleOptionClick(method)}
-                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/creditcard.png"
-                        alt="Card"
-                        className="w-6 h-6 mr-2"
-                      />
-
-                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
-                    </button>
-                  ) : method.type === "googlepay" ? (
-                    <button
-                      onClick={() => handleOptionClick(method)}
-                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/googlepay.png"
-                        alt="Card"
-                        className="w-6 h-6 mr-2"
-                      />
-
-                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleOptionClick(method)}
-                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <img
-                        src="/images/applepay.png"
-                        alt="Card"
-                        className="w-6 h-6 mr-2"
-                      />
-                      {`${method.details.brand} ****${method.details.last4} (Exp: ${method.details.exp_month}/${method.details.exp_year})`}
-                    </button>
-                  )}
-                  {index < listPaymentMethod.length - 1 && (
-                    <div className="border-b border-gray-200"></div>
-                  )}
                 </div>
-              ))}
+              </div>
+              <div className="cart-toal-block">
+                <p>
+                  <span>{t("Sum")}</span>
+                  <span>CHF&nbsp;{formatPrice(calculatedPrice)}</span>
+                </p>
+                <p>
+                  <span>{t("Deliveryfees")}</span>
+                  <span>
+                    CHF&nbsp;
+                    {formatPrice(CONSTANT_DATA.DELIVERY_FEE)}
+                  </span>
+                </p>
+                <div className="cart-total-bold">
+                  <p>
+                    <span>{t("Intotal")}</span>
+                    <span>CHF&nbsp;{formatPrice(totalSum)}</span>
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })}
       </div>
     );
   };
 
-  function openModal() {
-    setIssOpen(true);
-  }
-  function closeModal() {
-    setIssOpen(false);
-    setAmount(0);
-  }
-
-  const [amount, setAmount] = useState(0);
-
-  const handleSubmit = (e) => {
-    // e.preventDefault();
-    if (e > currentBalance) {
-      toast.error(
-        `Amount cannot exceed your current balance of ${(
-          currentBalance / 100
-        ).toLocaleString("de-DE")}.`
-      );
-    } else if (e < CONSTANT_DATA.MIN_DISBURSEMENT_VALUE) {
-      toast.error("Amount must be at least €5.");
-    } else {
-      DisburseFundsApi(e);
-    }
+  const selectedAddressOption = (selectedValue) => {
+    setSelectedAddress(selectedValue?.value);
   };
+
   return (
     <div>
       <DashboardHeader />
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <CommonPagesBlock>
-          <div className="common-cart-pages-block">
-            <div className="common-cart-pages-block-left">
-              {renderRecarge()}
-              {renderAutoTopup()}
+      <CommonPagesBlock>
+        <div className="common-cart-pages-block">
+          <div className="common-cart-pages-block-left">{renderCart()}</div>
+          <div className="common-cart-pages-block-right">
+            <div className="common-cart-pages-block-right-inner">
+              <div className="common-cart-search">
+                <input
+                  type="text"
+                  placeholder="Brandenburger Tor Pariser Platz 10117 Berlin Germany"
+                  // disabled
+                  value={`${fetchAddressData?.house}, ${fetchAddressData?.street}, ${fetchAddressData?.city}, ${fetchAddressData?.country}`}
+                />
+                <svg
+                  width="16"
+                  height="20"
+                  viewBox="0 0 16 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 9L7 11L11 7M15 8.2C15 12.1764 11.5 15.4 8 19C4.5 15.4 1 12.1764 1 8.2C1 4.22355 4.13401 1 8 1C11.866 1 15 4.22355 15 8.2Z"
+                    stroke="#1D2939"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div className="datepiker-block">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 9V20C3 20.2652 3.10536 20.5196 3.29289 20.7071C3.48043 20.8946 3.73478 21 4 21H20C20.2652 21 20.5196 20.8946 20.7071 20.7071C20.8946 20.5196 21 20.2652 21 20V9M3 9H21M3 9V5C3 4.73478 3.10536 4.48043 3.29289 4.29289C3.48043 4.10536 3.73478 4 4 4H20C20.2652 4 20.5196 4.10536 20.7071 4.29289C20.8946 4.48043 21 4.73478 21 5V9M16 3V6M8 3V6M12 13V17"
+                    stroke="#1D2939"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M10 15L12 17L14 15"
+                    stroke="#1D2939"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  minDate={new Date()}
+                  locale={locale}
+                  className="custom-datepicker-input"
+                  wrapperClassName="custom-datepicker-wrapper"
+                />
+              </div>
+              <div className="tooltip-block-radio">
+                <div className="tooltip-block-radio-top">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g clipPath="url(#clip0_850_2456)">
+                      <path
+                        d="M10 18.3346C14.6024 18.3346 18.3334 14.6037 18.3334 10.0013C18.3334 5.39893 14.6024 1.66797 10 1.66797C5.39765 1.66797 1.66669 5.39893 1.66669 10.0013C1.66669 14.6037 5.39765 18.3346 10 18.3346Z"
+                        stroke="#475467"
+                        strokeWidth="1.5"
+                      />
+                      <path
+                        d="M10 14.168V9.16797"
+                        stroke="#475467"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M10 5.83333C10.4603 5.83333 10.8334 6.20643 10.8334 6.66667C10.8334 7.1269 10.4603 7.5 10 7.5C9.53978 7.5 9.16669 7.1269 9.16669 6.66667C9.16669 6.20643 9.53978 5.83333 10 5.83333Z"
+                        fill="#475467"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_850_2456">
+                        <rect width="20" height="20" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <p>{t("SelectDeliveryDate")}</p>
+                </div>
+                <div className="radio-buttons-main-data">
+                  {days.map((day) => (
+                    <div className="radio-buttons" key={day}>
+                      <button
+                        className={`button ${
+                          selectedDays.includes(day) ? "active" : ""
+                        }`}
+                        onClick={() => toggleDay(day)}
+                      >
+                        {day}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="delivery-intruction-block">
+                  <input
+                    type="text"
+                    placeholder={t("AddInstruction")}
+                    value={instruction}
+                    onChange={handleInstructionChange}
+                  ></input>
+                  <button>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.33334 15.8346H4.16667V11.668M11.6667 4.16797H15.8333V8.33464"
+                        stroke="black"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div className="add-to-cart">
+                  <button
+                    className="common-btn btn"
+                    onClick={() => onTapCreateOrder()}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15.5777 3.38197L17.5777 4.43152C19.7294 5.56066 20.8052 6.12523 21.4026 7.13974C22 8.15425 22 9.41667 22 11.9415V12.0585C22 14.5833 22 15.8458 21.4026 16.8603C20.8052 17.8748 19.7294 18.4393 17.5777 19.5685L15.5777 20.618C13.8221 21.5393 12.9443 22 12 22C11.0557 22 10.1779 21.5393 8.42229 20.618L6.42229 19.5685C4.27063 18.4393 3.19479 17.8748 2.5974 16.8603C2 15.8458 2 14.5833 2 12.0585V11.9415C2 9.41667 2 8.15425 2.5974 7.13974C3.19479 6.12523 4.27063 5.56066 6.42229 4.43152L8.42229 3.38197C10.1779 2.46066 11.0557 2 12 2C12.9443 2 13.8221 2.46066 15.5777 3.38197Z"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M21 7.5L12 12M12 12L3 7.5M12 12V21.5"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <span>{t("OrderNowForFee")}</span>
+                  </button>
+                </div>
+              </div>
             </div>
-            {renderTransactionList()}
           </div>
-        </CommonPagesBlock>
-      )}
-      <Modal
-        isOpen={modalIsOpen}
-        className="disburse-amount-modal-block"
-        onRequestClose={closeModal}
-        contentLabel="Disburse Modal"
-      >
-        <div
-          // onSubmit={handleSubmit}
-          className="flex flex-col space-y-6 max-w-md mx-auto p-6 bg-white mt-[10%] rounded-lg"
-        >
-          <label className="font-semibold text-gray-700">Amount:</label>
-          <input
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="Enter amount"
-            className="p-3 border border-gray-300 rounded-lg"
-          />
-
-          <button
-            onClick={() => handleSubmit(amount)}
-            className="p-3 bg-redEB text-white font-semibold rounded-lg"
-          >
-            Disburse Funds
-          </button>
         </div>
-      </Modal>
+      </CommonPagesBlock>
     </div>
   );
 };
 
-export default Wallet;
+export default ShoppingCart;

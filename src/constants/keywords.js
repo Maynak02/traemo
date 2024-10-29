@@ -23,3 +23,22 @@ export const CONSTANT_DATA = {
   WEB_CUSTOMER_VERSION: "",
   WEB_HUB_VERSION: "",
 };
+export function formatPrice(price) {
+  return (price / 100).toLocaleString("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+export function capitalizeTitle(title) {
+  return title.charAt(0).toUpperCase() + title.slice(1);
+}
+export function formatUnit(unit) {
+  const unitMap = {
+    KG: "kg",
+    K: "g",
+    L: "l",
+    ML: "ml",
+    PIECE: "Stück",
+  };
+  return unitMap[unit] || unit;
+}

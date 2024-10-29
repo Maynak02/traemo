@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  resetToInitialState,
   setAddressForList,
   setConstants,
   setDecreaseQuantity,
@@ -16,7 +17,12 @@ import {
 } from "@/redux/Cart/CartReducer";
 import { getUserAction, logoutAction } from "@/redux/Auth/action";
 import { toast } from "react-toastify";
-import { CONSTANT_DATA, TOAST_ALERTS } from "@/constants/keywords";
+import {
+  CONSTANT_DATA,
+  formatPrice,
+  formatUnit,
+  TOAST_ALERTS,
+} from "@/constants/keywords";
 import { getData, removeAll, removeData, saveData } from "@/utils/storage";
 import {
   GoogleMap,
@@ -41,7 +47,7 @@ import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 
 const libraries = ["places"];
 
-const DashboardHeader = ({ className = "" }) => {
+const DashboardHeader = ({ className = "", open }) => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const [modalIsInnerOpen, setIsInnerOpen] = React.useState(false);
   const router = useRouter();
@@ -53,7 +59,19 @@ const DashboardHeader = ({ className = "" }) => {
     libraries,
   });
 
+  // console.log("openopen", open);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { t } = useTranslation("common");
+
+  useEffect(() => {
+    console.log("openopen", open);
+
+    if (open === true) {
+      openModal();
+    }
+  }, [open]);
 
   function openModal() {
     setIsOpen(true);
@@ -93,6 +111,8 @@ const DashboardHeader = ({ className = "" }) => {
   const [longitude, setLongitude] = useState(9.334408964095253);
 
   const [addressList, setAddressList] = useState([]);
+
+  const [sidemenuOpen, setSidemenuOpen] = useState(false);
 
   useEffect(() => {
     const token = getData("token");
@@ -141,7 +161,8 @@ const DashboardHeader = ({ className = "" }) => {
           setFormData(tempData);
           storeDispatch(setAddressForList(tempData));
         } else {
-          setIsOpen(true);
+          console.log("HERE...");
+          // setIsOpen(true);
         }
         setIsLoading(false);
       } else {
@@ -168,6 +189,18 @@ const DashboardHeader = ({ className = "" }) => {
         setUserData(data);
 
         saveData("user", data);
+
+        // const addressData = {
+        //   name: data?.firstname,
+        //   country: data?.country,
+        //   postcode: data?.postcode,
+        //   city: data?.city,
+        //   street: data?.street,
+        //   house: data?.house,
+        //   delivery_instructions: "",
+        //   delivery_picture: "",
+        // };
+        // storeDispatch(setAddressForList(addressData));
       } else {
         if (data?.status === 401) {
           router.push(PATH_AUTH.login);
@@ -200,10 +233,11 @@ const DashboardHeader = ({ className = "" }) => {
       );
       const { data, status, message } = res;
       if (status) {
-        storeDispatch(setAddressForList(locationData));
+        storeDispatch(setAddressForList(objParam));
         setIsLoading(false);
         setIsInnerOpen(false);
         closeModal();
+        listAddressData();
       } else {
         setIsLoading(false);
         toast.error(message);
@@ -288,8 +322,8 @@ const DashboardHeader = ({ className = "" }) => {
     const { status, message } = res;
     if (status) {
       setLoading(false);
-      removeData("user");
-      removeData("token");
+      removeAll();
+      storeDispatch(resetToInitialState());
       setIsModalVisible(false);
       onTapLogin();
     } else {
@@ -351,6 +385,9 @@ const DashboardHeader = ({ className = "" }) => {
         setIsInnerOpen(true);
         // CreateAddress(locationDetails);
       } else {
+        console.log("locationDetails", locationDetails);
+        saveData("tempAddress", locationDetails);
+
         storeDispatch(setAddressForList(locationDetails));
         closeModal();
       }
@@ -425,7 +462,7 @@ const DashboardHeader = ({ className = "" }) => {
   };
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
@@ -484,14 +521,19 @@ const DashboardHeader = ({ className = "" }) => {
             </div>
           </div>
           <div className="header-right">
-            <div className="toggle-bar-block">
+            <div
+              className="toggle-bar-block"
+              onClick={() => {
+                setSidemenuOpen(true);
+              }}
+            >
               <button>
                 <span></span>
                 <span></span>
                 <span></span>
               </button>
             </div>
-            <div className="sidebar-block">
+            <div className={`sidebar-block ${sidemenuOpen ? "active" : ""}`}>
               <div className="sidebar-block-inner">
                 <div className="logo-close-block">
                   <div className="logo-block">
@@ -499,7 +541,12 @@ const DashboardHeader = ({ className = "" }) => {
                       <img alt="logo" src="/image-1@2x.png" />
                     </Link>
                   </div>
-                  <div className="close-icon-block">
+                  <div
+                    className="close-icon-block"
+                    onClick={() => {
+                      setSidemenuOpen(false);
+                    }}
+                  >
                     <button>
                       <img alt="logo" src="/close-icon.svg" />
                     </button>
@@ -508,7 +555,7 @@ const DashboardHeader = ({ className = "" }) => {
                 <div className="map-header">
                   <div
                     className={`map-header-link  ${
-                      hasAddress ? "bg-white" : "bg-theme"
+                      hasAddress ? "bg-white text-black" : "bg-theme text-white"
                     }`}
                     onClick={openModal}
                   >
@@ -602,7 +649,7 @@ const DashboardHeader = ({ className = "" }) => {
               <div className="header-right-cart" onClick={openCartDropdown}>
                 <div className="header-right-cart-link-left">
                   <img alt="" src="/frame.svg" />
-                  <p>€{(totalPrice / 100).toLocaleString("de-DE")}</p>
+                  <p>CHF&nbsp;{formatPrice(totalPrice)}</p>
                 </div>
                 <img
                   className="arrow-icon"
@@ -654,15 +701,13 @@ const DashboardHeader = ({ className = "" }) => {
                                     item?.title.slice(1)}
                                 </h5>
                                 <p>
-                                  {item.quantity}&nbsp;{item.unit}
+                                  {item.quantity}&nbsp;{formatUnit(item.unit)}
                                 </p>
                               </div>
                               <div className="cart-price">
                                 <h3>
                                   CHF&nbsp;
-                                  {(item.displayPrice / 100).toLocaleString(
-                                    "de-DE"
-                                  )}
+                                  {formatPrice(item.displayPrice)}
                                 </h3>
                                 <div className="flex items-center">
                                   <button
@@ -706,7 +751,7 @@ const DashboardHeader = ({ className = "" }) => {
                     >
                       <img alt="" src="/cart-img.svg" />
                       <p>{t("ProceedToCheckout")}</p>
-                      <h4>€{(totalPrice / 100).toLocaleString("de-DE")}</h4>
+                      <h4>CHF&nbsp;{formatPrice(totalPrice)}</h4>
                     </button>
                   </div>
                 </div>
@@ -822,6 +867,7 @@ const DashboardHeader = ({ className = "" }) => {
                                       longitude: item.location.coordinates[0],
                                     });
                                     setIsInnerOpen(true);
+
                                     // storeDispatch(setAddressForList(item));
                                   }}
                                 >
@@ -916,7 +962,6 @@ const DashboardHeader = ({ className = "" }) => {
                             name="street"
                             value={formData.street}
                             onChange={handleChange}
-                            disabled
                             className="custom-input"
                           />
                         </div>
@@ -926,10 +971,9 @@ const DashboardHeader = ({ className = "" }) => {
                           <label className="custom-label">{t("city")}</label>
                           <input
                             type="text"
-                            name="street"
+                            name="city"
                             value={formData.city}
                             onChange={handleChange}
-                            disabled
                             className="custom-input"
                           />
                         </div>
@@ -939,10 +983,9 @@ const DashboardHeader = ({ className = "" }) => {
                           </label>
                           <input
                             type="text"
-                            name="country"
+                            name="postcode"
                             value={formData.postcode}
                             onChange={handleChange}
-                            disabled
                             className="custom-input"
                           />
                         </div>

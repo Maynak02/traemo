@@ -19,16 +19,23 @@ import {
 } from "@/redux/Product/action";
 
 import { toast } from "react-toastify";
-import { TOAST_ALERTS } from "@/constants/keywords";
+import {
+  capitalizeTitle,
+  formatPrice,
+  formatUnit,
+  TOAST_ALERTS,
+} from "@/constants/keywords";
 import Loader from "@/components/Loader";
 import LoginMain from "@/components/styles/auth.style";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PATH_DASHBOARD } from "@/routes/paths";
+import { getData } from "@/utils/storage";
 
 const CustomerDashboard = () => {
   const [filteredProductList, setFilteredProductList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const [selectedSubCategory, setSelectedSubCategory] = useState(0);
   const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
@@ -43,12 +50,12 @@ const CustomerDashboard = () => {
 
   const storeDispatch = useDispatch();
   let hasAddress = false;
+  if (fetchAddressData && Object.keys(fetchAddressData).length > 0) {
+    hasAddress = true;
+  } else {
+    hasAddress = false;
+  }
   useEffect(() => {
-    if (fetchAddressData && Object.keys(fetchAddressData).length > 0) {
-      hasAddress = true;
-    } else {
-      hasAddress = false;
-    }
     GetAllDetails();
   }, []);
 
@@ -132,9 +139,7 @@ const CustomerDashboard = () => {
                                 <div className="block-content">
                                   <div className="block-content-left">
                                     <h3>
-                                      {(
-                                        item.price_discounted / 100
-                                      ).toLocaleString("de-DE")}
+                                      {formatPrice(item.price_discounted)}
                                     </h3>
                                     <h3>CHF</h3>
                                   </div>
@@ -143,9 +148,7 @@ const CustomerDashboard = () => {
                                     <div className="block-content-right">
                                       <h5>
                                         <del>
-                                          {(
-                                            item.price_gross / 100
-                                          ).toLocaleString("de-DE")}
+                                          {formatPrice(item.price_gross)}
                                         </del>
                                       </h5>
                                       <h6>CHF</h6>
@@ -153,12 +156,9 @@ const CustomerDashboard = () => {
                                   )}
                                 </div>
                                 <div className="bottom-content">
-                                  <h3>
-                                    {item?.title.charAt(0).toUpperCase() +
-                                      item?.title.slice(1)}
-                                  </h3>
+                                  <h3>{capitalizeTitle(item?.title)}</h3>
                                   <p>
-                                    {item.quantity}&nbsp;{item.unit}
+                                    {item.quantity}&nbsp;{formatUnit(item.unit)}
                                   </p>
                                 </div>
                               </div>
@@ -167,7 +167,22 @@ const CustomerDashboard = () => {
                               <button
                                 className="add-icon-button"
                                 onClick={() => {
-                                  storeDispatch(setUpdatedCartList(item));
+                                  const token = getData("token");
+                                  if (token) {
+                                    if (hasAddress) {
+                                      storeDispatch(setUpdatedCartList(item));
+                                    } else {
+                                      setIsOpen(!isOpen);
+                                    }
+                                  } else {
+                                    const tempAddress = getData("tempAddress");
+                                    console.log("tempAddress", tempAddress);
+                                    if (tempAddress != undefined) {
+                                      storeDispatch(setUpdatedCartList(item));
+                                    } else {
+                                      setIsOpen(!isOpen);
+                                    }
+                                  }
                                 }}
                               >
                                 <img src="/addcard.svg" />
@@ -187,7 +202,7 @@ const CustomerDashboard = () => {
 
   return (
     <div className="">
-      <DashboardHeader />
+      <DashboardHeader open={isOpen} />
       {isLoading ? (
         <Loader />
       ) : (

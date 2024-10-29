@@ -245,9 +245,9 @@ const AddressSelection = () => {
     return location;
   };
 
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
+  // if (!isLoaded) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <>

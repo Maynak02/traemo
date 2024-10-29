@@ -525,11 +525,12 @@ const Header = styled.div`
         .map-header-link {
           display: flex;
           align-items: center;
-          padding: 10px 0px;
+          padding: 10px 4px;
+          border-radius: 12px;
           p {
             font-size: 14px;
             line-height: 17px;
-            color: #000;
+            color: black;
             padding-left: 8px;
             word-break: break-all;
           }
@@ -548,6 +549,9 @@ const Header = styled.div`
         }
       }
     }
+  }
+  .sidebar-block.active {
+    display: flex;
   }
   .loader {
     border: 2px solid #f3f3f3; /* Light grey */

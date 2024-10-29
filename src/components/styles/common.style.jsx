@@ -21,7 +21,7 @@ const CommonPagesBlock = styled.div`
             margin: 0px 15px;
           }
           @media (max-width: 1199px) {
-            min-width: 1215px;
+            min-width: 1300px;
           }
           .react-tabs__tab {
             border: none;
@@ -57,6 +57,9 @@ const CommonPagesBlock = styled.div`
       }
       .tabs-block-fixed {
         transition: 0.5s;
+        @media (max-width: 1199px) {
+          overflow-x: auto;
+        }
         &.scrolled {
           position: fixed;
           top: 0px;
