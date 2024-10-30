@@ -17,7 +17,12 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "next/navigation";
 import { GetProductByIdServiceAction } from "@/redux/Product/action";
 import { toast } from "react-toastify";
-import { formatPrice, formatUnit, TOAST_ALERTS } from "@/constants/keywords";
+import {
+  formatNutritionLabel,
+  formatPrice,
+  formatUnit,
+  TOAST_ALERTS,
+} from "@/constants/keywords";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "@/utils/axios";
 import { HOST_API } from "@/config";
@@ -132,9 +137,6 @@ const Productdetail = () => {
                   <h2>
                     {productdetail?.title.charAt(0).toUpperCase() +
                       productdetail?.title.slice(1)}
-                    &nbsp;-&nbsp;
-                    {productdetail?.quantity}&nbsp;
-                    {formatUnit(productdetail?.unit)}
                   </h2>
                   <p>
                     {productdetail?.quantity}&nbsp;
@@ -202,38 +204,55 @@ const Productdetail = () => {
                         </div>
                         <div className="accordian-block-data-inner diff-pad">
                           <h3>{t("Ingredients")}</h3>
-                          {/* {productdetail?.ingredients != undefined &&
-                        Object.entries(productdetail?.ingredients).map(
-                          ([key, value]) => {
-                            return (
-                              <p key={key}>
-                                <span>{key}</span>
-                                <span>{value}</span>
-                              </p>
-                            );
-                          }
-                        )} */}
                           {productdetail?.ingredients.length > 0 &&
                             productdetail?.ingredients.map((item, index) => (
                               <p key={index}>
                                 <span>{item?.name}</span>
-                                <span>{item?.value}</span>
+                                <span>
+                                  {item?.value}
+                                  {item.value != "" && "%"}
+                                </span>
                               </p>
                             ))}
                         </div>
                         <div className="accordian-block-data-inner diff-pad">
                           <h3>{t("Nutrition")}</h3>
-                          {productdetail?.nutrition != undefined &&
+                          {/* {productdetail?.nutrition != undefined &&
                             Object.entries(productdetail?.nutrition).map(
                               ([key, value]) => {
                                 return (
                                   <p key={key}>
-                                    <span>{key}</span>
+                                    <span>{formatNutritionLabel(key)}</span>
                                     <span>{value}</span>
                                   </p>
                                 );
                               }
-                            )}
+                            )} */}
+                          {productdetail?.nutrition && (
+                            <>
+                              {/* Special case for energy */}
+                              <p>
+                                <span>Energie</span>
+                                <span>
+                                  {productdetail.nutrition.joules} kJ /{" "}
+                                  {productdetail.nutrition.calories} kCal
+                                </span>
+                              </p>
+
+                              {Object.entries(productdetail.nutrition).map(
+                                ([key, value]) => {
+                                  if (key === "joules" || key === "calories")
+                                    return null;
+                                  return (
+                                    <p key={key}>
+                                      <span>{formatNutritionLabel(key)}</span>
+                                      <span> {value}</span>
+                                    </p>
+                                  );
+                                }
+                              )}
+                            </>
+                          )}
                         </div>
                       </div>
                     </AccordionItemPanel>
@@ -246,6 +265,20 @@ const Productdetail = () => {
       </div>
     );
   };
+
+  //   <p key={key}>
+  // {key === "joules" || key === "calories" ? (
+  //   <>
+  //     <span></span>
+  //     <span></span>
+  //   </>
+  // ) : (
+  //   <>
+  //     <span>{formatNutritionLabel(key)}</span>
+  //     <span>{value}</span>
+  //   </>
+  // )}
+  // </p>
 
   return (
     <div>

@@ -7,3 +7,6 @@ export const GetUpcomingOrder = (data) => {
 export const CreateUpdateOrderPlan = (data) => {
   return axiosPut(API_ROUTER.UPCOMING_ORDER_LIST, data);
 };
+export const GetDays = (payload) => {
+  return axiosGet(API_ROUTER.DAYS_LIST, payload);
+};

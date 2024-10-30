@@ -1,10 +1,10 @@
 export const TOAST_ALERTS = {
-  LOGIN_SUCCESS: "Login Successfully",
-  REGISTER_SUCCESS: "Registered Successfully",
-  RESET_PASSWORD: "Verify Otp",
-  VERIFIED_SUCCESSFULLY: "Verified Successfully",
-  RESET_SUCCESSFULLY: "Password set Successfully. Please Login.",
-  ERROR_MESSAGE: "Something went wrong",
+  LOGIN_SUCCESS: "Anmeldung erfolgreich",
+  REGISTER_SUCCESS: "Erfolgreich registriert",
+  RESET_PASSWORD: "OTP überprüfen",
+  VERIFIED_SUCCESSFULLY: "Erfolgreich verifiziert",
+  RESET_SUCCESSFULLY: "Passwort erfolgreich gesetzt. Bitte einloggen.",
+  ERROR_MESSAGE: "Das hat nicht geklappt.",
 };
 
 export const TOAST_TYPES = {
@@ -41,4 +41,27 @@ export function formatUnit(unit) {
     PIECE: "Stück",
   };
   return unitMap[unit] || unit;
+}
+export function formatNutritionLabel(nutritionKey) {
+  const nutritionMap = {
+    fat: "Fett",
+    saturated_fat: "davon gesättigte Fettsäuren",
+    carbohydrates: "Kohlenhydrate",
+    sugar: "davon Zucker",
+    protein: "Eiweiss",
+    salt: "Salz",
+  };
+  return nutritionMap[nutritionKey] || nutritionKey; // Return mapped value or original if not found
+}
+export function formatDayLabel(dayName) {
+  const dayMap = {
+    Mo: "monday",
+    Di: "tuesday",
+    Mi: "wednesday",
+    Do: "thursday",
+    Fr: "friday",
+    Sa: "saturday",
+    So: "sunday",
+  };
+  return dayMap[dayName] || dayName; // Return mapped value or original if not found
 }

@@ -41,20 +41,20 @@
   "enterDigitCode": "Enter a 6 digit code",
   "validAddress": "Enter valid address",
 
-  "EnterDeliveryAddress": "Geben Sie Ihre Lieferadresse ein",
-  "Subscription": "Abonnement",
+  "EnterDeliveryAddress": "Geben Sie bitte Ihre Lieferadresse ein",
+  "Subscription": "Dauerbestellung",
 
   "SelectAddress": "Bitte wählen Sie Ihre Adresse aus",
   "EnterAddress": "Adresse eingeben...",
-  "EnterYourAddress": "Gib deine Adresse ein",
-  "DeliverAtHome": "Lass dir alle Lieblingsprodukte nach Hause liefern.",
+  "EnterYourAddress": "Bitte geben Sie hier Ihre Adresse ein",
+  "DeliverAtHome": "Lieblingsbrötli? Jetzt bestellen! frisch. regional. handgemacht.",
 
   "TopupNow": "Jetzt aufladen",
   "Profile": "Profil",
   "RecurringOrders": "Dauerbestellungen",
   "Addresses": "Adressen",
   "OrderHistory": "Bestellhistorie",
-  "ProceedToCheckout": "Zur Kasse gehen",
+  "ProceedToCheckout": "Weiter zum Checkout",
   "Support": "Unterstützung",
 
   "Discover": "Entdecken",
@@ -79,15 +79,15 @@
   "ProductInformation": "Produktinformationen",
   "Description": "Beschreibung",
   "Ingredients": "Zutaten",
-  "Nutrition": "Ernährung",
-  "AddToCart": "In den Warenkorb legen",
+  "Nutrition": "Nährwerte (pro 100g)",
+  "AddToCart": "Hinzufügen",
 
   "Archive": "Archiv",
   "Download": "Herunterladen",
   "Previous": "Zurück",
   "Next": "Weiter",
 
-  "Cart": "Wagen",
+  "Cart": "Einkaufswagen",
 
   "EmailAddress": "E-Mail-Adresse",
   "Register": "Registrieren",
@@ -111,7 +111,7 @@
   "WantToLogout": "Möchten Sie sich wirklich abmelden?",
   "Cancel": "Abbrechen",
 
-  "SelectDeliveryDate": "Wählen Sie bitte den gewünschten Liefertermin aus und geben Sie ggf. die erforderlichen Lieferanweisungen ein.",
+  "SelectDeliveryDate": "Sollen die ausgwählten Produkte regelmäßig geliefert werden?",
   "AddInstruction": "Tippen, um Lieferanweisungen hinzuzufügen",
   "DeliveryBy": "Lieferung bis ",
   "Sum": "Summe",
@@ -134,9 +134,9 @@
   "SelectedAddress": "Ausgewählte Adresse",
   "SaveAddress": "Adresse speichern",
 
-  "StandingOrders": "Daueraufträge",
-  "Pause": "Pause",
-  "Finish": "Fertig",
+  "StandingOrders": "Dauerbestellungen",
+  "Pause": "Pausieren",
+  "Finish": "Beenden",
   "AddMore": "Mehr hinzufügen",
   "TopupIfBalanceLow": "Mit der automatischen Aufladung müssen Sie sich um nichts mehr kümmern. Unser System lädt automatisch genug Guthaben auf um Ihre nächsten Bestellungen liefern zu können. Die Höhe einer Aufladung bestimmt sich anhand ihrer nächsten Bestellungen. Nicht benutztes Guthaben kann jederzeit ausgezahlt werden.",
   "CreditAvailable": "Kredit verfügbar",
@@ -152,5 +152,7 @@
   "SystemReduceTopups": "Unser System reduziert die Anzahl an Aufladungen indem es höhrere Beträge pro Aufladung auswählt.",
   "SystemAvailableTopups": "Unser System reduziert das vorhandene Guthaben indem es niedrigere Beträge pro Aufladung auswählt.",
   "Done": "Erledigt",
-  "InputValidation": "Die Eingabe muss größer oder gleich 2000 sein."
+  "InputValidation": "Die Eingabe muss größer oder gleich 2000 sein.",
+
+  "NextOrder": "Nächste Bestellungen"
 }

@@ -13,7 +13,12 @@ const CartReducer = createSlice({
   initialState,
   reducers: {
     resetToInitialState(state) {
-      return initialState;
+      const initial = {
+        cartList: [],
+        updatedCartList: [],
+        cartTotal: 0,
+      };
+      return initial;
     },
     setCartList: (state, action) => {
       state.cartList.push(action.payload);

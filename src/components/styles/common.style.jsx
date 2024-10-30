@@ -3,6 +3,28 @@ import styled from "styled-components";
 
 const CommonPagesBlock = styled.div`
   position: relative;
+  .f-bottom-link {
+    display: flex;
+    padding: 26px 32px;
+    border-top: 1px solid rgba(208, 213, 221, 0.6);
+    justify-content: center;
+    @media (max-width: 767px) {
+      padding: 26px 15px 90px 15px;
+    }
+    a {
+      margin: 0px 20px;
+      color: #98a2b3;
+      font-size: 18px;
+      @media (max-width: 767px) {
+        font-size: 14px;
+        margin: 0px 8px;
+      }
+      &:hover {
+        color: #ffc93c;
+        text-decoration: underline;
+      }
+    }
+  }
   .dasborad-main {
     position: relative;
     .tabs-block {
@@ -172,7 +194,7 @@ const CommonPagesBlock = styled.div`
           .tab-panel-custom {
             padding: 12px 32px;
             @media (max-width: 767px) {
-              padding: 12px 15px 90px 15px;
+              padding: 12px 15px 30px 15px;
             }
           }
           .tab-panel-data-block {
@@ -2153,6 +2175,15 @@ const CommonPagesBlock = styled.div`
     font-size: 12px;
     line-height: 22px;
     color: #667085;
+  }
+  .date-before-min {
+    color: gray; /* Customize color as needed */
+    opacity: 0.5;
+  }
+
+  .date-after-max {
+    color: gray; /* Customize color as needed */
+    opacity: 0.5;
   }
 `;
 

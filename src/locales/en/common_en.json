@@ -79,7 +79,7 @@
   "ProductInformation": "Product information",
   "Description": "Description",
   "Ingredients": "Ingredients",
-  "Nutrition": "Nutrition",
+  "Nutrition": "Nutrition (per 100g)",
   "AddToCart": "Add to cart",
 
   "Archive": "Archive",
@@ -152,5 +152,7 @@
   "SystemReduceTopups": "Our system reduces the number of top-ups by selecting higher amounts per top-up.",
   "SystemAvailableTopups": "Our system reduces the available balance by selecting lower amounts per top-up.",
   "Done": "Done",
-  "InputValidation": "Input should be greater than or equal to 2000"
+  "InputValidation": "Input should be greater than or equal to 2000",
+
+  "NextOrder": "Next Order"
 }

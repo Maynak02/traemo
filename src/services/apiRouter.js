@@ -49,6 +49,8 @@ export const API_ROUTER = {
   GET_ORDER_HISTORY: "/orders",
   UPCOMING_ORDER_LIST: "/orderplans",
 
+  DAYS_LIST: "/days",
+
   GET_CONSTANTS: "/constants/",
   POST_SEARCHES: "/searches",
 };

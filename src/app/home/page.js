@@ -39,7 +39,6 @@ const CustomerDashboard = () => {
 
   const [selectedSubCategory, setSelectedSubCategory] = useState(0);
   const fetchAddressData = useSelector((state) => state.cartData.fetchAddress);
-
   const [activeIndex, setActiveIndex] = useState(0);
   const handleSelect = (index) => {
     setActiveIndex(index);
@@ -57,12 +56,23 @@ const CustomerDashboard = () => {
   }
   useEffect(() => {
     GetAllDetails();
-  }, []);
+  }, [fetchAddressData]);
 
   const GetAllDetails = async () => {
+    const objParam = {
+      ...(hasAddress === true && {
+        lat: fetchAddressData.latitude,
+      }),
+      ...(hasAddress === true && {
+        lon: fetchAddressData.longitude,
+      }),
+    };
+
     setIsLoading(true);
     try {
-      const { payload: res } = await storeDispatch(SearchAllProductsAction());
+      const { payload: res } = await storeDispatch(
+        SearchAllProductsAction(objParam)
+      );
       const { data, status, message } = res;
       if (status) {
         setIsLoading(false);
@@ -230,6 +240,12 @@ const CustomerDashboard = () => {
                   {renderProductList()}
                 </Tabs>
               </div>
+            </div>
+            <div className="f-bottom-link">
+              <Link href="https://info.traemo.com/datenschutz">
+                Datenschutzerklärung
+              </Link>
+              <Link href="https://info.traemo.com/agbs">AGB und Impressum</Link>
             </div>
           </div>
         </CommonPagesBlock>

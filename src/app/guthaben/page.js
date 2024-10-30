@@ -292,12 +292,12 @@ const Wallet = () => {
             <p className="autotopup-description">{t("TopupIfBalanceLow")}</p>
           </div>
         </div>
-        {autoTopupData.status === "active" && (
+        {autoTopupData?.status === "active" && (
           <div className="list-block-wallet">
             <div className="list-block-wallet-outer">
               <button
                 onClick={() => {
-                  CreateAutoTopup("PAUSED", autoTopupData.payment_method_id);
+                  CreateAutoTopup("PAUSED", autoTopupData?.payment_method_id);
                 }}
               >
                 <span>{t("Pause")}</span>
@@ -306,7 +306,7 @@ const Wallet = () => {
             <div className="list-block-wallet-finish">
               <button
                 onClick={() => {
-                  CreateAutoTopup("PAUSED", autoTopupData.payment_method_id);
+                  CreateAutoTopup("PAUSED", autoTopupData?.payment_method_id);
                 }}
               >
                 <span>{t("Finish")}</span>
@@ -705,7 +705,7 @@ const Wallet = () => {
         ).toLocaleString("de-DE")}.`
       );
     } else if (e < CONSTANT_DATA.MIN_DISBURSEMENT_VALUE) {
-      toast.error("Amount must be at least €5.");
+      toast.error("Amount must be at least CHF 5.");
     } else {
       DisburseFundsApi(e);
     }

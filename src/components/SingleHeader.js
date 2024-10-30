@@ -148,7 +148,7 @@ const SingleHeader = ({ className = "" }) => {
                 <span className="font-inter text-black text-[16px]">
                   {t("TopupNow")}
                 </span>
-                <span className="text-green-500 font-semibold">€0</span>
+                <span className="text-green-500 font-semibold">CHF 0</span>
               </li>
             </Link>
             {/* <Link href={PATH_DASHBOARD.profil}>

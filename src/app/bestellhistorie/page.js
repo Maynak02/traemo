@@ -233,7 +233,7 @@ export default function OrderHistory() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    €{(order.sum_total / 100).toLocaleString("de-DE")}
+                    CHF{(order.sum_total / 100).toLocaleString("de-DE")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                     <button className="text-grayText hover:text-gray-900 mr-3">

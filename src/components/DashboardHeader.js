@@ -161,8 +161,12 @@ const DashboardHeader = ({ className = "", open }) => {
           setFormData(tempData);
           storeDispatch(setAddressForList(tempData));
         } else {
-          console.log("HERE...");
-          // setIsOpen(true);
+          let locationDetails = getData("tempAddress");
+          console.log("HERE...", locationDetails);
+          CreateAddress(locationDetails);
+
+          setIsOpen(true);
+          setIsInnerOpen(true);
         }
         setIsLoading(false);
       } else {
@@ -215,16 +219,18 @@ const DashboardHeader = ({ className = "", open }) => {
     }
   };
 
-  const CreateAddress = async () => {
+  const CreateAddress = async (form) => {
     setIsLoading(true);
     const objParam = {
-      name: formData.name,
-      country: formData.country,
-      postcode: formData.postcode,
-      city: formData.city,
-      street: formData.street,
-      house: formData.house,
-      delivery_instructions: formData.delivery_instructions,
+      name: form.name,
+      country: form.country,
+      postcode: form.postcode,
+      city: form.city,
+      street: form.street,
+      house: form.house,
+      delivery_instructions: form?.delivery_instructions
+        ? form?.delivery_instructions
+        : "",
       delivery_picture: "",
     };
     try {
@@ -233,7 +239,11 @@ const DashboardHeader = ({ className = "", open }) => {
       );
       const { data, status, message } = res;
       if (status) {
-        storeDispatch(setAddressForList(objParam));
+        objParam.latitude = form.latitude;
+        objParam.longitude = form.longitude;
+        console.log("formData", formData);
+
+        storeDispatch(setAddressForList(formData));
         setIsLoading(false);
         setIsInnerOpen(false);
         closeModal();
@@ -587,7 +597,9 @@ const DashboardHeader = ({ className = "", open }) => {
                         <span className="font-inter text-black text-[16px]">
                           {t("TopupNow")}
                         </span>
-                        <span className="text-green-500 font-semibold">€0</span>
+                        <span className="text-green-500 font-semibold">
+                          CHF 0
+                        </span>
                       </li>
                     </Link>
                     {/* <Link href={PATH_DASHBOARD.profile}>
@@ -763,6 +775,7 @@ const DashboardHeader = ({ className = "", open }) => {
           isOpen={modalIsOpen}
           className="common-modal-block"
           onRequestClose={closeModal}
+          ariaHideApp={false}
           contentLabel="Example Modal"
         >
           <div className="two-block-modal-inner">
@@ -906,13 +919,13 @@ const DashboardHeader = ({ className = "", open }) => {
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke-width="2"
+                          strokeWidth="2"
                           stroke="#667085"
                           class="w-6 h-6"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M15 19l-7-7 7-7"
                           />
                         </svg>
@@ -1011,9 +1024,9 @@ const DashboardHeader = ({ className = "", open }) => {
                           if (formData.name == "") {
                             toast.error("Please Enter your Name");
                           } else if (formData.house == "") {
-                            toast.error("Please House");
+                            toast.error("Please Enter your House");
                           } else if (formData.id == "") {
-                            CreateAddress();
+                            CreateAddress(formData);
                           } else {
                             setIsInnerOpen(false);
                             storeDispatch(setAddressForList(formData));
@@ -1044,7 +1057,7 @@ const DashboardHeader = ({ className = "", open }) => {
                 <span className="font-inter text-black text-[16px]">
                   {t("TopupNow")}
                 </span>
-                <span className="text-green-500 font-semibold">€0</span>
+                <span className="text-green-500 font-semibold">CHF 0</span>
               </li>
             </Link>
             {/* <Link href={PATH_DASHBOARD.profile}>

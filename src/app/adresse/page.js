@@ -378,13 +378,13 @@ const AddressSelection = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        stroke-width="2"
+                        strokeWidth="2"
                         stroke="#667085"
                         class="w-6 h-6"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           d="M15 19l-7-7 7-7"
                         />
                       </svg>
@@ -486,7 +486,7 @@ const AddressSelection = () => {
                         if (formData.name == "") {
                           toast.error("Please Enter your Name");
                         } else if (formData.house == "") {
-                          toast.error("Please House");
+                          toast.error("Please Enter your House");
                         } else if (formData.id == "") {
                           CreateAddress();
                         } else {

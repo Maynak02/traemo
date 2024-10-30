@@ -57,6 +57,7 @@ const StandingOrders = () => {
 
         const singleOrderData = combineOnceData(data.once, data.products);
         setSingleOrder(singleOrderData);
+        console.log("singleOrderData", singleOrderData);
 
         setIsLoading(false);
       } else {
@@ -209,7 +210,7 @@ const StandingOrders = () => {
                     <h2>{data?.hub?.name}</h2>
                     <p>
                       {t("DeliveryBy")}
-                      <span>9:00 am</span>
+                      <span>9:00 Uhr</span>
                     </p>
                   </div>
                   <div className="top-block-cart-right">
@@ -248,19 +249,19 @@ const StandingOrders = () => {
               <div className="cart-toal-block">
                 <p>
                   <span>{t("Sum")}</span>
-                  <span>€{calculatedPrice}</span>
+                  <span>CHF{calculatedPrice}</span>
                 </p>
                 <p>
                   <span>{t("Deliveryfees")}</span>
                   <span>
-                    €
+                    CHF
                     {(CONSTANT_DATA.DELIVERY_FEE / 100).toLocaleString("de-DE")}
                   </span>
                 </p>
                 <div className="cart-total-bold">
                   <p>
                     <span>{t("Intotal")}</span>
-                    <span>€{totalSum}</span>
+                    <span>CHF{totalSum}</span>
                   </p>
                 </div>
               </div>
@@ -365,7 +366,7 @@ const StandingOrders = () => {
             </div>
             <div className="common-cart-pages-block-left">
               <div className="title-left">
-                <h2>Next orders</h2>
+                <h2>{t("NextOrder")}</h2>
               </div>
               {singleOrderData()}
             </div>

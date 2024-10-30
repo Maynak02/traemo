@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { toast } from "react-toastify";
-import { CreateUpdateOrderPlan, GetUpcomingOrder } from "./services";
+import { CreateUpdateOrderPlan, GetDays, GetUpcomingOrder } from "./services";
 import { AxiosError } from "axios";
 
 export const getUpcomingOrderAction = createAsyncThunk(
@@ -23,6 +23,20 @@ export const CreateUpdateOrderPlanAction = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const { data, status, message } = await CreateUpdateOrderPlan(payload);
+      return { data, status, message };
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message);
+      }
+      return rejectWithValue(err.message);
+    }
+  }
+);
+export const getDaysAction = createAsyncThunk(
+  "order/GetDays",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data, status, message } = await GetDays(payload);
       return { data, status, message };
     } catch (err) {
       if (err instanceof AxiosError) {
