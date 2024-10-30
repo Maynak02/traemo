@@ -36,6 +36,7 @@ import { now } from "moment";
 import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 import { removeAll } from "@/utils/storage";
 import { getFundServiceAction } from "@/redux/Payment/action";
+import { DayPicker } from "react-day-picker";
 import Loader from "@/components/Loader";
 registerLocale("de", de);
 
@@ -71,6 +72,7 @@ const ShoppingCart = () => {
     if (!acc[hubId]) {
       acc[hubId] = [];
     }
+
     acc[hubId].push(product);
     return acc;
   }, {});
@@ -227,9 +229,11 @@ const ShoppingCart = () => {
       const { data, status, message } = res;
       if (status) {
         toast.success("Order Create Successfully");
-        router.push(PATH_DASHBOARD.home);
         setTimeout(() => {
           dispatch(resetToInitialState());
+        }, 1500);
+        setTimeout(() => {
+          router.push(PATH_DASHBOARD.standingorders);
           setIsbtnLoading(false);
         }, 2000);
       } else {

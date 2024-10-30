@@ -349,8 +349,7 @@ const CommonPagesBlock = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-          0px 1px 2px rgba(16, 24, 40, 0.06);
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
         @media (max-width: 1400px) {
           width: 45px;
           height: 45px;
@@ -420,8 +419,7 @@ const CommonPagesBlock = styled.div`
         }
         .product-details-main-left-img {
           width: 100%;
-          box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-            0px 1px 2px rgba(16, 24, 40, 0.06);
+          box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
           height: 500px;
           padding: 16px;
           border: 1px solid rgba(208, 213, 221, 0.6);
@@ -503,8 +501,7 @@ const CommonPagesBlock = styled.div`
           padding: 32px 20px;
           border: 1px solid rgba(208, 213, 221, 0.6);
           border-radius: 12px;
-          box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-            0px 1px 2px rgba(16, 24, 40, 0.06);
+          box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
           @media (max-width: 1400px) {
             padding: 15px;
           }
@@ -678,8 +675,8 @@ const CommonPagesBlock = styled.div`
                   @media (max-width: 1400px) {
                     padding: 10px 0px;
                   }
-                  .accordion__button[aria-expanded="true"]::before,
-                  .accordion__button[aria-selected="true"]::before {
+                  .accordion__button[aria-expanded='true']::before,
+                  .accordion__button[aria-selected='true']::before {
                     transform: rotate(-135deg);
                   }
                   .accordian-block-data-inner {
@@ -774,8 +771,7 @@ const CommonPagesBlock = styled.div`
         padding: 24px 20px;
         border: 1px solid rgba(208, 213, 221, 0.6);
         border-radius: 12px;
-        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-          0px 1px 2px rgba(16, 24, 40, 0.06);
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
         margin-bottom: 32px;
         @media (max-width: 1400px) {
           margin-bottom: 15px;
@@ -815,8 +811,7 @@ const CommonPagesBlock = styled.div`
               font-size: 14px;
               font-weight: 700;
               color: #000;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 30px;
               padding: 16px;
@@ -834,8 +829,7 @@ const CommonPagesBlock = styled.div`
         padding: 32px 20px;
         border: 1px solid rgba(208, 213, 221, 0.6);
         border-radius: 12px;
-        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-          0px 1px 2px rgba(16, 24, 40, 0.06);
+        box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
         margin-bottom: 32px;
         @media (max-width: 1400px) {
           padding: 15px;
@@ -935,7 +929,7 @@ const CommonPagesBlock = styled.div`
           .title-inner-cart-block {
             position: relative;
             &::before {
-              content: "";
+              content: '';
               position: absolute;
               left: 0px;
               width: 56px;
@@ -1061,8 +1055,7 @@ const CommonPagesBlock = styled.div`
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               width: 100%;
               span {
                 padding-left: 8px;
@@ -1176,8 +1169,7 @@ const CommonPagesBlock = styled.div`
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               @media (max-width: 1400px) {
                 padding: 15px 24px;
               }
@@ -1232,8 +1224,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 12px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               width: 100%;
@@ -1253,8 +1244,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 12px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               width: 100%;
@@ -1275,8 +1265,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 12px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #ffc93c;
               width: 100%;
@@ -1296,8 +1285,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 31px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               @media (max-width: 1400px) {
@@ -1316,8 +1304,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid rgba(208, 213, 221, 0.6);
               border-radius: 31px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               width: 100%;
@@ -1343,8 +1330,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid #fda29b;
               border-radius: 31px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               @media (max-width: 1400px) {
@@ -1364,8 +1350,7 @@ const CommonPagesBlock = styled.div`
               height: 62px;
               border: 1px solid #fda29b;
               border-radius: 31px;
-              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-                0px 1px 2px rgba(16, 24, 40, 0.06);
+              box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
               font-size: 18px;
               color: #027a48;
               width: 100%;
@@ -1395,8 +1380,7 @@ const CommonPagesBlock = styled.div`
             justify-content: center;
             border: 1px solid rgba(208, 213, 221, 0.6);
             border-radius: 12px;
-            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-              0px 1px 2px rgba(16, 24, 40, 0.06);
+            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
             background-color: #fff;
             @media (max-width: 1400px) {
               font-size: 18px;
@@ -1445,8 +1429,7 @@ const CommonPagesBlock = styled.div`
             justify-content: center;
             border: 1px solid rgba(208, 213, 221, 0.6);
             border-radius: 12px;
-            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-              0px 1px 2px rgba(16, 24, 40, 0.06);
+            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
             background-color: #fff;
             @media (max-width: 767px) {
               width: 100%;
@@ -1491,8 +1474,7 @@ const CommonPagesBlock = styled.div`
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-              0px 1px 2px rgba(16, 24, 40, 0.06);
+            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
             width: 100%;
             @media (max-width: 1400px) {
               padding: 14px 24px;
@@ -1516,8 +1498,7 @@ const CommonPagesBlock = styled.div`
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1),
-              0px 1px 2px rgba(16, 24, 40, 0.06);
+            box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
             width: 100%;
             span {
               padding-left: 8px;
@@ -1630,7 +1611,7 @@ const CommonPagesBlock = styled.div`
             }
             .react-datepicker {
               border: 1px solid rgba(208, 213, 221, 0.6);
-              font-family: "Public Sans", sans-serif;
+              font-family: 'Public Sans', sans-serif;
               padding: 15px;
               @media (max-width: 767px) {
                 padding: 0px;
@@ -1759,7 +1740,7 @@ const CommonPagesBlock = styled.div`
                 }
               }
             }
-            input[type="radio"]:checked + label {
+            input[type='radio']:checked + label {
               .radio-buttons-content {
                 background-color: rgba(249, 201, 60, 0.2);
                 border-color: #ffc93c;
@@ -2072,7 +2053,7 @@ const CommonPagesBlock = styled.div`
         border: 1px solid #cbd5e1;
         border-radius: 10px;
         padding: 10px;
-        font-family: "Public Sans", sans-serif;
+        font-family: 'Public Sans', sans-serif;
         font-size: 13px;
         outline: none;
         box-shadow: none;
@@ -2175,15 +2156,6 @@ const CommonPagesBlock = styled.div`
     font-size: 12px;
     line-height: 22px;
     color: #667085;
-  }
-  .date-before-min {
-    color: gray; /* Customize color as needed */
-    opacity: 0.5;
-  }
-
-  .date-after-max {
-    color: gray; /* Customize color as needed */
-    opacity: 0.5;
   }
 `;
 

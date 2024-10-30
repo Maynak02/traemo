@@ -44,6 +44,7 @@ import * as yup from "yup";
 import LoginMain from "./styles/auth.style";
 import CommonPagesBlock from "./styles/common.style";
 import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
+import { getFundServiceAction } from "@/redux/Payment/action";
 
 const libraries = ["places"];
 
@@ -113,6 +114,38 @@ const DashboardHeader = ({ className = "", open }) => {
   const [addressList, setAddressList] = useState([]);
 
   const [sidemenuOpen, setSidemenuOpen] = useState(false);
+  const [currentBalance, setCurrentBalance] = useState(0);
+
+  const getCurrentBalance = async () => {
+    setIsLoading(true);
+    try {
+      const { payload: res } = await storeDispatch(getFundServiceAction());
+      const { data, status, message } = res;
+      if (status) {
+        setCurrentBalance(data?.total_funds);
+        if (totalPrice > data?.total_funds) {
+          console.log("no need fund", totalPrice);
+        } else {
+          console.log("need fund", totalPrice);
+        }
+        console.log("totalPrice", totalPrice);
+        console.log("currentBalance", data?.total_funds);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        if (data?.status === 401) {
+          router.push(PATH_AUTH.login);
+          removeAll();
+        } else {
+          toast.error(message);
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(TOAST_ALERTS.ERROR_MESSAGE);
+      console.log("Error", error);
+    }
+  };
 
   useEffect(() => {
     const token = getData("token");
@@ -121,6 +154,7 @@ const DashboardHeader = ({ className = "", open }) => {
       getUserData();
       listAddressData();
       getConstantData();
+      getCurrentBalance();
     }
   }, []);
 
@@ -695,6 +729,25 @@ const DashboardHeader = ({ className = "", open }) => {
                     <img alt="" src="/frame.svg"></img>
                     <h5>{t("Cart")}</h5>
                   </div>
+                  {totalPrice > currentBalance ? (
+                    <div className="cart-dropdown-inner-top-info">
+                      <img alt="" src="/introduction-icon.svg"></img>
+                      <p>
+                        Noch&nbsp;<span>3</span>&nbsp;
+                        <span className="chf-text">CHF</span>&nbsp;bis zum
+                        Mindestbestellwert
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="cart-dropdown-inner-top-info-purple">
+                      <img alt="" src="/introduction-icon.svg"></img>
+                      <p>
+                        Noch&nbsp;<span>11</span>&nbsp;
+                        <span className="chf-text">CHF</span>&nbsp;hinzufügen um
+                        1 CHF Liefergebühr zu sparen
+                      </p>
+                    </div>
+                  )}
                   <div className="cart-dropdown-block">
                     <div className="cart-dropdown-block-inner">
                       {cartData.map((item, index) => {

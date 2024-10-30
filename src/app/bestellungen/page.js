@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "react-datepicker";
 import Link from "next/link";
+import _ from "lodash";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -38,6 +39,7 @@ const StandingOrders = () => {
   const [recurringOrder, setRecurringOrder] = useState([]);
   const [singleOrder, setSingleOrder] = useState([]);
   const [products, setProducts] = useState([]);
+  const [hubTotal, setHubTotal] = useState({});
 
   useEffect(() => {
     GetUpcomingOrderList();
@@ -53,11 +55,90 @@ const StandingOrders = () => {
           data.recurring,
           data.products
         );
-        setRecurringOrder(recurringOrderData);
+        // setRecurringOrder(recurringOrderData);
 
-        const singleOrderData = combineOnceData(data.once, data.products);
-        setSingleOrder(singleOrderData);
-        console.log("singleOrderData", singleOrderData);
+        const groupByHubIDAndDay = _.groupBy(
+          data.recurring,
+          (val) => val.weekday
+        );
+        // addProductData;
+        const result = addProductData(groupByHubIDAndDay, data.products);
+
+        // const recurr = combineRecurringData(groupByHubIDAndDay,)
+
+        console.log("result", result);
+        setRecurringOrder(result);
+
+        // if (data.recurring.length > 0) {
+        //   const combinedData = data.recurring.map((item) => {
+        //     const matchProduct = data.products.find(
+        //       (product) => product.id === item.product_id
+        //     );
+        //     if (matchProduct) {
+        //       return {
+        //         ...item,
+        //         // weekday: item.
+        //         product: "matchProduct",
+        //         // quantity: item.quantity,
+        //         // price_discounted: matchProduct.price_discounted,
+        //         // hub_id: matchProduct.hub_id,
+        //         // logo: matchProduct.hub.logo,
+        //         // hub_name: matchProduct.hub.name,
+        //         // totalSum: matchProduct.price_discounted * item.quantity,
+        //       };
+        //     }
+        //     return item;
+        //   });
+        //   console.log("combinedData===", combinedData);
+
+        //   const groupByHubIDAndDate = _.groupBy(
+        //     combinedData,
+        //     (val) => val.ts_start && val.hub_id
+        //   );
+        //   const totalSumsByHub = {};
+        //   for (const hubId in groupByHubIDAndDate) {
+        //     totalSumsByHub[hubId] = groupByHubIDAndDate[hubId].reduce(
+        //       (acc, item) => acc + item.totalSum,
+        //       0
+        //     );
+        //   }
+        //   setHubTotal(totalSumsByHub);
+        //   setRecurringOrder(groupByHubIDAndDate);
+        // }
+
+        if (data.once.length > 0) {
+          const combinedData = data.once.map((item) => {
+            const matchProduct = data.products.find(
+              (product) => product.id === item.product_id
+            );
+            if (matchProduct) {
+              return {
+                ...item,
+                product: matchProduct,
+                quantity: item.quantity,
+                price_discounted: matchProduct.price_discounted,
+                hub_id: matchProduct.hub_id,
+                logo: matchProduct.hub.logo,
+                hub_name: matchProduct.hub.name,
+                totalSum: matchProduct.price_discounted * item.quantity,
+              };
+            }
+            return item;
+          });
+          const groupByHubIDAndDate = _.groupBy(
+            combinedData,
+            (val) => val.ts_start && val.hub_id
+          );
+          const totalSumsByHub = {};
+          for (const hubId in groupByHubIDAndDate) {
+            totalSumsByHub[hubId] = groupByHubIDAndDate[hubId].reduce(
+              (acc, item) => acc + item.totalSum,
+              0
+            );
+          }
+          setHubTotal(totalSumsByHub);
+          setSingleOrder(groupByHubIDAndDate);
+        }
 
         setIsLoading(false);
       } else {
@@ -76,18 +157,6 @@ const StandingOrders = () => {
     }
   };
 
-  const combineOnceData = (once, products) => {
-    return once.map((item) => {
-      const productDetails = products.find(
-        (product) => product.id === item.product_id
-      );
-      return {
-        ...item,
-        ...productDetails,
-      };
-    });
-  };
-
   const combineRecurringData = (recurring, products) => {
     return recurring.map((rec) => {
       const combinedProducts = rec.products.map((product) => {
@@ -102,82 +171,114 @@ const StandingOrders = () => {
 
       return {
         ...rec,
-        products: combinedProducts,
+        product: combinedProducts,
       };
     });
   };
+  const addProductData = (data, productData) => {
+    return Object.fromEntries(
+      Object.entries(data).map(([day, entries]) => {
+        const updatedEntries = entries.map((entry) => {
+          const updatedProducts = entry.products.map((product) => {
+            const matchingProductData = productData.find(
+              (p) => p.id === product.product_id
+            );
 
+            return {
+              ...product,
+              productData: matchingProductData || {}, // Add productData if found, otherwise an empty object
+            };
+          });
+
+          return {
+            ...entry,
+            products: updatedProducts,
+          };
+        });
+
+        return [day, updatedEntries];
+      })
+    );
+  };
   const recurringOrderData = () => {
     return (
       <div>
-        {recurringOrder.map((data, idx) => {
-          return (
-            <div key={idx} className="common-cart-pages-block-left-inner">
-              <div className="label-block-days">
-                <span>
-                  {data?.weekday.charAt(0).toUpperCase() +
-                    data?.weekday.slice(1)}
-                </span>
-              </div>
-              {data.products.map((item, index) => {
-                return (
-                  <div key={index} className="cart-dropdown-block-inner">
-                    <div className="title-inner-cart-block">
-                      <h4>{item?.hub?.name}</h4>
+        {Object.entries(recurringOrder).map(([weekday, entries], idx) => (
+          <div key={idx} className="common-cart-pages-block-left-inner">
+            <div className="label-block-days">
+              <span>{weekday.charAt(0).toUpperCase() + weekday.slice(1)}</span>
+            </div>
+
+            {entries.map((entry, entryIdx) =>
+              entry.products.map((item, itemIdx) => (
+                <div key={itemIdx} className="cart-dropdown-block-inner">
+                  <div className="title-inner-cart-block">
+                    {console.log("ITEm", item.productData)}
+                    <h4>{item.productData?.hub?.name || "No hub name"}</h4>
+                  </div>
+                  <div className="cart-dropdown-block-inner-block">
+                    <div className="img-block">
+                      {item.productData?.images?.[0] ? (
+                        <img src={item.productData.images[0]} alt="Product" />
+                      ) : (
+                        <span>No image</span>
+                      )}
                     </div>
-                    <div className="cart-dropdown-block-inner-block">
-                      <div className="img-block">
-                        <img src={item?.images[0]} />
+                    <div className="cart-block">
+                      <div className="cart-block-left">
+                        <h5>
+                          {item.productData?.title
+                            ? item.productData.title.charAt(0).toUpperCase() +
+                              item.productData.title.slice(1)
+                            : "No title"}
+                        </h5>
+                        <p>
+                          {item.productData.quantity}&nbsp;
+                          {formatUnit(item.productData?.unit || "")}
+                        </p>
                       </div>
-                      <div className="cart-block">
-                        <div className="cart-block-left">
-                          <h5>
-                            {item?.title.charAt(0).toUpperCase() +
-                              item?.title.slice(1)}
-                          </h5>
-                          <p>
-                            {item?.quantity}&nbsp;
-                            {formatUnit(item?.unit)}
-                          </p>
-                        </div>
-                        <div className="cart-price">
-                          <h3>CHF{formatPrice(item?.price_discounted)}</h3>
-                          <input
-                            type="text"
-                            placeholder="1"
-                            value={item.quantity}
-                            disabled
-                          />
-                        </div>
+                      <div className="cart-price">
+                        <h3>
+                          CHF
+                          {item.productData?.price_discounted
+                            ? formatPrice(item.productData.price_discounted)
+                            : "0.00"}
+                        </h3>
+                        <input
+                          type="text"
+                          placeholder="1"
+                          value={item.quantity}
+                          disabled
+                        />
                       </div>
                     </div>
                   </div>
-                );
-              })}
-              <div className="last-btn">
-                <button>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M6 12H18M12 6V18"
-                      stroke="black"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                </div>
+              ))
+            )}
 
-                  <span>Add more</span>
-                </button>
-              </div>
+            <div className="last-btn">
+              <button>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 12H18M12 6V18"
+                    stroke="black"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span>Add more</span>
+              </button>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     );
   };
@@ -185,89 +286,100 @@ const StandingOrders = () => {
   const singleOrderData = () => {
     return (
       <div>
-        {singleOrder.map((data, idx) => {
-          const calculatedPrice = (
-            (data.price_discounted * data.quantity) /
-            100
-          ).toLocaleString("de-DE");
-          const totalSum = (
-            (data.price_discounted * data.quantity + 499) /
-            100
-          ).toLocaleString("de-DE");
-          return (
-            <div key={idx} className="common-cart-pages-block-left-inner">
-              <div className="label-block-days">
-                <span>
-                  {moment
-                    .utc(data.ts_start)
-                    .local()
-                    .format("dddd, MMM Do, YYYY")}
-                </span>
-              </div>
-              <div className="cart-dropdown-block-inner">
-                <div className="top-block-cart">
-                  <div className="top-block-cart-left">
-                    <h2>{data?.hub?.name}</h2>
-                    <p>
-                      {t("DeliveryBy")}
-                      <span>9:00 Uhr</span>
-                    </p>
-                  </div>
-                  <div className="top-block-cart-right">
-                    <img src={data?.hub?.logo} />
-                  </div>
+        {Object.keys(singleOrder).length > 0 &&
+          Object.entries(singleOrder).map(([key, val], index) => {
+            return (
+              <div key={key} className="common-cart-pages-block-left-inner">
+                <div className="label-block-days">
+                  <span>
+                    {moment
+                      .utc(val?.ts_start)
+                      .local()
+                      .format("dddd, MMM Do, YYYY")}
+                  </span>
                 </div>
-                <div className="title-inner-cart-block">
-                  <h4>{data?.hub?.name}</h4>
-                </div>
-                <div className="cart-dropdown-block-inner-block">
-                  <div className="img-block">
-                    <img src={data?.images[0]} />
-                  </div>
-                  <div className="cart-block">
-                    <div className="cart-block-left">
-                      <h5>
-                        {data?.title.charAt(0).toUpperCase() +
-                          data?.title.slice(1)}
-                      </h5>
+                <div className="cart-dropdown-block-inner">
+                  <div className="top-block-cart">
+                    <div className="top-block-cart-left">
+                      {val.length > 0 && <h2>{val[0]?.hub_name}</h2>}
                       <p>
-                        {data?.quantity}&nbsp;{formatUnit(data?.unit)}
+                        {t("DeliveryBy")}
+                        <span>9:00 Uhr</span>
                       </p>
                     </div>
-                    <div className="cart-price">
-                      <h3>CHF{formatPrice(data?.price_discounted)}</h3>
-                      <input
-                        type="text"
-                        placeholder="1"
-                        value={data.quantity}
-                        disabled
-                      />
+                    <div className="top-block-cart-right">
+                      <img src={val[0]?.logo} />
                     </div>
                   </div>
+                  {val.map((data, idx) => {
+                    return (
+                      <>
+                        <div className="title-inner-cart-block">
+                          <h4>{data?.hub_name}</h4>
+                        </div>
+                        <div className="cart-dropdown-block-inner-block">
+                          <div className="img-block">
+                            <img src={data?.product?.images[0]} />
+                          </div>
+                          <div className="cart-block">
+                            <div className="cart-block-left">
+                              <h5>
+                                {data?.product?.title.charAt(0).toUpperCase() +
+                                  data?.product?.title.slice(1)}
+                              </h5>
+                              <p>
+                                {data?.quantity}&nbsp;
+                                {formatUnit(data?.product?.unit)}
+                              </p>
+                            </div>
+                            <div className="cart-price">
+                              <h3>
+                                CHF
+                                {formatPrice(data?.product?.price_discounted)}
+                              </h3>
+                              <input
+                                type="text"
+                                placeholder="1"
+                                value={data.quantity}
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        {idx === val.length - 1 && (
+                          <div className="cart-toal-block">
+                            <p>
+                              <span>{t("Sum")}</span>
+                              {console.log("val.hubid=====", val)}
+                              <span>CHF&nbsp;{formatPrice(hubTotal[key])}</span>
+                            </p>
+                            <p>
+                              <span>{t("Deliveryfees")}</span>
+                              <span>
+                                CHF&nbsp;
+                                {formatPrice(CONSTANT_DATA.DELIVERY_FEE)}
+                              </span>
+                            </p>
+                            <div className="cart-total-bold">
+                              <p>
+                                <span>{t("Intotal")}</span>
+                                <span>
+                                  CHF&nbsp;
+                                  {formatPrice(
+                                    hubTotal[key] + CONSTANT_DATA.DELIVERY_FEE
+                                  )}
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    );
+                  })}
                 </div>
               </div>
-              <div className="cart-toal-block">
-                <p>
-                  <span>{t("Sum")}</span>
-                  <span>CHF{calculatedPrice}</span>
-                </p>
-                <p>
-                  <span>{t("Deliveryfees")}</span>
-                  <span>
-                    CHF
-                    {(CONSTANT_DATA.DELIVERY_FEE / 100).toLocaleString("de-DE")}
-                  </span>
-                </p>
-                <div className="cart-total-bold">
-                  <p>
-                    <span>{t("Intotal")}</span>
-                    <span>CHF{totalSum}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     );
   };

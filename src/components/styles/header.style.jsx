@@ -156,6 +156,44 @@ const Header = styled.div`
         }
         .cart-dropdown-inner {
           padding: 32px 24px;
+          .cart-dropdown-inner-top-info {
+            display: flex;
+            align-items: center;
+            border-radius: 32px;
+            padding: 8px 15px;
+            background-color: #f5faff;
+            margin-top: 15px;
+            p {
+              padding-left: 8px;
+              font-size: 12px;
+              line-height: 14px;
+              span {
+                font-weight: 700;
+                &.chf-text {
+                  color: #175cd3;
+                }
+              }
+            }
+          }
+          .cart-dropdown-inner-top-info-purple {
+            display: flex;
+            align-items: center;
+            border-radius: 32px;
+            padding: 8px 15px;
+            background-color: #fcfaff;
+            margin-top: 15px;
+            p {
+              padding-left: 8px;
+              font-size: 12px;
+              line-height: 14px;
+              span {
+                font-weight: 700;
+                &.chf-text {
+                  color: #7f56d9;
+                }
+              }
+            }
+          }
           .cart-footer {
             padding: 24px 12px 0px 12px;
             .btn-footer {
@@ -193,6 +231,7 @@ const Header = styled.div`
               color: #000;
             }
           }
+
           .cart-dropdown-block {
             .cart-dropdown-block-inner {
               height: 274px;
@@ -341,6 +380,47 @@ const Header = styled.div`
     }
     .cart-dropdown-inner {
       padding: 24px 24px;
+      .cart-dropdown-inner-top-info {
+        display: flex;
+        align-items: center;
+        border-radius: 32px;
+        padding: 8px 15px;
+        background-color: #f5faff;
+        margin-top: 15px;
+        p {
+          padding-left: 8px;
+          font-size: 12px;
+          line-height: 14px;
+          span {
+            font-weight: 700;
+            &.chf-text {
+              color: #175cd3;
+            }
+          }
+        }
+      }
+      @media (max-width: 767px) {
+        padding: 15px;
+      }
+      .cart-dropdown-inner-top-info-purple {
+        display: flex;
+        align-items: center;
+        border-radius: 32px;
+        padding: 8px 15px;
+        background-color: #fcfaff;
+        margin-top: 15px;
+        p {
+          padding-left: 8px;
+          font-size: 12px;
+          line-height: 14px;
+          span {
+            font-weight: 700;
+            &.chf-text {
+              color: #7f56d9;
+            }
+          }
+        }
+      }
       @media (max-width: 767px) {
         padding: 15px;
       }

@@ -8,6 +8,51 @@ const LoginMain = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    &.d-blok-email {
+      flex-direction: column;
+      @media (max-width: 1199px) {
+        padding: 15px;
+        text-align: center;
+        &::before {
+          content: none;
+        }
+      }
+      h2 {
+        /* font-family: 'Public Sans', sans-serif; */
+        font-size: 45px;
+        line-height: 60px;
+        color: #000;
+        font-weight: 600;
+        margin-bottom: 12px;
+        @media (max-width: 1199px) {
+          font-size: 36px;
+          line-height: 50px;
+        }
+        @media (max-width: 991px) {
+          font-size: 30px;
+          line-height: 40px;
+        }
+        @media (max-width: 767px) {
+          font-size: 24px;
+          line-height: 30px;
+        }
+      }
+      p {
+        color: #667085;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 22px;
+        padding: 0px;
+        a {
+          color: #f9c93c;
+          font-weight: 500;
+        }
+        @media (max-width: 767px) {
+          font-size: 14px;
+          line-height: 18px;
+        }
+      }
+    }
     @media (max-width: 767px) {
       margin-top: 250px;
       height: auto;
