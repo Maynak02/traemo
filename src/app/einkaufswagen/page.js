@@ -36,7 +36,6 @@ import { now } from "moment";
 import { PATH_AUTH, PATH_DASHBOARD } from "@/routes/paths";
 import { removeAll } from "@/utils/storage";
 import { getFundServiceAction } from "@/redux/Payment/action";
-import { DayPicker } from "react-day-picker";
 import Loader from "@/components/Loader";
 registerLocale("de", de);
 
