@@ -154,5 +154,6 @@
   "Done": "Erledigt",
   "InputValidation": "Die Eingabe muss größer oder gleich 2000 sein.",
 
-  "NextOrder": "Nächste Bestellungen"
+  "NextOrder": "Nächste Bestellungen",
+  "CreatePaymentMethod": "Zahlungsmethode erstellen"
 }

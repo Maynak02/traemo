@@ -154,5 +154,6 @@
   "Done": "Done",
   "InputValidation": "Input should be greater than or equal to 2000",
 
-  "NextOrder": "Next Order"
+  "NextOrder": "Next Order",
+  "CreatePaymentMethod": "Create payment method"
 }

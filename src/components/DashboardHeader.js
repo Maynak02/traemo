@@ -83,7 +83,6 @@ const DashboardHeader = ({ className = "", open }) => {
   const [isProfileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isCartDropdownOpen, setCartDropdownOpen] = useState(false);
   const [enabled, setEnabled] = useState(false);
-  const [total, setTotal] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -101,8 +100,11 @@ const DashboardHeader = ({ className = "", open }) => {
   }, []);
 
   const openCartDropdown = useCallback(() => {
-    setTotal(100);
     setCartDropdownOpen(true);
+  }, []);
+
+  const closeCartDropdown = useCallback(() => {
+    setCartDropdownOpen(false);
   }, []);
 
   const [userData, setUserData] = useState();
@@ -695,7 +697,7 @@ const DashboardHeader = ({ className = "", open }) => {
                 </div>
               </div>
             </div>
-            {cartData.length > 0 && (
+            {cartData.length > 0 ? (
               <div className="header-right-cart" onClick={openCartDropdown}>
                 <div className="header-right-cart-link-left">
                   <img alt="" src="/frame.svg" />
@@ -707,6 +709,8 @@ const DashboardHeader = ({ className = "", open }) => {
                   src="/chevrondown-1@2x.png"
                 />
               </div>
+            ) : (
+              <div onClick={closeCartDropdown}></div>
             )}
             {userAuth !== null ? (
               <div
@@ -749,8 +753,8 @@ const DashboardHeader = ({ className = "", open }) => {
                       <img alt="" src="/introduction-icon.svg"></img>
                       <p>
                         Noch&nbsp;<span>11</span>&nbsp;
-                        <span className="chf-text">CHF</span>&nbsp;hinzufügen um
-                        1 CHF Liefergebühr zu sparen
+                        <span className="chf-text">CHF</span>
+                        &nbsp;hinzufügen um 1 CHF Liefergebühr zu sparen
                       </p>
                     </div>
                   )}
@@ -772,7 +776,8 @@ const DashboardHeader = ({ className = "", open }) => {
                                     item?.title.slice(1)}
                                 </h5>
                                 <p>
-                                  {item.quantity}&nbsp;{formatUnit(item.unit)}
+                                  {item.quantity}&nbsp;
+                                  {formatUnit(item.unit)}
                                 </p>
                               </div>
                               <div className="cart-price">

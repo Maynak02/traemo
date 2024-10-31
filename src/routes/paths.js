@@ -1,6 +1,7 @@
 export const PATH_AUTH = {
   login: "/login",
   signup: "/register",
+  email: "/email",
 };
 
 export const PATH_DASHBOARD = {

@@ -1,7 +1,7 @@
 "use client";
 import DashboardHeader from "@/components/DashboardHeader";
 import Loader from "@/components/Loader";
-import { TOAST_ALERTS } from "@/constants/keywords";
+import { formatPrice, TOAST_ALERTS } from "@/constants/keywords";
 import { getHistoryAction } from "@/redux/History/action";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -233,7 +233,7 @@ export default function OrderHistory() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    CHF{(order.sum_total / 100).toLocaleString("de-DE")}
+                    CHF{formatPrice(order.sum_total)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                     <button className="text-grayText hover:text-gray-900 mr-3">

@@ -162,11 +162,6 @@ const ShoppingCart = () => {
   }, 0);
 
   const onTapCreateOrder = () => {
-    // const addRecurring = (weekday, products) => {
-
-    console.log("recurringOrder", recurringOrder);
-    console.log("singleOrder", singleOrder);
-
     recurringOrder;
     singleOrder;
 
@@ -294,14 +289,10 @@ const ShoppingCart = () => {
 
   const ts_end = twoWeeksFromTomorrow.toISOString().slice(0, 10);
 
-  console.log(ts_start); // This will print the start date (tomorrow's date)
-  console.log(ts_end); // This will print the end date (two weeks from tomorrow)
-
   const getDaysApi = async () => {
     setIsLoading(true);
 
     const objParam = { filters: `date$gte${ts_start} and date$lte${ts_end}` };
-    console.log("objParam", objParam);
 
     try {
       const { payload: res } = await dispatch(getDaysAction(objParam));
@@ -312,7 +303,6 @@ const ShoppingCart = () => {
         const closedDays = [];
         const weekendDays = [];
         const openDays = [];
-        console.log("data", data);
 
         data?.forEach(({ date, is_holiday, is_weekend, is_open }) => {
           const parsedDate = new Date(date);
@@ -329,7 +319,6 @@ const ShoppingCart = () => {
           weekend: weekendDays,
           open: openDays,
         };
-        console.log("datesAre", datesAre);
 
         setSortedDays(datesAre);
       } else {
@@ -373,13 +362,10 @@ const ShoppingCart = () => {
     const formattedDate = `${DATE.getFullYear()}-${
       DATE.getMonth() + 1
     }-${DATE.getDate()}`;
-    console.log("formattedDate", formattedDate);
     setStartDate(DATE);
   };
 
   const renderCart = () => {
-    console.log("cartData---", cartData);
-
     return (
       <div>
         {Object.entries(groupedByHub).map(([hubId, products]) => {

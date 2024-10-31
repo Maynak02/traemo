@@ -68,6 +68,7 @@ const LoginPage = () => {
       if (status) {
         const filterToken = data.message.split("token=")[1];
         authMagicLink(filterToken);
+        // router.push(PATH_AUTH.email);
       } else {
         setIsLoading(false);
         toast.error(message);

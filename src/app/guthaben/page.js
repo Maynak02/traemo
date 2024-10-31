@@ -17,7 +17,7 @@ import {
   listPaymentServiceAction,
 } from "@/redux/Payment/action";
 import { toast } from "react-toastify";
-import { CONSTANT_DATA, TOAST_ALERTS } from "@/constants/keywords";
+import { CONSTANT_DATA, formatPrice, TOAST_ALERTS } from "@/constants/keywords";
 import Loader from "@/components/Loader";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { removeAll } from "@/utils/storage";
 import Modal from "react-modal";
 import { PATH_AUTH } from "@/routes/paths";
+import { toInteger } from "lodash";
 
 const Wallet = () => {
   const dispatch = useDispatch();
@@ -131,8 +132,10 @@ const Wallet = () => {
       const { payload: res } = await dispatch(getAutoTopupServiceAction());
       const { data, status, message } = res;
       if (status) {
-        setAutoTopupData(data);
-        setActiveButton(data.mode);
+        if (data) {
+          setAutoTopupData(data);
+          setActiveButton(data.mode);
+        }
         setIsLoading(false);
       } else {
         setIsLoading(false);
@@ -181,7 +184,7 @@ const Wallet = () => {
   };
   const ChargeUserService = async (paymentId) => {
     const objParam = {
-      amount: customAmountShow ? customAmount : selectedAmount,
+      amount: customAmountShow ? customAmount * 100 : selectedAmount,
       payment_method_id: paymentId,
     };
     setIsLoading(true);
@@ -264,7 +267,10 @@ const Wallet = () => {
       const { payload: res } = await dispatch(DisburseFundAction(objParam));
       const { data, status, message } = res;
       if (status) {
-        closeModal();
+        toast.success("");
+        setTimeout(() => {
+          closeModal();
+        }, 200);
         GetCurrentBalance();
       } else {
         if (data?.status === 401) {
@@ -292,7 +298,7 @@ const Wallet = () => {
             <p className="autotopup-description">{t("TopupIfBalanceLow")}</p>
           </div>
         </div>
-        {autoTopupData?.status === "active" && (
+        {autoTopupData?.status === "ACTIVE" && (
           <div className="list-block-wallet">
             <div className="list-block-wallet-outer">
               <button
@@ -332,6 +338,18 @@ const Wallet = () => {
         {isAutoTopupOpen && (
           <div className="mt-2 w-[100%] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
             <div className="py-1">
+              <button
+                onClick={() => {
+                  CreatePayment();
+                }}
+                className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >
+                <img
+                  src={"/images/automatic_topup.svg"}
+                  className="w-6 h-6 mr-2 rounded"
+                />
+                {t("CreatePaymentMethod")}
+              </button>
               {listPaymentMethod.map((method, index) => (
                 <div key={index}>
                   {method.type === "paypal" ? (
@@ -409,11 +427,11 @@ const Wallet = () => {
           </button>
           <button
             className={`list-block-wallet-outer ${
-              activeButton === "LOWEST_BALANCE" ? "active" : ""
+              activeButton === "LOWER_BALANCE" ? "active" : ""
             }`}
             onClick={() => {
-              // LOWEST_BALANCE
-              setActiveButton("LOWEST_BALANCE");
+              // LOWER_BALANCE
+              setActiveButton("LOWER_BALANCE");
             }}
           >
             <h3>{t("LessCredit")}</h3>
@@ -483,9 +501,7 @@ const Wallet = () => {
                       </h3>
                     </div>
                     <div className="transition-block-inner-right">
-                      <h2>
-                        CHF&nbsp;{(item.amount / 100).toLocaleString("de-DE")}
-                      </h2>
+                      <h2>CHF&nbsp;{formatPrice(item.amount)}</h2>
                     </div>
                   </div>
                 );
@@ -507,7 +523,7 @@ const Wallet = () => {
       <div className="common-cart-pages-block-left-inner">
         <div className="wallet-top-block">
           <div className="wallet-top-block-left">
-            <h2>CHF&nbsp;{(currentBalance / 100).toLocaleString("de-DE")}</h2>
+            <h2>CHF&nbsp;{formatPrice(currentBalance)}</h2>
             <p className="available-credit">{t("CreditAvailable")}</p>
           </div>
           <div className="wallet-top-block-right">
@@ -595,20 +611,25 @@ const Wallet = () => {
                 CreatePayment();
               } else {
                 if (customAmountShow) {
-                  if (customAmount < CONSTANT_DATA.MIN_TOPUP_VALUE) {
-                    toast.error(
-                      `Minimum Topup Value must be ${CONSTANT_DATA.MIN_ORDER_VALUE}`
-                    );
-                  } else {
+                  let custom = customAmount * 100;
+                  if (CONSTANT_DATA.MIN_TOPUP_VALUE <= custom) {
                     toggleDropdown();
+                  } else {
+                    toast.error(
+                      `Minimum Topup Value must be ${formatPrice(
+                        CONSTANT_DATA.MIN_TOPUP_VALUE
+                      )}`
+                    );
                   }
                 } else {
-                  if (selectedAmount < CONSTANT_DATA.MIN_TOPUP_VALUE) {
-                    toast.error(
-                      `Minimum Topup Value must be ${CONSTANT_DATA.MIN_ORDER_VALUE}`
-                    );
-                  } else {
+                  if (CONSTANT_DATA.MIN_TOPUP_VALUE <= selectedAmount) {
                     toggleDropdown();
+                  } else {
+                    toast.error(
+                      `Minimum Topup Value must be ${formatPrice(
+                        CONSTANT_DATA.MIN_TOPUP_VALUE
+                      )}`
+                    );
                   }
                 }
               }
@@ -697,17 +718,20 @@ const Wallet = () => {
   const [amount, setAmount] = useState(0);
 
   const handleSubmit = (e) => {
-    // e.preventDefault();
-    if (e > currentBalance) {
+    if (e * 100 > currentBalance) {
       toast.error(
-        `Amount cannot exceed your current balance of ${(
-          currentBalance / 100
-        ).toLocaleString("de-DE")}.`
+        `Amount cannot exceed your current balance of ${formatPrice(
+          currentBalance
+        )}.`
       );
-    } else if (e < CONSTANT_DATA.MIN_DISBURSEMENT_VALUE) {
-      toast.error("Amount must be at least CHF 5.");
+    } else if (e * 100 < CONSTANT_DATA.MIN_DISBURSEMENT_VALUE) {
+      toast.error(
+        `Amount must be at least CHF ${formatPrice(
+          CONSTANT_DATA.MIN_DISBURSEMENT_VALUE
+        )}.`
+      );
     } else {
-      DisburseFundsApi(e);
+      DisburseFundsApi(e * 100);
     }
   };
   return (
