@@ -28,6 +28,7 @@ import { getAddressID, readAddressFromID } from "@/redux/Dashboard/action";
 import moment from "moment";
 import { PATH_AUTH } from "@/routes/paths";
 import { useRouter } from "next/navigation";
+import "moment/locale/de";
 const StandingOrders = () => {
   const [startDate, setStartDate] = useState(new Date());
   const { t } = useTranslation("common");
@@ -40,6 +41,8 @@ const StandingOrders = () => {
   const [singleOrder, setSingleOrder] = useState([]);
   const [products, setProducts] = useState([]);
   const [hubTotal, setHubTotal] = useState({});
+
+  moment.locale("de");
 
   useEffect(() => {
     GetUpcomingOrderList();
@@ -61,50 +64,9 @@ const StandingOrders = () => {
           data.recurring,
           (val) => val.weekday
         );
-        // addProductData;
         const result = addProductData(groupByHubIDAndDay, data.products);
-
-        // const recurr = combineRecurringData(groupByHubIDAndDay,)
-
         console.log("result", result);
         setRecurringOrder(result);
-
-        // if (data.recurring.length > 0) {
-        //   const combinedData = data.recurring.map((item) => {
-        //     const matchProduct = data.products.find(
-        //       (product) => product.id === item.product_id
-        //     );
-        //     if (matchProduct) {
-        //       return {
-        //         ...item,
-        //         // weekday: item.
-        //         product: "matchProduct",
-        //         // quantity: item.quantity,
-        //         // price_discounted: matchProduct.price_discounted,
-        //         // hub_id: matchProduct.hub_id,
-        //         // logo: matchProduct.hub.logo,
-        //         // hub_name: matchProduct.hub.name,
-        //         // totalSum: matchProduct.price_discounted * item.quantity,
-        //       };
-        //     }
-        //     return item;
-        //   });
-        //   console.log("combinedData===", combinedData);
-
-        //   const groupByHubIDAndDate = _.groupBy(
-        //     combinedData,
-        //     (val) => val.ts_start && val.hub_id
-        //   );
-        //   const totalSumsByHub = {};
-        //   for (const hubId in groupByHubIDAndDate) {
-        //     totalSumsByHub[hubId] = groupByHubIDAndDate[hubId].reduce(
-        //       (acc, item) => acc + item.totalSum,
-        //       0
-        //     );
-        //   }
-        //   setHubTotal(totalSumsByHub);
-        //   setRecurringOrder(groupByHubIDAndDate);
-        // }
 
         if (data.once.length > 0) {
           const combinedData = data.once.map((item) => {
@@ -295,7 +257,7 @@ const StandingOrders = () => {
                     {moment
                       .utc(val?.ts_start)
                       .local()
-                      .format("dddd, MMM Do, YYYY")}
+                      .format("dddd, MMMM DD, YYYY")}
                   </span>
                 </div>
                 <div className="cart-dropdown-block-inner">
@@ -328,7 +290,7 @@ const StandingOrders = () => {
                                   data?.product?.title.slice(1)}
                               </h5>
                               <p>
-                                {data?.quantity}&nbsp;
+                                {data?.product?.quantity}&nbsp;
                                 {formatUnit(data?.product?.unit)}
                               </p>
                             </div>

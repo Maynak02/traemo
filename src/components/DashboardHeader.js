@@ -509,6 +509,10 @@ const DashboardHeader = ({ className = "", open }) => {
     return <Loader />;
   }
 
+  // if (cartData.length === 0) {
+  //   setCartDropdownOpen(false);
+  // }
+
   return (
     <>
       <div className="">
@@ -733,7 +737,9 @@ const DashboardHeader = ({ className = "", open }) => {
                     <div className="cart-dropdown-inner-top-info">
                       <img alt="" src="/introduction-icon.svg"></img>
                       <p>
-                        Noch&nbsp;<span>3</span>&nbsp;
+                        Noch&nbsp;
+                        <span>{formatPrice(totalPrice - currentBalance)}</span>
+                        &nbsp;
                         <span className="chf-text">CHF</span>&nbsp;bis zum
                         Mindestbestellwert
                       </p>
